@@ -51,6 +51,15 @@ export default function RootLayout({
           href="https://unpkg.com/maplibre-gl@3.1.0/dist/maplibre-gl.css"
           rel="stylesheet"
         />
+        <meta
+          property="og:description"
+          content="🌍🚀 Join me on SkyTrade and start trading airspace and real estate! Sign up with my link and get exclusive rewards: [Referral_Link] 💸 #SkyTrade #EarnRewards #RealEstate"
+        />
+        <meta name="twitter:title" content="Air right" />
+        <meta
+          name="twitter:description"
+          content="🌍🚀 Join me on SkyTrade and start trading airspace and real estate! Sign up with my link and get exclusive rewards: [Referral_Link] 💸 #SkyTrade #EarnRewards #RealEstate"
+        />
       </head>
       <body>
         <div id="backdrop-root"></div>

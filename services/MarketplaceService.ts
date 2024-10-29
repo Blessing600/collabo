@@ -64,22 +64,27 @@ const MarketplaceService = () => {
   };
 
   const searchAuctions = async (
-    search_text: string | undefined,
+    search_text?: string,
     page: number = 1,
     limit: number = 10,
     min_price = 0,
-    max_price = 9999999999999,
-
+    max_price = 9999999999999
   ) => {
     try {
-      const response = await getRequest({
-        uri: `/private/auction-house/search-auctions?search_text=${search_text}&page=${page}&limit=${limit}&min_price=${min_price}&max_price=${max_price}`,
-      });
+
+      let uri = `/private/auction-house/search-auctions?page=${page}&limit=${limit}&min_price=${min_price}&max_price=${max_price > 0 ? max_price : 9999999999999}`;
+      
+      if (search_text && search_text.trim() !== '') {
+        uri += `&search_text=${search_text}`;
+      }
+  
+      const response = await getRequest({ uri });
       return response?.data;
     } catch (error) {
       console.error(error);
     }
   };
+  
 
   const filterAuctions = async (minPrice: number, maxPrice: number) => {
     try {

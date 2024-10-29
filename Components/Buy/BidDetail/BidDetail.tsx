@@ -142,7 +142,7 @@ const BidDetails: React.FC<BidDetailsProps> = ({
             </div>
           : <>
               <div>
-                <div className="flex w-full justify-between gap-8 pb-[5px] text-sm sm:text-base">
+                <div className="flex w-full justify-between gap-8 pb-[5px] text-sm">
                   <div className="flex">
                     <p className="whitespace-nowrap leading-[21px] text-[#838187]">Your Bid</p>
                     <span className="text-[#E04F64]">*</span>
@@ -168,7 +168,7 @@ const BidDetails: React.FC<BidDetailsProps> = ({
                     className="flex-1 appearance-none border-none text-[14px] leading-[21px] outline-none"
                   />
                 </div>
-                <span className="w-full text-right text-xs text-gray-500 sm:hidden">
+                <span className="w-full text-right text-sm text-gray-500 sm:hidden">
                   <span className="text-[#E04F64]">*</span> You cannot bid lower than
                   {` $${getMinBid()}`}
                 </span>

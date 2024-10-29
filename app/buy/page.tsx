@@ -164,12 +164,11 @@ const Buy = () => {
           <Sidebar />
 
           <div className="flex h-full w-full flex-col">
-            <div className="hidden md:block">
+            <div className="relative hidden md:block">
               <PageHeader pageTitle={isMobile ? "Buy Airspace" : "Marketplace: Buy Airspace"} />
-            </div>
-
-            <div className="fixed right-10 top-[15%] z-50 hidden md:block">
-              {user?.betaUser?.isBetaUser && <BuyFilter />}
+              <div className="absolute right-10 top-[8rem] z-50 hidden md:block">
+                {user?.betaUser?.isBetaUser && <BuyFilter />}
+              </div>
             </div>
 
             {isCreateAuctionModalOpen && (

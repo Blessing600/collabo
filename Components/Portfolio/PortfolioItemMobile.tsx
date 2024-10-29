@@ -14,6 +14,7 @@ import { checkDocumentStatus } from "@/utils/propertyUtils/fileUpload";
 import { PortfolioTabEnum } from "@/hooks/usePortfolioList";
 import Modal from "./Modal";
 import CancelClaimModal from "./CancelClaimModal";
+import LoadingButton from "../LoadingButton/LoadingButton";
 
 interface PropsI {
   airspaceName: string;
@@ -72,8 +73,7 @@ const PortfolioItemMobile = ({
   const handleCancelClaim = () => {
     selectAirspace();
     setShowCancelModal(true);
-    refetchAirspaceRef.current = true;
-    modalRef.current = true;
+    refetchAirspaceRef.current = false;
   };
   const handleOnClaim = () => {
     selectAirspace();
@@ -85,7 +85,15 @@ const PortfolioItemMobile = ({
 
   return (
     <div>
-      {showModal && <Modal airspace={selectedAirspace} onCloseModal={() => {onCloseModal(); setShowModal(false)}} />}
+      {showModal && (
+        <Modal
+          airspace={selectedAirspace}
+          onCloseModal={() => {
+            onCloseModal();
+            setShowModal(false);
+          }}
+        />
+      )}
       {showCancelModal && (
         <CancelClaimModal
           airspace={selectedAirspace}
@@ -102,18 +110,25 @@ const PortfolioItemMobile = ({
                 <LocationPointIcon />
               </div>
               <p className="flex-1 text-[14px] font-normal text-[#222222]">
-                {airspaceName.length > 15 ? airspaceName.slice(0, 25) + " ..." : airspaceName}
+                {airspaceName.length > 15
+                  ? airspaceName.slice(0, 25) + " ..."
+                  : airspaceName}
               </p>
             </div>
             <div className="">
               <div className="mt-2 flex w-full items-center justify-between gap-[10px]">
                 {!!tags[0] && (
-                  <div
+                  <LoadingButton
                     onClick={handleOnClaim}
-                    className="flex h-[27px] cursor-pointer items-center justify-center rounded-[3px] bg-[#DBDBDB] p-2 text-sm font-normal text-[#222222]"
+                    isLoading={false}
+                    color={""}
+                    className="bg-[#DBDBDB] text-[#222222] text-[11.89px] font-normal px-[7px] cursor-pointer rounded-[3px] h-[27px]"
+                    disable={false}
                   >
-                    {type === "land" ? `Claim Date: ${formatDate(createdAt)}` : "On Rent"}
-                  </div>
+                    {type === "land"
+                      ? `Claim Date: ${formatDate(createdAt)}`
+                      : "On Rent"}
+                  </LoadingButton>
                 )}
                 {!!tags[1] && (
                   <div className="cursor-pointer rounded-[3px] bg-[#E7E6E6] px-[7px] text-sm font-normal text-[#222222]">
@@ -131,12 +146,15 @@ const PortfolioItemMobile = ({
                   </div>
                 )}
                 {activeTab === PortfolioTabEnum.UNVERIFIED && (
-                  <div
+                  <LoadingButton
                     onClick={handleCancelClaim}
-                    className="flex h-8 w-28 cursor-pointer items-center justify-center rounded-[3px] bg-[#4285F4] px-2 text-sm font-normal text-white"
+                    isLoading={false}
+                    color={""}
+                    disable={false}
+                    className="bg-[#4285F4] text-white text-[11.89px] font-normal px-[7px] cursor-pointer rounded-[3px] h-[27px]"
                   >
                     Cancel Claim
-                  </div>
+                  </LoadingButton>
                 )}
 
                 {(documentStatus === "SUBMITTED" || underReview) && (
@@ -144,7 +162,9 @@ const PortfolioItemMobile = ({
                     <div className="h-6 w-6">
                       <ReviewVerificationIcon />
                     </div>
-                    <p className="text-sm font-normal text-orange-500">Documents under review</p>
+                    <p className="text-sm font-normal text-orange-500">
+                      Documents under review
+                    </p>
                   </div>
                 )}
                 {documentStatus === "APPROVED" && !underReview && (
@@ -152,22 +172,28 @@ const PortfolioItemMobile = ({
                     <div className="h-6 w-6">
                       <DocumentApprovedIcon />
                     </div>
-                    <p className="text-sm font-normal text-[#1FD387]">Documents approved</p>
+                    <p className="text-sm font-normal text-[#1FD387]">
+                      Documents approved
+                    </p>
                   </div>
                 )}
-                {(documentStatus === "REJECTED" || documentStatus === "RE_UPLOAD") && !underReview && (
-                  <div className="">
-                    <div className="flex items-center justify-end">
-                      <div className="mr-[10px] h-4 w-4">
-                        <DocumentRejectedIcon />
+                {(documentStatus === "REJECTED" ||
+                  documentStatus === "RE_UPLOAD") &&
+                  !underReview && (
+                    <div className="">
+                      <div className="flex items-center justify-end">
+                        <div className="mr-[10px] h-4 w-4">
+                          <DocumentRejectedIcon />
+                        </div>
+                        <p className="text-sm font-normal text-[#E04F64]">
+                          Documents rejected
+                        </p>
                       </div>
-                      <p className="text-sm font-normal text-[#E04F64]">Documents rejected</p>
+                      <div className="h-[14px] w-[7px]">
+                        <ChevronRightIcon />
+                      </div>
                     </div>
-                    <div className="h-[14px] w-[7px]">
-                      <ChevronRightIcon />
-                    </div>
-                  </div>
-                )}
+                  )}
               </div>
               {
                 <div>
@@ -182,20 +208,28 @@ const PortfolioItemMobile = ({
                 </div>
               }
 
-              {documentStatus === "NOT_SUBMITTED" && !underReview && requestDocument && (
-                <div className="mt-4 flex w-full items-center justify-between gap-12">
-                  <div onClick={handleButtonClick} className="rounded-md border border-orange-500 p-2">
-                    <p className="text-sm font-normal text-orange-500">Additional documents requested</p>
+              {documentStatus === "NOT_SUBMITTED" &&
+                !underReview &&
+                requestDocument && (
+                  <div className="mt-4 flex w-full items-center justify-between gap-12">
+                    <div
+                      onClick={handleButtonClick}
+                      className="rounded-md border border-orange-500 p-2"
+                    >
+                      <p className="text-sm font-normal text-orange-500">
+                        Additional documents requested
+                      </p>
+                    </div>
+                    <div className="h-[14px] w-[7px]">
+                      <ChevronRightIcon />
+                    </div>
                   </div>
-                  <div className="h-[14px] w-[7px]">
-                    <ChevronRightIcon />
-                  </div>
-                </div>
-              )}
+                )}
 
-              {(documentStatus === "SUBMITTED" || underReview) && requestDocument && (
-                <UploadedDocuments requestDocument={requestDocument} />
-              )}
+              {(documentStatus === "SUBMITTED" || underReview) &&
+                requestDocument && (
+                  <UploadedDocuments requestDocument={requestDocument} />
+                )}
               {showPopup && !underReview && requestDocument && (
                 <AdditionalDocuments
                   setUnderReview={setUnderReview}

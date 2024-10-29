@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { RxCaretLeft, RxCaretRight } from "react-icons/rx";
 import PortfolioItem from "./PortfolioItem";
 import Spinner from "../Spinner";
@@ -36,6 +36,8 @@ const PortfolioList = ({
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [uniqueAirspaceList, setUniqueAirspaceList] = useState<PropertyData[]>();
+  const modalRef = useRef(false);
+
   const {
     handleTabSwitch,
     handlePrevPage,
@@ -45,6 +47,7 @@ const PortfolioList = ({
     pageNumber,
     activeTab,
     setAirspaceList,
+    refetchAirspaceRef,
   } = usePortfolioList();
 
   function getUniqueItemsByAssetId(items: PropertyData[]) {
@@ -96,9 +99,7 @@ const PortfolioList = ({
   };
   return (
     <>
-      {selectedAirspace !== null && <Modal airspace={selectedAirspace} onCloseModal={onCloseModal} />}
-
-      {showCancelModal && (
+    {showCancelModal && (
         <CancelClaimModal
           airspace={selectedAirspace}
           setShowCancelModal={setShowCancelModal}
@@ -203,7 +204,16 @@ const PortfolioList = ({
                     requestDocument={airspace?.requestDocument}
                     selectAirspace={() => selectAirspace(airspace)}
                     setUploadedDoc={setUploadedDoc}
-                  />
+                    activeTab={activeTab}
+                    createdAt={airspace.createdAt as Date}
+                    modalRef={modalRef}
+                    refetchAirspaceRef={refetchAirspaceRef}
+                    selectedAirspace={selectedAirspace}
+                    onCloseModal={onCloseModal}
+                    setAirspaceList={setAirspaceList} 
+                    setShowCancelModal={setShowCancelModal}    
+                    tags={[true, false, false, false]}           
+                     />
                 ))
               : <AirspacesEmptyMessage />}
             </div>

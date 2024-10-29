@@ -8,7 +8,15 @@ import { calculateTimeLeft, formatDate } from "@/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import TransferCertificate from "./TransferCertificate";
 import { ArrowLeftIcon, CloseIcon, LocationPointIcon } from "../Icons";
-import { Page, Text, View, Document, StyleSheet, pdf, Image as Img } from "@react-pdf/renderer";
+import {
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+  pdf,
+  Image as Img,
+} from "@react-pdf/renderer";
 import { useAppSelector } from "@/redux/store";
 import { PortfolioTabEnum } from "@/hooks/usePortfolioList";
 import UploadVerifiedDocuments from "./UploadedVerifiedDocuments";
@@ -30,8 +38,12 @@ interface ModalProps {
   pageNumber?: number;
 }
 
-
-const Modal = ({ airspace, onCloseModal, isOffer, pageNumber = 0 }: ModalProps) => {
+const Modal = ({
+  airspace,
+  onCloseModal,
+  isOffer,
+  pageNumber = 0,
+}: ModalProps) => {
   const router = useRouter();
 
   const [bids, setBids] = useState([]);
@@ -41,15 +53,16 @@ const Modal = ({ airspace, onCloseModal, isOffer, pageNumber = 0 }: ModalProps) 
   const { editAirSpaceAddress } = PropertiesService();
   const [isLoading, setIsLoading] = useState(false);
   const { getUnverifiedAirspaces } = AirspaceRentalService();
-  const imageUrl = getMapboxStaticImage(property?.latitude, property?.longitude);
+  const imageUrl = getMapboxStaticImage(
+    property?.latitude,
+    property?.longitude,
+  );
   const [imageUrls, setImagaeUrls] = useState("");
 
   const { user, activePortfolioTab } = useAppSelector((state) => {
     const { user, activePortfolioTab } = state.userReducer;
     return { user, activePortfolioTab };
   });
-
- 
 
   const handleGenerateAuctionCertificate = async () => {
     const auctionId = airspace?.auction?.id;
@@ -76,10 +89,12 @@ const Modal = ({ airspace, onCloseModal, isOffer, pageNumber = 0 }: ModalProps) 
     window.open(blobUrl, "_blank");
   };
 
-
   useEffect(() => {
     const handelAirspaceImage = async () => {
-      const url = await fetchMapboxStaticImage(airspace?.latitude, airspace?.longitude);
+      const url = await fetchMapboxStaticImage(
+        airspace?.latitude,
+        airspace?.longitude,
+      );
       setImagaeUrls(url);
     };
     handelAirspaceImage();
@@ -88,7 +103,7 @@ const Modal = ({ airspace, onCloseModal, isOffer, pageNumber = 0 }: ModalProps) 
   return (
     <Fragment>
       <div className="fixed inset-0 z-40 bg-black opacity-50"></div>
-      {airspace?.type === "placedBid" || airspace?.type === "receivedBid" ?
+      {airspace?.type === "placedBid" || airspace?.type === "receivedBid" ? (
         <div className="fixed left-1/2 top-1/2 z-[500] flex h-full w-full -translate-x-1/2 -translate-y-1/2 flex-col gap-[15px] bg-white px-[29px] py-[30px] md:z-50 md:h-auto md:w-[689px] md:rounded-[30px]">
           <div
             className="relative -mx-[29px] -mt-[30px] flex items-center gap-[20px] px-[29px] py-[20px] md:mx-0 md:my-0 md:p-0 md:shadow-none"
@@ -99,7 +114,9 @@ const Modal = ({ airspace, onCloseModal, isOffer, pageNumber = 0 }: ModalProps) 
             </div>
 
             <h2 className="break-words text-center text-xl font-medium text-[#222222]">
-              {property?.title > 60 ? property?.title.slice(0, 57) + " ..." : property?.title}
+              {property?.title > 60
+                ? property?.title.slice(0, 57) + " ..."
+                : property?.title}
             </h2>
 
             <div
@@ -123,9 +140,13 @@ const Modal = ({ airspace, onCloseModal, isOffer, pageNumber = 0 }: ModalProps) 
               </p>
             </div>
 
-            {calculateTimeLeft(airspace?.auction?.endDate).toLowerCase() === "ended" &&
+            {calculateTimeLeft(airspace?.auction?.endDate).toLowerCase() ===
+              "ended" &&
               airspace?.auction?.currentBidder === user?.blockchainAddress && (
-                <button onClick={handleGenerateAuctionCertificate} className="rounded bg-blue-500 px-2 py-1 text-white">
+                <button
+                  onClick={handleGenerateAuctionCertificate}
+                  className="rounded bg-blue-500 px-2 py-1 text-white"
+                >
                   Generate Certificate
                 </button>
               )}
@@ -133,24 +154,38 @@ const Modal = ({ airspace, onCloseModal, isOffer, pageNumber = 0 }: ModalProps) 
 
           <div className="flex gap-[15px]">
             <p className="text-[14px] font-normal text-[#222222]">ID:</p>
-            <p className="break-all text-[14px] font-normal text-[#87878D]">{airspace?.auction?.assetId}</p>
+            <p className="break-all text-[14px] font-normal text-[#87878D]">
+              {airspace?.auction?.assetId}
+            </p>
           </div>
 
           {airspace?.placedBid?.price && (
             <div className="flex gap-[15px]">
-              <p className="text-[14px] font-normal text-[#222222]">Your Bid:</p>
-              <p className="break-all text-[14px] font-normal text-[#87878D]">${airspace?.placedBid?.price}</p>
+              <p className="text-[14px] font-normal text-[#222222]">
+                Your Bid:
+              </p>
+              <p className="break-all text-[14px] font-normal text-[#87878D]">
+                ${airspace?.placedBid?.price}
+              </p>
             </div>
           )}
 
           <div className="flex gap-[15px]">
-            <p className="text-[14px] font-normal text-[#222222]">Highest Bid:</p>
-            <p className="break-all text-[14px] font-normal text-[#87878D]">${airspace?.auction?.currentPrice}</p>
+            <p className="text-[14px] font-normal text-[#222222]">
+              Highest Bid:
+            </p>
+            <p className="break-all text-[14px] font-normal text-[#87878D]">
+              ${airspace?.auction?.currentPrice}
+            </p>
           </div>
 
           <div className="flex gap-[15px]">
-            <p className="text-[14px] font-normal text-[#222222]">Highest Bidder:</p>
-            <p className="break-all text-[14px] font-normal text-[#87878D]">{airspace?.auction?.currentBidder}</p>
+            <p className="text-[14px] font-normal text-[#222222]">
+              Highest Bidder:
+            </p>
+            <p className="break-all text-[14px] font-normal text-[#87878D]">
+              {airspace?.auction?.currentBidder}
+            </p>
           </div>
 
           <div className="flex gap-[15px]">
@@ -173,7 +208,9 @@ const Modal = ({ airspace, onCloseModal, isOffer, pageNumber = 0 }: ModalProps) 
           <div className="opacity-60">
             <Accordion
               title={`Previous Bids (${bids.length})`}
-              content={<CustomTable header={["Price($)", "From"]} auctionBids={bids} />}
+              content={
+                <CustomTable header={["Price($)", "From"]} auctionBids={bids} />
+              }
             />
 
             {loading && (
@@ -195,23 +232,31 @@ const Modal = ({ airspace, onCloseModal, isOffer, pageNumber = 0 }: ModalProps) 
             <button
               onClick={() =>
                 router.push(
-                  calculateTimeLeft(airspace?.auction?.endDate).toLowerCase() === "ended" ?
-                    "/funds"
-                  : `/buy?auctionId=${airspace?.auction?.id}&bid=true`
+                  calculateTimeLeft(
+                    airspace?.auction?.endDate,
+                  ).toLowerCase() === "ended"
+                    ? "/funds"
+                    : `/buy?auctionId=${airspace?.auction?.id}&bid=true`,
                 )
               }
               className="flex flex-1 cursor-pointer items-center justify-center rounded-[5px] border border-[#0653EA] bg-white px-[20px] py-[10px] text-center text-[#0653EA]"
             >
-              {calculateTimeLeft(airspace?.auction?.endDate).toLowerCase() === "ended" ?
-                "View Transaction"
-              : airspace.type === "placedBid" ?
-                "Place Higher Bid"
-              : "View Auction"}{" "}
+              {calculateTimeLeft(airspace?.auction?.endDate).toLowerCase() ===
+              "ended"
+                ? "View Transaction"
+                : airspace.type === "placedBid"
+                  ? "Place Higher Bid"
+                  : "View Auction"}{" "}
             </button>
           </div>
         </div>
-      : <AirspaceDetails airspace={airspace} onCloseModal={ onCloseModal}/>
-      }
+      ) : (
+        <AirspaceDetails
+          airspace={airspace}
+          onCloseModal={onCloseModal}
+          requestDocument={airspace?.requestDocument}
+        />
+      )}
     </Fragment>
   );
 };

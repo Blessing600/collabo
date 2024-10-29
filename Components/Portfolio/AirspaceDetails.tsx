@@ -18,13 +18,14 @@ import {
 } from "@react-pdf/renderer";
 import AirspaceRentalService from "@/services/AirspaceRentalService";
 import PropertiesService from "@/services/PropertiesService";
-import { PropertyData } from "@/types";
+import { PropertyData, RequestDocument } from "@/types";
 
 interface airspaceDetailsProps {
   airspace: any;
   onCloseModal: () => void;
   isOffer?: boolean;
   pageNumber?: number;
+  requestDocument: RequestDocument[];
 }
 
 const formatPriceRange = (range) => {
@@ -36,7 +37,7 @@ const checkFacilities = (facilities) => {
 
   for (const [key, value] of Object.entries(facilities)) {
     if (value === true) {
-        trueFacilities.push(key);
+      trueFacilities.push(key);
     }
   }
 
@@ -149,6 +150,7 @@ const AirspaceDetails = ({
   onCloseModal,
   isOffer,
   pageNumber = 0,
+  requestDocument,
 }: airspaceDetailsProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { editAirSpaceAddress } = PropertiesService();
@@ -215,6 +217,11 @@ const AirspaceDetails = ({
     if (!airspace) return;
     handelAirspaceImage();
   }, [airspace]);
+let submittedDocumentsCount;
+if(requestDocument){
+  submittedDocumentsCount = requestDocument.filter((doc) => doc.status === 'SUBMITTED').length
+}
+
   return (
     <div>
       <div className="fixed left-1/2 top-1/2 z-[500] flex h-full w-full -translate-x-1/2 -translate-y-1/2 flex-col gap-[15px] bg-white px-[29px] py-[30px] md:z-50 md:h-auto md:w-[689px] md:rounded-[30px]">
@@ -319,11 +326,15 @@ const AirspaceDetails = ({
             </p>
           </div>
         )}
-        <div>
-          <UploadVerifiedDocuments
-            requestDocument={airspace?.requestDocument || []}
-          />
-        </div>
+        {requestDocument &&
+          requestDocument?.length > 0 &&
+          submittedDocumentsCount > 0 && (
+            <div>
+              <UploadVerifiedDocuments
+                requestDocument={airspace?.requestDocument || []}
+              />
+            </div>
+          )}
 
         {isOffer ? (
           <div

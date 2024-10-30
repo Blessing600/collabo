@@ -21,6 +21,7 @@ import PlanningPermission from "./PlanningPermission/PlanningPermission";
 import AirspaceOptions from "./AirspaceOptions/AirspaceOptions";
 import S3UploadServices from "@/services/s3upload";
 import ZoningPermission from "./PlanningPermission/ZoningPermission";
+import Button from "@/Components/Shared/Button";
 
 interface PropsI {
   onCloseModal: () => void;
@@ -83,6 +84,8 @@ export const ClaimModal = ({
   const isDisabled = data.hasZoningPermission === null;
 
   const handleClaim = async () => {
+    setIsClaimLoading(true);
+
     try {
       const imageList: string[] = [];
       if (selectedFile.length > 0) {
@@ -106,10 +109,12 @@ export const ClaimModal = ({
           await onClaim(imageList);
         }
       } else {
-        onClaim([]);
+        await onClaim([]);
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsClaimLoading(false);
     }
   };
 
@@ -142,52 +147,45 @@ export const ClaimModal = ({
     }
   };
 
-const handleNextButton = async () => {
-  if (steps === ClaimAirspaceSteps.UNSELECTED) {
-    const byteSize = getByteSize(data?.title);
-    if(byteSize >= 32){
-      toast.error('Name of air right exceeds the character limit. Please use a shorter name!');
-      return;
-    }
-    setStepCounter(stepsCounter + 1);
-    setSteps(ClaimAirspaceSteps.ZONING_PERMISSION);
-    setCurrentMode("Air Rights Settings");  
-  } else if (steps === ClaimAirspaceSteps.ZONING_PERMISSION) {
-    setStepCounter(stepsCounter + 1);
-    if (data.rent) {
-      setSteps(ClaimAirspaceSteps.RENT);
-      setCurrentMode("Air Rights Renting Settings"); 
-    } else {
+  const handleNextButton = async () => {
+    if (steps === ClaimAirspaceSteps.UNSELECTED) {
+      const byteSize = getByteSize(data?.title);
+      if (byteSize >= 32) {
+        toast.error("Name of air right exceeds the character limit. Please use a shorter name!");
+        return;
+      }
+      setStepCounter(stepsCounter + 1);
+      setSteps(ClaimAirspaceSteps.ZONING_PERMISSION);
+      setCurrentMode("Air Rights Settings");
+    } else if (steps === ClaimAirspaceSteps.ZONING_PERMISSION) {
+      setStepCounter(stepsCounter + 1);
+      if (data.rent) {
+        setSteps(ClaimAirspaceSteps.RENT);
+        setCurrentMode("Air Rights Renting Settings");
+      } else {
+        setSteps(ClaimAirspaceSteps.UPLOAD_IMAGE);
+        setCurrentMode("Air Rights Photos");
+      }
+    } else if (steps === ClaimAirspaceSteps.UPLOAD_IMAGE) {
+      if (selectedFile.length > 5) {
+        toast.error("You can only upload up to 5 files. Please adjust your selection and try again!");
+        return;
+      }
+      await handleClaim();
+    } else if (steps === ClaimAirspaceSteps.RENT) {
+      setStepCounter(stepsCounter + 1);
       setSteps(ClaimAirspaceSteps.UPLOAD_IMAGE);
       setCurrentMode("Air Rights Photos");
     }
-  } else if (steps === ClaimAirspaceSteps.UPLOAD_IMAGE) {
-    try{
-      if (selectedFile.length > 5) {
-        toast.error(
-          "You can only upload up to 5 files. Please adjust your selection and try again!",
-        );
-        return;
-      }
-      setIsClaimLoading(true)
-      await handleClaim();
-      setIsClaimLoading(false)
-    }finally{
-      setIsClaimLoading(false);
-    }
-  } else if (steps === ClaimAirspaceSteps.RENT) {
-    setStepCounter(stepsCounter + 1);
-    setSteps(ClaimAirspaceSteps.UPLOAD_IMAGE);
-    setCurrentMode("Air Rights Photos");
-  }
-};
+  };
 
-const getByteSize = (str) => new Blob([str]).size;
-const handleChangeAirRightName = (e) =>{
-  const value = e.target.value;
-    setData((prev) => ({ ...prev, title: value }))
-}
+  const getByteSize = (str) => new Blob([str]).size;
+  const handleChangeAirRightName = (e) => {
+    const value = e.target.value;
+    setData((prev) => ({ ...prev, title: value }));
+  };
   const isClaimAirspace = steps === ClaimAirspaceSteps.UPLOAD_IMAGE;
+
   return (
     <div>
       <Backdrop />
@@ -262,10 +260,8 @@ const handleChangeAirRightName = (e) =>{
 
                   <input
                     value={data?.title}
-                    onChange={
-                      handleChangeAirRightName
-                    }
-                    className="py-[16px] px-[22px] rounded-lg text-[14px] outline-none text-[#222222] mt-0.5 md:mt-1"
+                    onChange={handleChangeAirRightName}
+                    className="mt-0.5 rounded-lg px-[22px] py-[16px] text-[14px] text-[#222222] outline-none md:mt-1"
                     style={{ border: "1px solid #87878D" }}
                     type="text"
                     name="name"
@@ -318,17 +314,24 @@ const handleChangeAirRightName = (e) =>{
               >
                 {steps === ClaimAirspaceSteps.UNSELECTED ? "Cancel" : "Back"}
               </div>
-
+              {/* 
               <LoadingButton
                 onClick={handleNextButton}
-                isLoading={isClaimLoading}
+                isLoading={true}
                 color="white"
                 className="Claim-airspacebtn2-step flex w-[75%] cursor-pointer justify-center rounded-[5px] bg-[#0653EA] px-[22px] py-[10px] text-white md:w-[25%]"
               >
                 <div className="flex w-full items-center justify-center">
-                  {isClaimAirspace ? "Claim Air right" : "Next"}
+                  {isClaimAirspace ? "Claim Air Right" : "Next"}
                 </div>
-              </LoadingButton>
+              </LoadingButton> */}
+              <div className="Claim-airspacebtn2-step flex w-[75%] cursor-pointer justify-center whitespace-nowrap rounded-[5px] bg-[#0653EA] px-[22px] text-white md:w-[25%]">
+                <Button
+                  onClick={handleNextButton}
+                  label={isClaimAirspace ? "Claim Air Right" : "Next"}
+                  isLoading={isClaimLoading}
+                />
+              </div>
             </div>
           </div>
         </div>

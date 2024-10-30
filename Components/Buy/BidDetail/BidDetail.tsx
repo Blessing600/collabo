@@ -87,7 +87,7 @@ const BidDetails: React.FC<BidDetailsProps> = ({
   const isAuctionComplete = endDate ? new Date() > endDate : false;
 
   return (
-    <div className="fixed inset-0 bottom-[74px] z-50 flex items-start justify-center bg-[#294B63] bg-opacity-50 pt-32 backdrop-blur-[2px] sm:bottom-0">
+    <div className="fixed inset-0 bottom-[74px] !z-[500] flex w-screen items-start justify-center bg-[#294B63] bg-opacity-50 pt-32 backdrop-blur-[2px] sm:bottom-0">
       <div className="thin-scrollbar short-scrollbar fixed bottom-0 z-[500] flex w-full flex-col gap-[15px] overflow-x-auto overflow-y-auto rounded-t-[30px] bg-white sm:left-1/2 sm:top-1/2 sm:z-50 sm:-translate-x-1/2 sm:-translate-y-1/2 md:h-[640px] md:w-[689px] md:rounded-[30px] md:shadow-md">
         <div className="shadow-[0_12px_34px_-10px_rgba(58, 77, 233, 0.15)] sticky left-0 right-0 top-0 z-[100] -mt-[1px] flex flex-col gap-[15px] bg-white px-[29px] py-[20px]">
           <button className="text-right" onClick={onCloseModal}>

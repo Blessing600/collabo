@@ -150,7 +150,7 @@ const Buy = () => {
   return (
     <Fragment>
       <Head>
-        <title>SkyTrade - Marketplace : Buy Airspace</title>
+        <title>SkyTrade - Marketplace : Buy Air Rights</title>
       </Head>
 
       {isLoading && <Backdrop />}

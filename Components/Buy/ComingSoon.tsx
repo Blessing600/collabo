@@ -7,10 +7,17 @@ import Button from "../Shared/Button";
 import { toast } from "react-toastify";
 import BetaUserService from "@/services/BetaUserService";
 import UserService from "@/services/UserService";
+import { useAppSelector } from "@/redux/store";
+import { useRouter } from "next/navigation";
 
 const ComingSoon = () => {
   const { subscribeNewsLetters } = UserService();
   const { joinWaitlist } = BetaUserService();
+  const router = useRouter();
+  const { user } = useAppSelector((state) => {
+    const { user } = state.userReducer;
+    return { user };
+  });
 
   const [isSubscribing, setIsSubscribing] = useState(false);
   const [isJoiningWaitlist, setIsJoiningWaitlist] = useState(false);
@@ -48,6 +55,10 @@ const ComingSoon = () => {
     } finally {
       setIsSubscribing(false);
     }
+  };
+
+  const handleLoginRedirect = () => {
+    router.push("/auth");
   };
 
   return (
@@ -88,8 +99,13 @@ const ComingSoon = () => {
         </div>
       </p>
       <p>Thank you for your patience and enthusiasm — we can’t wait for you to join us!</p>
-      <Button isLoading={isJoiningWaitlist} label="Join the Waitlist Now!" onClick={handleJoinWaitlist} />
-      <Button isLoading={isSubscribing} secondary label="Subscribe to our Newsletter" onClick={handleSubscribe} />
+      {user && <Button isLoading={isJoiningWaitlist} label="Join the Waitlist Now!" onClick={handleJoinWaitlist} />}
+      {user && (
+        <Button isLoading={isSubscribing} secondary label="Subscribe to our Newsletter" onClick={handleSubscribe} />
+      )}
+      {!user && (
+        <Button isLoading={isSubscribing} secondary label="Log in to subscribe" onClick={handleLoginRedirect} />
+      )}
     </div>
   );
 };

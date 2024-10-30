@@ -2,6 +2,7 @@ import React from "react";
 import { getMapboxStaticImage, getTimeLeft } from "@/utils/marketPlaceUtils";
 import { AuctionDataI } from "@/types";
 import Carousel from "../Shared/Carousel";
+import { shortenAddress } from "@/utils";
 
 interface MarkerPopupProps {
   auction: AuctionDataI;
@@ -32,13 +33,20 @@ const MarkerPopup: React.FC<MarkerPopupProps> = ({ auction, setShowBidDetail, se
       }
     >
       <div className={"relative h-[151px] w-1/2 rounded-xl sm:w-[266px]"}>
-        <Carousel images={images} />
+        {/* <Carousel images={images} /> */}
+        <div className="w-full p-1">
+          <img className="h-36 w-full" src={imageUrl} alt="" />
+        </div>
       </div>
       <div className={"flex h-[151px] w-1/2 flex-col justify-between sm:w-[266px]"}>
         <div>
           <div className="w-full bg-white px-[15px] py-[5px]">
-            <h1 className="text-[14px] font-semibold leading-5">Name</h1>
-            <p className="w-[98%] truncate text-xs leading-[26px] text-[#727272]">{auction?.layer?.property?.title}</p>
+            <h1 className="text-[14px] font-semibold leading-5">
+              {shortenAddress(auction?.layer?.property?.title, 24)}
+            </h1>
+            <p className="w-[98%] truncate text-xs leading-[26px] text-[#727272]">
+              {shortenAddress(auction.assetId, 15)}
+            </p>
           </div>
           <div className="flex-end flex h-[46px] w-full items-center justify-between bg-[#4285F4]/5 px-[15px]">
             <div className="flex flex-col">

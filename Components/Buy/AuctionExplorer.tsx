@@ -67,10 +67,10 @@ const AuctionExplorer: React.FC<AuctionExplorerProps> = ({
   }, [auctions, setAuctionDetailData, setShowBidDetail]);
 
   return (
-    <div className="z-20 m-8 hidden h-[668px] w-[518px] overflow-hidden rounded-[30px] bg-white p-6 shadow-md md:block">
+    <div className="z-20 m-8 hidden h-[668px] w-[518px] overflow-hidden rounded-[30px] bg-white px-6 py-3 shadow-md md:block">
       <div>
         <div className="py-4 text-center text-[18px] font-semibold">SkyMarket Hub</div>
-        <div className="text-[14px]">Explore and Own Low-Altitude Airspaces, Your Gateway to Aerial Freedom.</div>
+        <div className="text-[14px]">Explore and Own Low-Altitude Air Rights, Your Gateway to Aerial Freedom.</div>
       </div>
       <div className="flex flex-col gap-4 py-4">
         <button

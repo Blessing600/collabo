@@ -9,15 +9,13 @@ import BetaUserService from "@/services/BetaUserService";
 import UserService from "@/services/UserService";
 import { useAppSelector } from "@/redux/store";
 import { useRouter } from "next/navigation";
+import useAuth from "@/hooks/useAuth";
 
 const ComingSoon = () => {
   const { subscribeNewsLetters } = UserService();
   const { joinWaitlist } = BetaUserService();
   const router = useRouter();
-  const { user } = useAppSelector((state) => {
-    const { user } = state.userReducer;
-    return { user };
-  });
+  const { isLoggedIn } = useAuth();
 
   const [isSubscribing, setIsSubscribing] = useState(false);
   const [isJoiningWaitlist, setIsJoiningWaitlist] = useState(false);
@@ -25,6 +23,12 @@ const ComingSoon = () => {
   const handleJoinWaitlist = async () => {
     setIsJoiningWaitlist(true);
     try {
+      if (!isLoggedIn) {
+        toast.error(
+          "You need to login to enable this feature"
+        );
+        return;
+      }
       const response = await joinWaitlist();
       if (response && response.id) {
         toast.success(
@@ -42,6 +46,12 @@ const ComingSoon = () => {
   const handleSubscribe = async () => {
     setIsSubscribing(true);
     try {
+      if (!isLoggedIn) {
+        toast.error(
+          "You need to login to enable this feature"
+        );
+        return;
+      }
       const response = await subscribeNewsLetters();
 
       if (response && response.id) {
@@ -99,11 +109,11 @@ const ComingSoon = () => {
         </div>
       </p>
       <p>Thank you for your patience and enthusiasm — we can’t wait for you to join us!</p>
-      {user && <Button isLoading={isJoiningWaitlist} label="Join the Waitlist Now!" onClick={handleJoinWaitlist} />}
-      {user && (
+      {isLoggedIn && <Button isLoading={isJoiningWaitlist} label="Join the Waitlist Now!" onClick={handleJoinWaitlist} />}
+      {isLoggedIn && (
         <Button isLoading={isSubscribing} secondary label="Subscribe to our Newsletter" onClick={handleSubscribe} />
       )}
-      {!user && (
+      {!isLoggedIn && (
         <Button isLoading={isSubscribing} secondary label="Log in to subscribe" onClick={handleLoginRedirect} />
       )}
     </div>

@@ -66,35 +66,19 @@ const BidDetails: React.FC<BidDetailsProps> = ({
   const { latitude, longitude, title } = auctionDetailData?.layer?.property || {};
   const imageUrl = getMapboxStaticImage(latitude, longitude);
 
+  const getMinBid = () => {
+    if (auctionDetailData && auctionDetailData.currentPrice > 0) {
+      return 0.1 * auctionDetailData?.currentPrice + auctionDetailData?.currentPrice;
+    }
+
+    return auctionDetailData?.initialPrice;
+  };
+
   useEffect(() => {
     setCurrentUserBid(null);
   }, []);
 
   const isAuctionComplete = endDate ? new Date() > endDate : false;
-
-  const airspaceHistoryMockData = [
-    {
-      price: "Rental",
-      date: "15 december 2023",
-      from: "bcndkl,spuifijdczvè”yçh",
-    },
-    {
-      price: "Rental",
-      date: "5 december 2023",
-      from: "bvqnx,,qzidjcn-’bfszdxd",
-    },
-    {
-      price: "Sell",
-      date: "29 november 2023",
-      from: "adncjdjf, chzjneofjiochui",
-    },
-  ];
-  const images = [
-    { image_url: "/images/imagetest1.jpg" },
-    { image_url: "/images/imagetest2.jpg" },
-    { image_url: "/images/imagetest3.jpg" },
-  ];
-  images[0] = { image_url: imageUrl };
 
   return (
     <div className="fixed inset-0 bottom-[74px] z-50 flex items-start justify-center bg-[#294B63] bg-opacity-50 pt-32 backdrop-blur-[2px] sm:bottom-0">
@@ -135,6 +119,12 @@ const BidDetails: React.FC<BidDetailsProps> = ({
               </h1>
             </div>
             <div className="flex flex-col gap-[2px]">
+              <p className="text-[14px] leading-[26px] text-[#727272]">Starting Bid</p>
+              <h1 className="text-[14px] font-bold leading-[26px] text-[#050505]">
+                ${auctionDetailData?.initialPrice}
+              </h1>
+            </div>
+            <div className="flex flex-col gap-[2px]">
               <p className="text-[14px] text-[#727272]">Time left</p>
               <h1 className="text-right text-[14px] font-bold text-[#050505]">{timeLeft ?? "N/A"}</h1>
             </div>
@@ -158,8 +148,8 @@ const BidDetails: React.FC<BidDetailsProps> = ({
                     <span className="text-[#E04F64]">*</span>
                   </div>
                   <span className="hidden text-right text-gray-500 sm:block">
-                    Your bid must be at least 10% more than the highest bid{" "}
-                    {`(>= $${auctionDetailData && 0.1 * auctionDetailData?.currentPrice + auctionDetailData?.currentPrice})`}
+                    <span className="text-[#E04F64]">*</span>You cannot bid lower than
+                    {` $${getMinBid()}`}
                   </span>
                 </div>
                 <div
@@ -179,8 +169,8 @@ const BidDetails: React.FC<BidDetailsProps> = ({
                   />
                 </div>
                 <span className="w-full text-right text-xs text-gray-500 sm:hidden">
-                  Your bid must be at least 1% more than the highest bid{" "}
-                  {`(>= $${auctionDetailData && 0.01 * auctionDetailData?.currentPrice + auctionDetailData?.currentPrice})`}
+                  <span className="text-[#E04F64]">*</span> You cannot bid lower than
+                  {` $${getMinBid()}`}
                 </span>
               </div>
               <div className="w-full rounded-lg bg-[#0653EA] text-white">

@@ -160,7 +160,7 @@ const Buy = () => {
         </div>
       )}
       {
-        <div className="relative flex h-screen w-screen items-center justify-center overflow-clip rounded bg-[#F6FAFF]">
+        <div className="relative flex h-screen w-screen items-center justify-center rounded bg-[#F6FAFF]">
           <Sidebar />
 
           <div className="flex h-full w-full flex-col">
@@ -179,9 +179,9 @@ const Buy = () => {
               <AuctionSearchMobile searchTerm={searchTerm} setSearchTerm={(value: string) => setSearchTerm(value)} />
             )}
             <section
-              className={"relative mb-[79px] flex h-full w-full items-start justify-start overflow-scroll md:mb-0"}
+              className={"oveflow-scroll relative mb-[79px] flex h-full w-full items-start justify-start md:mb-0"}
             >
-              <div className={"!absolute !left-0 !top-0 !m-0 !h-screen !w-screen"} id="map" style={{ zIndex: "10" }} />
+              <div className={"!absolute !left-0 !top-0 !m-0 !h-[850px] !w-screen"} id="map" style={{ zIndex: "10" }} />
 
               {isMobile ?
                 <>

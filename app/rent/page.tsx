@@ -229,7 +229,7 @@ const Rent = () => {
       {isLoading && <Backdrop />}
       {isLoading && <Spinner />}
       {
-        <div className="relative flex h-screen w-screen items-center justify-center overflow-clip rounded md:bg-[#F6FAFF]">
+        <div className="relative flex h-screen w-screen items-center justify-center rounded md:bg-[#F6FAFF]">
           <Sidebar />
 
           <div className="flex h-full w-full flex-col">
@@ -248,7 +248,7 @@ const Rent = () => {
             <section
               className={"relative mb-[79px] flex h-full w-full items-start justify-start overflow-scroll md:mb-0"}
             >
-              <div className={"!absolute !left-0 !top-0 !m-0 !h-screen !w-screen"} id="map" />
+              <div className={"!absolute !left-0 !top-0 !m-0 !h-[850px] !w-screen"} id="map" />
               <RentSearchMobile
                 address={address}
                 setAddress={setAddress}

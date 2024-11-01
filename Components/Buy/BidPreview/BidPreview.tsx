@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useMobile } from "@/hooks/useMobile";
 import useAuth from "@/hooks/useAuth";
 import LoadingButton from "@/Components/LoadingButton/LoadingButton";
-import { LAMPORTS_PER_SOL, VersionedTransaction } from "@solana/web3.js";
+import { VersionedTransaction } from "@solana/web3.js";
 import { executeTransaction } from "@/utils/rent/transactionExecutor";
 import { Web3authContext } from "@/providers/web3authProvider";
 import { AuctionDataI } from "@/types";
@@ -17,7 +17,6 @@ import { toast } from "react-toastify";
 import useAuction from "@/hooks/useAuction";
 import Carousel from "@/Components/Shared/Carousel";
 import { formatDate } from "@/utils";
-import { fetchsolbalance } from "@/utils/fetchBalance";
 
 interface BidPreviewProps {
   setTxHash: React.Dispatch<React.SetStateAction<string>>;
@@ -139,13 +138,12 @@ const BidPreview: React.FC<BidPreviewProps> = ({
   };
   const { latitude, longitude, title } = auctionDetailData?.layer?.property || {};
   const imageUrl = getMapboxStaticImage(latitude, longitude);
- 
-  const images = auctionDetailData?.layer?.property?.images || []
-  let displayImages;  
-  if(auctionDetailData?.layer?.property?.orderPhotoforGeneratedMap){
+
+  const images = auctionDetailData?.layer?.property?.images || [];
+  let displayImages;
+  if (auctionDetailData?.layer?.property?.orderPhotoforGeneratedMap) {
     displayImages = [...(images || []), imageUrl];
-  }
-  else{
+  } else {
     displayImages = [imageUrl, ...(images || [])];
   }
 

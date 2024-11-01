@@ -62,9 +62,9 @@ const Dashboard: FC = () => {
 
         <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden rounded bg-[#F6FAFF]">
           <Sidebar />
-          <div className="flex h-full w-full flex-col overflow-scroll md:overflow-hidden">
+          <div className="flex h-full w-full flex-col">
             <PageHeader pageTitle={"Dashboard"} />
-            <section className="relative h-full w-full md:flex lg:pl-8">
+            <section className="relative h-full w-full overflow-scroll md:flex lg:pl-8">
               <div className="items-align flex flex-col-reverse justify-center lg:flex-row">
                 <div className="md:my-[-53px] md:flex md:h-screen md:basis-[58%] md:flex-col md:gap-5 md:overflow-y-auto md:px-8 md:py-[53px] lg:px-0">
                   <h2 className="hidden pt-10 text-xl font-medium text-black md:flex">Welcome to SkyTrade!</h2>

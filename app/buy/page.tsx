@@ -178,7 +178,9 @@ const Buy = () => {
             {user?.betaUser?.isBetaUser && (
               <AuctionSearchMobile searchTerm={searchTerm} setSearchTerm={(value: string) => setSearchTerm(value)} />
             )}
-            <section className={"relative mb-[79px] flex h-full w-full items-start justify-start md:mb-0"}>
+            <section
+              className={"relative mb-[79px] flex h-full w-full items-start justify-start overflow-scroll md:mb-0"}
+            >
               <div className={"!absolute !left-0 !top-0 !m-0 !h-screen !w-screen"} id="map" style={{ zIndex: "10" }} />
 
               {isMobile ?

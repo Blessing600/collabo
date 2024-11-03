@@ -32,9 +32,9 @@ const RentSearchMobile: React.FC<RentSearchMobileProps> = ({
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             type="text"
-            name="searchAirspaces"
-            id="searchAirspaces"
-            placeholder="Search Airspaces"
+            name="searchAirRights"
+            id="searchAirRights"
+            placeholder="Search Air Rights"
             className="min-w-[200px] text-[14px] focus:outline-none"
           />
 
@@ -42,7 +42,7 @@ const RentSearchMobile: React.FC<RentSearchMobileProps> = ({
             <MagnifyingGlassIcon />
           </div>
         </div>
-        <div onClick={() => setIsFilterOpen(!isFilterOpen)} className="text-gray-300 cursor-not-allowed">
+        <div onClick={() => setIsFilterOpen(!isFilterOpen)} className="cursor-not-allowed text-gray-300">
           <GiSettingsKnobs />
         </div>
       </div>

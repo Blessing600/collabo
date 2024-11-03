@@ -108,7 +108,7 @@ const PortfolioList = ({
           />
         )}
       <div
-        className="flex  w-[900px] flex-1 flex-col gap-[43px] rounded-[30px] bg-white px-[29px] py-[43px]"
+        className="flex w-full flex-1 flex-col gap-[43px] rounded-[30px] bg-white px-[29px] py-[43px]"
         style={{ boxShadow: "0px 12px 34px -10px #3A4DE926" }}
       >
         <h2 className="text-center text-xl font-medium text-[#222222]">My Air Rights</h2>

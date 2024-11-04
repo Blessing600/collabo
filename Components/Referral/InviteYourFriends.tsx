@@ -35,7 +35,7 @@ const InviteYourFriends: React.FC<InviteYourFriendsProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-[15px] px-[51px]">
+    <div className="flex flex-col gap-[15px] px-[51px] mt-14">
       <p className="text-[#222222] text-xl font-normal">Invite your friends</p>
       <p className="text-[#87878D] text-[15px] font-normal">
         Insert your friend&apos;s email address and send them invitations to

@@ -3,7 +3,7 @@ import { HistoryArrowIcon } from "../../Icons";
 import { Web3authContext } from "@/providers/web3authProvider";
 import ReferralCodeService from "@/services/ReferralCodeService";
 import { useMobile } from "@/hooks/useMobile";
-
+import { Pagination, Table } from "antd";
 interface ReferralListI {
   description: string;
   date: string;
@@ -51,68 +51,72 @@ const ReferralHistoryTable: React.FC = () => {
     setPageNumber(page);
   };
   const { isMobile } = useMobile();
+  const columns = [
+    {
+      title: "Date",
+      dataIndex: "date",
+      key: "date",
+    },
+    {
+      title: <p className="text-right">Amount</p>,
+      dataIndex: "amount",
+      key: "amount",
+      render: (amount: string) => (
+        <p
+          className={`text-right ${amount.startsWith("+") ? "text-green-500" : "text-red-500"}`}
+        >
+          {amount}
+        </p>
+      ),
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: <p className="text-right">Balance</p>,
+      dataIndex: "balance",
+      key: "balance",
+      render: (balance: string) => <p className="text-right">{balance}</p>,
+    },
+  ];
+  const customItemRender = (current, type, originalElement) => {
+    if (type === "next") {
+      return (
+        <button className="flex items-center gap-4 text-gray-700  ">
+          next
+          <HistoryArrowIcon />
+        </button>
+      );
+    }
+    if (type === "page") {
+      return (
+        <button
+          className={`${
+            current === originalElement.props.children
+              ? "bg-gray-700 text-white"
+              : "bg-gray-200 text-gray-700"
+          } rounded-full px-4 py-1`}
+        >
+          {originalElement.props.children}
+        </button>
+      );
+    }
+    return originalElement;
+  };
   return (
     <div
-      className={`${isMobile ? "history-table-scrollbar" : "overflow-x-scroll"}  w-[100%] h-full bg-white `}
+      className={`${isMobile ? "history-table-scrollbar" : ""}  w-[100%] h-full bg-white `}
     >
-      <table className=" w-[582.33px]">
-        <thead className="">
-          <tr>
-            <th className="px-4 py-2 text-[15px] text-[#222222]">Date</th>
-            <th className="px-4 py-2 text-[15px] text-[#222222]">Amount</th>
-            <th className="px-4 py-2 text-[15px] text-[#222222]">
-              Description
-            </th>
-            <th className="px-4 py-2 text-[15px] text-[#222222]">Balance</th>
-          </tr>
-        </thead>
-        <tbody className="text-center ">
-          {referralList.map((row, index) => (
-            <tr key={index}>
-              <td className="py-2 text-[#87878D] text-[15px]">{row.date}</td>
-              <td
-                className={`px-4 py-2 ${row.amount.startsWith("+") ? "text-green-500" : "text-red-500"}`}
-              >
-                {row.amount}
-              </td>
-              <td className="px-4 py-2 text-[#87878D] text-[15px]">
-                {row.description}
-              </td>
-              <td className="px-4 py-2 text-[#87878D] text-[15px]">
-                {row.balance}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {!loading ? (
-        <div className="flex justify-center my-4 gap-4">
-          {Array.from({ length: totalPages }, (_, index) => index).map(
-            (currentPage) => (
-              <button
-                key={currentPage}
-                onClick={() => handlePrevPage(currentPage)}
-                className={`mx-1 w-8 h-8 flex items-center justify-center rounded-full ${currentPage === pageNumber ? "bg-[#5D7285] text-white" : "text-[#5D7285]"}`}
-              >
-                {currentPage + 1}
-              </button>
-            ),
-          )}
-          {referralList?.length >= 9 && (
-            <div className="flex justify-center items-center">
-              <button
-                onClick={handleNextPage}
-                className="ml-2 px-3 py-1 rounded text-[#5D7285] hover:bg-[#5D7285] hover:text-white"
-              >
-                Next
-              </button>
-              <HistoryArrowIcon />
-            </div>
-          )}
-        </div>
-      ) : (
-        <p className="text-center mt-8">Loading...</p>
-      )}
+      <Table
+        columns={columns}
+        dataSource={referralList}
+        pagination={{
+          position: ["bottomCenter"],
+          itemRender: customItemRender,
+        }}
+      />
     </div>
   );
 };

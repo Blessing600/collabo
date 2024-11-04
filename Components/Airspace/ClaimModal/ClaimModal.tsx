@@ -83,7 +83,8 @@ export const ClaimModal = ({
   const isDisabled = data.hasZoningPermission === null;
 
   const handleClaim = async () => {
-    try {
+    try{
+
       const imageList: string[] = [];
       if (selectedFile.length > 0) {
         const contentTypes = selectedFile.map((file) => file.type);

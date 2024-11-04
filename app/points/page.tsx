@@ -35,6 +35,7 @@ const Points = () => {
   const sections = ["The Program", "Share", "History", "Leaderboard"];
 
   const [userRewards, setUserRewards] = useState<UserRewards | null>(null);
+  const [showAlert, setShowAlert] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,6 +69,12 @@ const Points = () => {
 
   const skyPoint: string | null =
     userRewards?.stats._sum.point?.toString() ?? "0";
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowAlert(false);
+    }, 10000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <Fragment>
@@ -87,9 +94,7 @@ const Points = () => {
               activeSection={activeIndex}
               setActiveSection={setActiveIndex}
             />
-
-            <AlertMessage />
-
+            {showAlert && <AlertMessage />}
             <div className="md:flex justify-between items-center w-full">
               <PointBalance point={skyPoint} isLoading={fetchingCode} />
               <ReferralActivities />
@@ -97,7 +102,7 @@ const Points = () => {
             <div>
               <div className="flex flex-col items-center">
                 {!isMobile && (
-                  <div className="flex  gap-10 border-b-4 border-[#D3D3D3] w-[95%]">
+                  <div className="flex  gap-10 border-b-2 border-[#D3D3D3] w-[95%]">
                     {[
                       "The Program",
                       "Share Referral Link",
@@ -107,11 +112,12 @@ const Points = () => {
                       <div
                         key={index}
                         onClick={() => handleClick(index)}
-                        className=" text-[#222222] text-[16px] relative px-8 py-1.5 cursor-pointer transition ease-linear delay-75"
+                        className={`relative px-8 py-1.5 cursor-pointer transition ease-linear delay-75 text-[16px]
+                          ${activeIndex === index ? "text-black" : "text-[#87878D]"}`}
                       >
                         <span>{item}</span>
                         {activeIndex === index && (
-                          <div className="absolute bottom-[-4px] left-0 right-0 h-1 bg-[#0653EA]"></div>
+                          <div className="absolute bottom-[-2px] left-0 right-0 h-1 bg-[#0653EA]"></div>
                         )}
                       </div>
                     ))}

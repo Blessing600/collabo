@@ -21,7 +21,7 @@ import PropertiesService from "@/services/PropertiesService";
 import { PropertyData, RequestDocument } from "@/types";
 
 interface airspaceDetailsProps {
-  airspace: any;
+  airspace: PropertyData;
   onCloseModal: () => void;
   isOffer?: boolean;
   pageNumber?: number;
@@ -193,7 +193,7 @@ const AirspaceDetails = ({
       setIsLoading(true);
       const editResponse = await editAirSpaceAddress({
         address: inputValue,
-        propertyId: airspace.id,
+        propertyId: airspace.id as number,
       });
       if (editResponse) {
         const airspaceResp = await getUnverifiedAirspaces(pageNumber, 10);

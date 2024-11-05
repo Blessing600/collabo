@@ -47,7 +47,9 @@ const Funds = () => {
                   tokenBalance={parseFloat(userUSDWalletBalance.amount)}
                 />
               </div>
-              <TransactionHistory />
+              <div className={`w-full sm:flex sm:w-auto sm:flex-grow`}>
+                <TransactionHistory />
+              </div>
             </div>
           </section>
         </div>

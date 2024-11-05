@@ -196,7 +196,7 @@ const TransactionHistory = () => {
             </div>
           </div>
 
-          <div className="ml-5">
+          <div className="ml-2 md:ml-5">
             <div
               className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-[8px] bg-[#0653EA] p-1 py-4 text-center font-medium"
               onClick={handleReset}

@@ -160,7 +160,7 @@ const Buy = () => {
         </div>
       )}
       {
-        <div className="relative flex h-screen w-screen items-center justify-center rounded bg-[#F6FAFF]">
+        <div className="relative flex h-screen w-screen items-center justify-center rounded bg-white">
           <Sidebar />
 
           <div className="flex h-full w-full flex-col">

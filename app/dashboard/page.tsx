@@ -62,7 +62,7 @@ const Dashboard: FC = () => {
 
         <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden rounded bg-[#F6FAFF]">
           <Sidebar />
-          <div className="flex h-full w-full flex-col">
+          <div className="flex h-full w-full flex-col overflow-y-auto">
             <PageHeader pageTitle={"Dashboard"} />
             <section className="relative h-full w-full md:flex lg:pl-8">
               <div className="items-align mb-24 flex flex-col-reverse justify-center lg:flex-row">
@@ -85,7 +85,7 @@ const Dashboard: FC = () => {
                         />
                       </div>
                     </div>
-                    <div className="mx-auto mb-20 h-60 md:my-0 md:h-0">
+                    <div className="mb-20 h-60 md:mx-auto md:my-0 md:h-0">
                       <ReferralProgram />
                     </div>
                   </div>

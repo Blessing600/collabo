@@ -72,11 +72,9 @@ const MarketplaceService = () => {
   ) => {
     try {
 
-      let uri = `/private/auction-house/search-auctions?page=${page}&limit=${limit}&min_price=${min_price}&max_price=${max_price > 0 ? max_price : 9999999999999}`;
+      let uri = `/private/auction-house/search-auctions?page=${page}&limit=${limit}&min_price=${min_price}&max_price=${max_price > 0 ? max_price : 9999999999999}&search_text=${search_text}`;
       
-      if (search_text && search_text.trim() !== '') {
-        uri += `&search_text=${search_text}`;
-      }
+
   
       const response = await getRequest({ uri });
       return response?.data;

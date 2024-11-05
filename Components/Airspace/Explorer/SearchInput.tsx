@@ -29,7 +29,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
         type="text"
         name="searchLocation"
         id="searchLocation"
-        placeholder="Search Airspaces"
+        placeholder="Search Air Rights"
         className="w-full pr-5 outline-none"
       />
       <div className="h-[17px] w-[17px]">
@@ -46,7 +46,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
                   item.place_name,
                   setAddress,
                   setFlyToAddress,
-                  setShowOptions
+                  setShowOptions,
                 )
               }
               className="w-full p-5 text-left text-light-black border-t-[0.2px] border-light-black"

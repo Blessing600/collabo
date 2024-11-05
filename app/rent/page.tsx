@@ -1,7 +1,6 @@
 "use client";
-import { Fragment, useState, useEffect, SetStateAction } from "react";
+import { Fragment, useState, useEffect, useRef } from "react";
 import mapboxgl, { Map, Marker } from "mapbox-gl";
-import maplibregl from "maplibre-gl";
 import PageHeader from "@/Components/PageHeader";
 import Spinner from "@/Components/Spinner";
 import Backdrop from "@/Components/Backdrop";
@@ -11,20 +10,31 @@ import { useMobile } from "@/hooks/useMobile";
 import Head from "next/head";
 import ZoomControllers from "@/Components/ZoomControllers";
 import ExplorerMobile from "@/Components/Rent/Explorer/ExplorerMobile";
-import RentModal from "@/Components/Rent/RentModal/RentModal";
-import { getAddresses, goToAddress } from "@/utils/apiUtils/apiFunctions";
+import RentDetail from "@/Components/Rent/RentDetail/RentDetail";
+import { goToAddress } from "@/utils/apiUtils/apiFunctions";
 import { Coordinates, PropertyData } from "@/types";
 import Sidebar from "@/Components/Shared/Sidebar";
 import PropertiesService from "../../services/PropertiesService";
+import RentPreview from "@/Components/Rent/RentPreview/RentPreview";
+import dayjs from "dayjs";
+import { handleMouseEvent } from "@/utils/eventHandlerUtils/eventHandlers";
+import RentSearchMobile from "@/Components/Rent/Explorer/RentSearchMobile";
 const Rent = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingAddresses, setLoadingAddresses] = useState<boolean>(false);
-  const [loadingRegAddresses, setLoadingRegAddresses] =useState<boolean>(false);
+  const [loadingRegAddresses, setLoadingRegAddresses] =
+    useState<boolean>(false);
   const [map, setMap] = useState<Map | null>(null);
   const { isMobile } = useMobile();
-  const [registeredAddress, setRegisteredAddress] = useState<PropertyData[]>([]);
-  const [mapMove, setMapMove] = useState();
+  const [registeredAddress, setRegisteredAddress] = useState<PropertyData[]>(
+    [],
+  );
   const [address, setAddress] = useState<string>("");
+  const defaultValueDate = dayjs()
+  .add(1, "h")
+  .set("minute", 30)
+  .startOf("minute");
+  const [date, setDate] = useState(defaultValueDate);
   const [addressData, setAddressData] = useState<
     | { mapbox_id: string; short_code: string; wikidata: string }
     | null
@@ -37,11 +47,14 @@ const Rent = () => {
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
   const [marker, setMarker] = useState<Marker | null | undefined>();
   const [rentData, setRentData] = useState<PropertyData | undefined>();
-  const [showClaimModal, setShowClaimModal] = useState<boolean>(false);
+  const [showRentDetail, setShowRentDetail] = useState<boolean>(false);
+  const [showRentPreview, setShowRentPreview] = useState<boolean>(false);
   const { user } = useAuth();
   const [regAdressShow, setRegAdressShow] = useState<boolean>(false);
   const [showOptions, setShowOptions] = useState<boolean>(false);
+  const [responseData, setResponseData] = useState<PropertyData[]>([]);
   const { findPropertiesByCoordinates } = PropertiesService();
+  const [markers, setMarkers] = useState<mapboxgl.Marker[]>([]);
   useEffect(() => {
     if (map) return;
     const createMap = () => {
@@ -52,13 +65,13 @@ const Rent = () => {
         style: "mapbox://styles/mapbox/streets-v12",
         center: [-104.718243, 40.413869],
         zoom: 5,
-        // attributionControl: false
       });
+  
       newMap.on("render", function () {
-        newMap.resize()
+        newMap.resize();
       });
-
-       newMap.on("load", function () {
+  
+      newMap.on("load", function () {
         newMap.addLayer({
           id: "maine",
           type: "fill",
@@ -66,7 +79,7 @@ const Rent = () => {
             type: "geojson",
             data: {
               type: "Feature",
-              properties:[],
+              properties: [],
               geometry: {
                 type: "Polygon",
                 coordinates: [],
@@ -78,82 +91,94 @@ const Rent = () => {
             "fill-color": "#D20C0C",
           },
         });
-        newMap.zoomOut({duration:4});
-      }); 
+        newMap.zoomOut({ duration: 4 });
+      });
 
       let timeoutId;
 
-        newMap.on("move", async (e) => {
-        setLoadingRegAddresses(true);
+      newMap.on("move", () => {
+        if (timeoutId) clearTimeout(timeoutId);
 
-         clearTimeout(timeoutId);
-         timeoutId = setTimeout(async () => {
-          let crds = e.target.getBounds();
+        timeoutId = setTimeout(async () => {
+          const bounds = newMap.getBounds();
+
+          setLoadingRegAddresses(true);
 
           const responseData = await findPropertiesByCoordinates({
             postData: {
-              minLongitude: crds._sw.lng,
-              minLatitude: crds._sw.lat,
-              maxLongitude: crds._ne.lng,
-              maxLatitude: crds._ne.lat,
-            }
+              minLongitude: bounds._sw.lng,
+              minLatitude: bounds._sw.lat,
+              maxLongitude: bounds._ne.lng,
+              maxLatitude: bounds._ne.lat,
+            },
           });
 
-          let formattedProperties = [];
-          if (responseData) {
-            formattedProperties = responseData.filter((property) => {
-              if (
-                property.longitude >= crds._sw.lng &&
-                property.longitude <= crds._ne.lng &&
-                property.latitude >= crds._sw.lat &&
-                property.latitude <= crds._ne.lat
-              ) {
-                return property;
-              }
-            });
-          }
+          const formattedProperties = responseData?.filter((property) => {
+            return (
+              property.longitude >= bounds._sw.lng &&
+              property.longitude <= bounds._ne.lng &&
+              property.latitude >= bounds._sw.lat &&
+              property.latitude <= bounds._ne.lat
+            );
+          }) || [];
 
+          markers.forEach((marker) => marker.remove());
+          setMarkers([]); 
           setRegisteredAddress(formattedProperties);
           setLoadingRegAddresses(false);
-
-           if (responseData.length > 0) {
-            for (let i = 0; i < responseData.length; i++) {
-              const lngLat = new mapboxgl.LngLat(responseData[i].longitude, responseData[i].latitude);
-
-               const popup = new mapboxgl.Popup({offset: 25}).trackPointer().setHTML(
-                `<strong>${responseData[i].address}</strong>`
-              ); 
-             
-               popup.on('open', () => {
-                const popupElement = popup.getElement();                                
-                if (popupElement) {                                    
-                  popupElement.style.zIndex ='40';
-                  popupElement.addEventListener('click', function() {
-                    setRentData(responseData[i]);;
-                    setShowClaimModal(true);
-                  });                  
-                }
-              });              
-
-               const marker = new mapboxgl.Marker({
-                color: "#3FB1CE",
-              }).setLngLat(lngLat)
-              .setPopup(popup) 
-              .addTo(newMap);               
-               
-                marker.getElement().addEventListener('click', function() {
-                  setRentData(responseData[i]);
-                  setShowClaimModal(true);
-               }); 
-             }
-          } 
-        }, 3000);  
-      }); 
+          setResponseData(formattedProperties);
+        }, 3000); 
+      });
 
       setMap(newMap);
     };
+
     createMap();
+
+    return () => {
+      if (map){
+        (map as Map).remove(); 
+      } 
+        
+    };
   }, []);
+
+  useEffect(() => {
+    if (!responseData.length || !map) return;
+
+    const newMarkers: mapboxgl.Marker[] = [];
+
+    responseData.forEach((data) => {
+      const { longitude, latitude } = data;
+      if (longitude === undefined || latitude === undefined) return;
+
+      const lngLat = new mapboxgl.LngLat(longitude, latitude);
+
+      const marker = new mapboxgl.Marker({
+        color: "#3FB1CE",
+      })
+        .setLngLat(lngLat)
+        .addTo(map);
+
+      newMarkers.push(marker);
+
+      const markerElement = marker.getElement();
+      if (markerElement) {
+        handleMouseEvent(
+          isMobile,
+          markerElement,
+          marker,
+          map,
+          data,
+          setShowRentDetail,
+          setRentData
+        );
+      }
+    });
+
+    setMarkers(newMarkers);
+
+  }, [responseData, isMobile, map, setShowRentDetail, setRentData]);
 
   useEffect(() => {
     if (registeredAddress.length > 0) {
@@ -167,85 +192,78 @@ const Rent = () => {
     if (!showOptions) setShowOptions(true);
     if (!address) return setShowOptions(false);
 
-    let timeoutId: NodeJS.Timeout | null = null;
-    getAddresses(setAddresses, setCoordinates,setLoadingAddresses, timeoutId, address);
-    return () => {
-      if (timeoutId !== null) {
-        clearTimeout(timeoutId);
+    setCoordinates(null);
+    const timeoutId = setTimeout(async () => {
+      try {
+        const mapboxGeocodingUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_KEY}`;
+
+        const response = await fetch(mapboxGeocodingUrl);
+
+        if (!response.ok) throw new Error("Error while getting addresses");
+        const data = await response.json();
+        if (!response.ok) {
+          setLoadingAddresses(false);
+          throw new Error("Error while getting addresses");
+        }
+
+        if (data.features && data.features.length > 0) {
+          setAddresses(data.features);
+          setLoadingAddresses(false);
+        } else {
+          setAddresses([]);
+          setLoadingAddresses(false);
+        }
+      } catch (error) {
+        console.error(error);
+        //SetLoadingAddresses(false);
       }
-    };
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
   }, [address]);
 
   useEffect(() => {
     if (!flyToAddress) return;
-    goToAddress(
-      flyToAddress,
-      setCoordinates,
-      setAddressData,
-      setIsLoading,
-      setMarker,
-      map,
-      marker
-    );
+    goToAddress(flyToAddress, setCoordinates, setAddressData, setIsLoading, setMarker, map, marker);
   }, [flyToAddress, map]);
 
   useEffect(() => {
     if (flyToAddress === address) setShowOptions(false);
   }, [flyToAddress, address]);
 
-   useEffect(()=>{
-    const inintialRentDataString=localStorage.getItem('rentData')
-    const parsedInitialRentData=inintialRentDataString?JSON.parse(inintialRentDataString):null;
-    if(parsedInitialRentData && parsedInitialRentData?.address?.length>2){
-
+  useEffect(() => {
+    const inintialRentDataString = localStorage.getItem("rentData");
+    const parsedInitialRentData = inintialRentDataString ? JSON.parse(inintialRentDataString) : null;
+    if (parsedInitialRentData && parsedInitialRentData?.address?.length > 2) {
       setRentData(parsedInitialRentData);
-      setFlyToAddress(parsedInitialRentData.address)
-      setShowClaimModal(true)
-    }else{
-      console.log('no initial datta')
+      setFlyToAddress(parsedInitialRentData.address);
+      setShowRentDetail(true);
+    } else {
+      console.info("no initial datta");
     }
-  },[]) 
+  }, []);
 
   return (
     <Fragment>
-      <Head>
-        <title>SkyTrade - Marketplace : Rent</title>
-      </Head>
-
-      {isLoading && <Backdrop onClick={()=>{}}/>}
+      {isLoading && <Backdrop />}
       {isLoading && <Spinner />}
       {
-        <div className="relative rounded md:bg-[#F6FAFF] h-screen w-screen flex items-center justify-center  overflow-hidden ">
+        <div className="relative flex h-screen w-screen items-center justify-center overflow-clip rounded  md:bg-[#F6FAFF] ">
           <Sidebar />
 
-          <div className="w-full h-full flex flex-col ">
+          <div className="flex h-full w-full flex-col ">
             <div className="hidden md:block">
               <PageHeader pageTitle={"Marketplace: Rent"} />
             </div>
-            
+
             {isMobile && (
               <ExplorerMobile
-                loadingReg={loadingRegAddresses}
-                loading={loadingAddresses}
-                address={address}
-                setAddress={setAddress}
-                addresses={addresses}
-                showOptions={showOptions}
-                regAdressShow={regAdressShow}
                 registeredAddress={registeredAddress}
-                map={map}
-                marker={marker}
-                setMarker={setMarker}
-                setShowClaimModal={setShowClaimModal}
-                rentData={rentData}
+                setShowRentDetail={setShowRentDetail}
                 setRentData={setRentData}
-                setFlyToAddress={setFlyToAddress}
                 setShowOptions={setShowOptions}
-                setLoadingRegAddresses={setLoadingRegAddresses}
-                setRegisteredAddress={setRegisteredAddress} 
-                setRegAdressShow={setRegAdressShow} 
-                />
-            )} 
+              />
+            )}
             <section
               className={
                 "relative flex w-full h-full justify-start items-start md:mb-0 mb-[79px] "
@@ -255,13 +273,20 @@ const Rent = () => {
                 className={"!absolute !top-0 !left-0 !m-0 !w-screen !h-screen"}
                 id="map"
               />
+              <RentSearchMobile
+                address={address}
+                setAddress={setAddress}
+                addresses={addresses}
+                setFlyToAddress={setFlyToAddress}
+                setShowOptions={setShowOptions}
+                showOptions={showOptions}
+                
+              />
 
-               {!isMobile && (
-                <div className="flex justify-start items-start">
+              {!isMobile && (
+                <div className="flex items-start justify-start">
                   <Explorer
-                    setLoadingRegAddresses={setLoadingRegAddresses}
                     loadingReg={loadingRegAddresses}
-                    setRegisteredAddress={setRegisteredAddress}
                     loading={loadingAddresses}
                     address={address}
                     setAddress={setAddress}
@@ -269,29 +294,37 @@ const Rent = () => {
                     showOptions={showOptions}
                     regAdressShow={regAdressShow}
                     registeredAddress={registeredAddress}
-                    map={map}
-                    marker={marker}
-                    setMarker={setMarker}
-                    setShowClaimModal={setShowClaimModal}
-                    rentData={rentData}
+                    setShowRentDetail={setShowRentDetail}
                     setRentData={setRentData}
                     setFlyToAddress={setFlyToAddress}
                     setShowOptions={setShowOptions}
                   />
                 </div>
-              )} 
-              {showClaimModal && (
-                <RentModal
-                  setShowClaimModal={setShowClaimModal}
+              )}
+              {showRentDetail && (
+                <RentDetail
+                date={date}
+                setDate={setDate}
+                setShowRentPreview={setShowRentPreview}
+                setShowRentDetail={setShowRentDetail}
+                  rentData={rentData}
+                  isLoading={isLoading}
+                />
+              )}
+              {showRentPreview && (
+                <RentPreview
+                date={date}
+                  setShowRentPreview={setShowRentPreview}
+                  setShowRentDetail={setShowRentDetail}
                   rentData={rentData}
                   setIsLoading={setIsLoading}
-                  isLoading={isLoading} 
-                   />
+                  isLoading={isLoading}
+                />
               )}
             </section>
-             <div className="hidden sm:block">
+            <div className="hidden md:block">
               <ZoomControllers map={map} />
-            </div> 
+            </div>
           </div>
         </div>
       }

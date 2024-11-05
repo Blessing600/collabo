@@ -1,13 +1,16 @@
-
 const publicAccessRoutes = [
   {
-    localStorageKey:'airSpaceData',
-    redirectTo:'/airspaces'
+    localStorageKey: "buyData",
+    redirectTo: "/buy",
   },
   {
-    localStorageKey:'rentData',
-    redirectTo:'/rent'
-  }
-]
+    localStorageKey: "airSpaceData",
+    redirectTo: "/airspaces",
+  },
+  {
+    localStorageKey: "rentData",
+    redirectTo: "/rent",
+  },
+];
 
-export default publicAccessRoutes
+export default publicAccessRoutes;

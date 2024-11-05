@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
 export type Coordinates = {
   longitude: number;
@@ -38,25 +38,25 @@ export type layers = {
 };
 
 export interface Document {
-    id: number;
-    filePath: string;
-    userId: number;
-    requestDocumentId: number;
-    createdAt: string;
-    updateAt: string;
+  id: number;
+  filePath: string;
+  userId: number;
+  requestDocumentId: number;
+  createdAt: string;
+  updateAt: string;
 }
 
 export interface RequestDocument {
-    id: number;
-    userId: number;
-    actionType: string;
-    status: string;
-    description: string;
-    referenceId: number;
-    dateCreated: string;
-    dateUpdated: string;
-    document: Document;
-    previewUrl: string;
+  id: number;
+  userId: number;
+  actionType: string;
+  status: string;
+  description: string;
+  referenceId: number;
+  dateCreated: string;
+  dateUpdated: string;
+  document: Document;
+  previewUrl: string[] | [];
 }
 
 export type propertyStatus = {
@@ -65,8 +65,91 @@ export type propertyStatus = {
 };
 
 type metadata = {
-  endTime : Date;
-}
+  endTime: Date;
+};
+
+type BetaUserI = {
+  id: String;
+  userId: number;
+  user: any;
+  isBetaUser: boolean;
+  createdAt: string;
+  updateAt: string;
+};
+
+export type AirspaceItem = {
+  type: string;
+  receivedBid: {
+    id: number;
+    price: number;
+    bidder: string;
+    transaction: string;
+    auctionId: number;
+  };
+  auction: {
+    id: number;
+    assetId: string;
+    seller: string;
+    pdaAddress: string;
+    initialPrice: number;
+    endDate: string;
+    currentPrice: number;
+    currentBidder: string;
+    paymentToken: string;
+    transactions: string[];
+    isCancelled: boolean;
+    isExecuted: boolean;
+    AuctionBid: {
+      id: number;
+      price: number;
+      bidder: string;
+      transaction: string;
+      auctionId: number;
+    }[];
+    layer: {
+      id: number;
+      createdAt: string;
+      updateAt: string;
+      tokenId: string;
+      propertyId: number;
+      isCurrentlyInAuction: boolean;
+      property: {
+        id: number;
+        createdAt: string;
+        updateAt: string;
+        title: string;
+        transitFee: string;
+        address: string;
+        timezone: string;
+        hasLandingDeck: boolean;
+        hasChargingStation: boolean;
+        hasStorageHub: boolean;
+        isFixedTransitFee: boolean;
+        isRentableAirspace: boolean;
+        ownerId: number;
+        noFlyZone: boolean;
+        isBoostedArea: boolean;
+        latitude: number;
+        longitude: number;
+        propertyStatusId: number;
+        isActive: boolean;
+        isPropertyRewardClaimed: boolean;
+        isSoftDelete: boolean;
+      };
+    };
+  };
+};
+
+export type requestDocument = {
+  actionType: string;
+  dateCreated: string;
+  dateUpdated: string;
+  description: string;
+  id: number;
+  referenceId: number;
+  status: string;
+  userId: number;
+};
 
 export type PropertyData = {
   id?: number | string;
@@ -74,6 +157,8 @@ export type PropertyData = {
   ownerId?: number;
   propertyStatusId?: number;
   propertyId?: number;
+  property?: any;
+  auction?: AirspaceItem;
   hasChargingStation: boolean;
   hasLandingDeck: boolean;
   hasStorageHub: boolean;
@@ -96,11 +181,14 @@ export type PropertyData = {
   updateAt?: Date;
   layers?: layers[];
   propertyStatus?: propertyStatus;
-  status?:number;
-  type?:string;
-  hasPlanningPermission?:string | null;
+  status?: number;
+  type?: string;
+  hasPlanningPermission?: string | null;
+  hasZoningPermission?: boolean;
   requestDocument?: RequestDocument[];
-  metadata?:metadata;
+  metadata?: metadata;
+  images?:string[];
+  orderPhotoforGeneratedMap?:boolean;
 };
 
 export type User = {
@@ -108,6 +196,7 @@ export type User = {
   blockchainAddress: string;
   categoryId: number;
   createdAt: string;
+  betaUser?: BetaUserI;
   email: string;
   id: number;
   isActive: boolean;
@@ -129,7 +218,7 @@ export type User = {
   } | null;
   usedReferralCodeId: number | null;
   isUserRewardClaimed: boolean;
-  requestDocument: RequestDocument[]
+  requestDocument: RequestDocument[];
 };
 
 interface Reward {
@@ -164,7 +253,6 @@ export interface UserRewards {
   stats: RewardStats;
   rewards: Reward[];
 }
-
 
 export type Bounds = {
   _ne: {
@@ -266,28 +354,153 @@ export interface KeyI {
 }
 
 export type defaultData = {
-  address:string,
-  title:string,
-  rent: boolean,
-  sell: boolean,
-  hasPlanningPermission: boolean|null|string,
-  hasChargingStation: boolean,
-  hasLandingDeck: boolean,
-  hasStorageHub: boolean,
-  sellingPrice: string,
-  timezone: string,
-  transitFee:string,
-  isFixedTransitFee: boolean,
-  noFlyZone: boolean,
+  address: string;
+  title: string;
+  rent: boolean | null;
+  sell: boolean;
+  hasChargingStation: boolean;
+  hasLandingDeck: boolean;
+  hasStorageHub: boolean;
+  sellingPrice: string;
+  timezone: string;
+  transitFee: string;
+  isFixedTransitFee: boolean;
+  noFlyZone: boolean;
   weekDayRanges: [
-    { fromTime: number, toTime: 21, isAvailable: boolean, weekDayId: 0 },
-    { fromTime:number, toTime: number, isAvailable: boolean, weekDayId:number },
-    { fromTime:number, toTime: number, isAvailable: boolean, weekDayId:number },
-    { fromTime:number, toTime: number, isAvailable: boolean, weekDayId:number },
-    { fromTime:number, toTime: number, isAvailable: boolean, weekDayId:number },
-    { fromTime:number, toTime: number, isAvailable: boolean, weekDayId:number },
-    { fromTime:number, toTime: number, isAvailable: boolean, weekDayId:number },
-  ],
+    { fromTime: number; toTime: 21; isAvailable: boolean; weekDayId: 0 },
+    {
+      fromTime: number;
+      toTime: number;
+      isAvailable: boolean;
+      weekDayId: number;
+    },
+    {
+      fromTime: number;
+      toTime: number;
+      isAvailable: boolean;
+      weekDayId: number;
+    },
+    {
+      fromTime: number;
+      toTime: number;
+      isAvailable: boolean;
+      weekDayId: number;
+    },
+    {
+      fromTime: number;
+      toTime: number;
+      isAvailable: boolean;
+      weekDayId: number;
+    },
+    {
+      fromTime: number;
+      toTime: number;
+      isAvailable: boolean;
+      weekDayId: number;
+    },
+    {
+      fromTime: number;
+      toTime: number;
+      isAvailable: boolean;
+      weekDayId: number;
+    },
+  ];
+  hasZoningPermission: boolean | null;
+  orderPhotoforGeneratedMap: boolean;
+  assessorParcelNumber: string;
+  images: string[];
+};
+
+export interface AuctionPropertyI {
+  id?: string;
+  propertyId?: number;
+  address?: string;
+  latitude?: number;
+  property?: PropertyData;
+  longitude?: number;
+  transitFee: number;
+  owner?: string;
+  imageUrl: string;
+  area?: number[][];
+  name?: string;
+  highest_bid?: string;
+  time_left?: string;
+  price?: number;
+  currentUserBid?: number;
+  propertyStatusId?: number;
+}
+
+export type AuctionListingI = {
+  assetId: string;
+  seller: string;
+  initialPrice: number;
+  secsDuration: number;
+};
+
+export type AuctionSubmitI = {
+  signatures: string[];
+  assetId: string | undefined;
+};
+
+export enum ToastEnum {
+  ERROR,
+  SUCCESS,
+}
+
+export type AuctionDataI = {
+  id: number;
+  assetId: string;
+  seller: string;
+  pdaAddress: string;
+  initialPrice: number;
+  propertyStatusId?: number;
+  endDate: string;
+  currentPrice: number;
+  currentBidder: string;
+  paymentToken: string;
+  transactions: string[];
+  isCancelled: boolean;
+  isExecuted: boolean;
+  AuctionBid: {
+    id: number;
+    price: number;
+    bidder: string;
+    transaction: string;
+    auctionId: number;
+  }[];
+  layer: {
+    id: number;
+    createdAt: string;
+    updateAt: string;
+    tokenId: string;
+    propertyId: number;
+    isCurrentlyInAuction: boolean;
+    property: {
+      id: number;
+      createdAt: string;
+      updateAt: string;
+      title: string;
+      transitFee: string;
+      address: string;
+      timezone: string;
+      hasLandingDeck: boolean;
+      hasChargingStation: boolean;
+      hasStorageHub: boolean;
+      isFixedTransitFee: boolean;
+      isRentableAirspace: boolean;
+      ownerId: number;
+      noFlyZone: boolean;
+      isBoostedArea: boolean;
+      latitude: number;
+      longitude: number;
+      propertyStatusId: number;
+      isActive: boolean;
+      isPropertyRewardClaimed: boolean;
+      vertexes?: [];
+      images?:string[];
+      orderPhotoforGeneratedMap?:boolean;
+    };
+  };
 };
 
 export enum StatusTypes {
@@ -302,9 +515,11 @@ export enum StatusTypes {
   DocumentError = 8,
 }
 
+
+
 export enum RequestDocumentStatus {
-  NOT_SUBMITTED = 'NOT_SUBMITTED',
-  SUBMITTED = 'SUBMITTED',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED',
+  NOT_SUBMITTED = "NOT_SUBMITTED",
+  SUBMITTED = "SUBMITTED",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
 }

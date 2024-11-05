@@ -1,3 +1,4 @@
+import React from "react";
 import "./global.css";
 import { Provider } from "react-redux";
 import store from "../store/store";
@@ -15,17 +16,17 @@ import "react-datepicker/dist/react-datepicker.css";
 import "react-toastify/dist/ReactToastify.css";
 
 import type { Metadata } from "next";
-import { Head } from "next/document";
-import NextTopLoader from 'nextjs-toploader';
-import { TourProvider } from "@reactour/tour";
-import React from "react";
+import NextTopLoader from "nextjs-toploader";
 import { OnboardingTour } from "../Components/Tours";
 import NotificationBanner from "@/Components/NotificationBanner";
-
+import TawkMessengerComponent from "@/Components/TawkMessenger";
 
 export const metadata: Metadata = {
-  title: "Sky Trade",
-  description: "Airspace Hub",
+  title: {
+    template: "%s - SkyTrade",
+    default: "SkyTrade",
+  },
+  description: "The Ultimate Air Right Hub",
 };
 
 export default function RootLayout({
@@ -40,7 +41,12 @@ export default function RootLayout({
           href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css"
           rel="stylesheet"
         />
-        <link rel="icon" href="/favicon-1.ico" sizes="any" type="image/x-icon" />
+        <link
+          rel="icon"
+          href="/favicon-1.ico"
+          sizes="any"
+          type="image/x-icon"
+        />
         <link
           href="https://unpkg.com/maplibre-gl@3.1.0/dist/maplibre-gl.css"
           rel="stylesheet"
@@ -64,59 +70,29 @@ export default function RootLayout({
             `}
           </Script>
           <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-                var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-                (function(){
-                var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-                s1.async=true;
-                s1.src='https://embed.tawk.to/655381bacec6a912820fc8a3/1hf735gcu';
-                s1.charset='UTF-8';
-                s1.setAttribute('crossorigin','*');
-                s0.parentNode.insertBefore(s1,s0);
-                })();
-              Tawk_API.customStyle = {
-              visibility : {
-                mobile : {
-                  position : 'br',
-                  xOffset : 10,
-                  yOffset : 80
-                },
-                bubble : {
-                  rotate : '0deg',
-                  xOffset : -20,
-                  yOffset : 0
-                }
-              }
-            };
-              `,
-            }}
-          />
           {/* <Provider store={store}> */}
           <Web3authProvider>
             <SidebarProvider>
               <ToastContainer style={{ width: "500px" }} />
               <div id="backdrop-root"></div>
               <div id="modal-root"></div>
-              
-            <NextTopLoader
-              color="#2299DD"
-              initialPosition={0.08}
-              crawlSpeed={200}
-              height={3}
-              crawl={true}
-              showSpinner={false}
-              easing="ease"
-              speed={300}
-              shadow="0 0 10px #2299DD,0 0 5px #2299DD"
+
+              <NextTopLoader
+                color="#2299DD"
+                initialPosition={0.08}
+                crawlSpeed={200}
+                height={3}
+                crawl={true}
+                showSpinner={false}
+                easing="ease"
+                speed={300}
+                shadow="0 0 10px #2299DD,0 0 5px #2299DD"
               />
               <NotificationBanner />
-              <OnboardingTour>
-                {children}
-              </OnboardingTour>
+              <OnboardingTour>{children}</OnboardingTour>
             </SidebarProvider>
             <CookieConsent />
+            <TawkMessengerComponent />
           </Web3authProvider>
           {/* </Provider> */}
         </>

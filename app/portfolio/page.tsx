@@ -1,15 +1,8 @@
 "use client";
 
-import {
-  Fragment,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { Fragment, SetStateAction, useContext, useEffect, useState } from "react";
 
 import PageHeader from "@/Components/PageHeader";
-import Backdrop from "@/Components/Backdrop";
 import Head from "next/head";
 import { PortfolioList, PortfolioListMobile } from "@/Components/Portfolio";
 
@@ -21,11 +14,11 @@ import { Web3authContext } from "@/providers/web3authProvider";
 
 const Portfolio = () => {
   const [selectedAirspace, setSelectedAirspace] = useState(null);
-  const {getPropertyById} = PropertiesService()
-  const { getSingleAsset } = AirspaceRentalService()
-  const searchParams = useSearchParams()
-  const [uploadedDoc, setUploadedDoc] =useState<any[]>([])
-  
+  const { getPropertyById } = PropertiesService();
+  const { getSingleAsset } = AirspaceRentalService();
+  const searchParams = useSearchParams();
+  const [uploadedDoc, setUploadedDoc] = useState<any[]>([]);
+
   const id = searchParams?.get("id");
 
   const { web3auth } = useContext(Web3authContext);
@@ -51,7 +44,6 @@ const Portfolio = () => {
   const selectAirspace = (x) => {
     setSelectedAirspace(x);
   };
-  
 
   return (
     <Fragment>
@@ -59,33 +51,30 @@ const Portfolio = () => {
         <title>SkyTrade - Portfolio</title>
       </Head>
 
-      {selectedAirspace !== null && <Backdrop onClick={onCloseModal} />}
-
-      <div className="relative rounded bg-[#F6FAFF] h-screen w-screen flex items-center justify-center">
+      <div className="relative flex h-screen w-screen items-center justify-center rounded bg-[#F6FAFF]">
         <Sidebar />
-        <div className="w-full h-full flex flex-col">
-
+        <div className="flex h-full w-full flex-col">
           <PageHeader pageTitle={"Portfolio"} />
-          <section className="relative w-full h-full md:flex flex-wrap gap-6 py-[43px] px-[45px] hidden overflow-y-auto">
-
+          <section className="relative hidden h-full w-full flex-wrap gap-6 overflow-y-auto px-[45px] py-[43px] md:flex">
             <PortfolioList
-              title={"My Airspaces"}
-              selectAirspace={selectAirspace} 
-              selectedAirspace={selectedAirspace} 
+              title={"My Air Rights"}
+              selectAirspace={selectAirspace}
+              selectedAirspace={selectedAirspace}
               onCloseModal={onCloseModal}
-              uploadedDoc={uploadedDoc} 
+              uploadedDoc={uploadedDoc}
               setUploadedDoc={setUploadedDoc}
-              setSelectedAirspace={setSelectedAirspace}            
+              setSelectedAirspace={setSelectedAirspace}
             />
           </section>
-          <section className="relative w-full h-full flex flex-wrap gap-6 py-[10px] md:hidden overflow-y-auto ">
+          <section className="relative flex h-full w-full flex-wrap gap-6 overflow-y-auto py-[10px] md:hidden">
             <PortfolioListMobile
               onCloseModal={onCloseModal}
               selectAirspace={selectAirspace}
               uploadedDoc={uploadedDoc}
               setUploadedDoc={setUploadedDoc}
               selectedAirspace={selectedAirspace}
-              setSelectedAirspace={setSelectedAirspace}/>
+              setSelectedAirspace={setSelectedAirspace}
+            />
           </section>
         </div>
       </div>

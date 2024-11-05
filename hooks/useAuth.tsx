@@ -12,10 +12,11 @@ const useAuth = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [web3authStatus, setWeb3authStatus] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const { web3auth, setProvider } = useContext(Web3authContext);
 
   const { userData } = useAppSelector((state: any) => {
-    return { userData: state?.userReducer?.user as User | null};
+    return { userData: state?.userReducer?.user as User | null };
   }, shallowEqual);
 
   useEffect(() => {
@@ -37,14 +38,25 @@ const useAuth = () => {
     initStatus();
   }, [web3auth?.status]);
 
+  useEffect(() => {
+    const initStatus = async () => {
+      if (web3authStatus && userData) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    };
+    initStatus();
+  }, [web3authStatus, userData?.blockchainAddress]);
+
   const signIn = ({ user }: { user: User }) => {
     if (user) dispatch(setUser(user));
     localStorage.setItem("user", JSON.stringify(user));
   };
 
   const signOut = async () => {
+    await web3auth?.logout();
     setProvider(null);
-
     sessionStorage.clear();
     localStorage.clear();
     router.push("/auth");
@@ -55,15 +67,17 @@ const useAuth = () => {
     localStorage.setItem("user", JSON.stringify(updatedUser));
   };
 
-  const setAndClearOtherPublicRouteData = (localStorageKey: string, data: any) => {
+  const setAndClearOtherPublicRouteData = (
+    localStorageKey: string,
+    data: any,
+  ) => {
     for (const route of publicAccessRoutes) {
-      if(route.localStorageKey !== localStorageKey) {
-        localStorage.removeItem(route.localStorageKey)
+      if (route.localStorageKey !== localStorageKey) {
+        localStorage.removeItem(route.localStorageKey);
       }
     }
     localStorage.setItem(localStorageKey, JSON.stringify(data));
   };
-
 
   const customRedirect = () => {
     const routes = publicAccessRoutes || [];
@@ -79,24 +93,25 @@ const useAuth = () => {
   };
 
   const redirectIfUnauthenticated = () => {
-    if(web3auth && web3auth.status === "connected") return false;
-    else {
-      router.push("/auth");
-      toast.success("Congratulation!!! To ensure your your actions are saved and recognized, register now with SkyTrade.")  
-      return true;
-    }
-  }
+    if (web3auth && web3auth.status === "connected") return false;
 
+    router.push("/auth");
+    toast.success(
+      "Congratulation!!! To ensure your your actions are saved and recognized, register now with SkyTrade.",
+    );
+    return true;
+  };
 
   return {
     signIn,
     signOut,
     updateProfile,
+    isLoggedIn,
     user: userData,
     web3authStatus,
     customRedirect,
     redirectIfUnauthenticated,
-    setAndClearOtherPublicRouteData
+    setAndClearOtherPublicRouteData,
   };
 };
 

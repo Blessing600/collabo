@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import {
   DroneIcon,
   LocationPointIcon,
@@ -20,19 +20,19 @@ const MyAirspaces: FC<MyAirspacesProps> = ({
   totalAirspace,
   isLoading,
 }) => {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <Item
       title={
         <>
-          My Airspaces{" "}
+          My Air Rights{" "}
           {!isLoading && (
             <span className="text-[15px] font-normal">({totalAirspace})</span>
           )}
         </>
       }
       icon={<DroneIcon />}
-      linkText={`${!isLoading ? "View all airspaces" : ""}`}
+      linkText={`${!isLoading ? "View all air rights" : ""}`}
       href={"/portfolio"}
     >
       {isLoading ? (

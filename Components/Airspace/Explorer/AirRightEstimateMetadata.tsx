@@ -1,3 +1,4 @@
+import React from "react";
 interface IProps {
   title: string;
   value: string;
@@ -6,12 +7,12 @@ interface IProps {
 
 const labelClassNames = "text-[#0E2B56] font-poppins";
 
-function AirRightEstimateMetadata(props: IProps) {
+const AirRightEstimateMetadata = (props: IProps) => {
   return (
     <div className="flex items-center rounded-xl bg-[#DEE9F8] px-5 py-1">
-      <div className="w-5 h-5">{props.icon}</div>
+      <div className="h-5 w-5">{props.icon}</div>
 
-      <div className="flex flex-col ml-6">
+      <div className="ml-6 flex flex-col">
         <span className={`${labelClassNames} text-[13px]`}>{props.title}</span>
 
         <span className={`${labelClassNames} font-bold`}>
@@ -24,6 +25,6 @@ function AirRightEstimateMetadata(props: IProps) {
       </div>
     </div>
   );
-}
+};
 
 export default AirRightEstimateMetadata;

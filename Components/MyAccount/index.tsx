@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { createPortal } from "react-dom";
 
@@ -13,14 +13,13 @@ import { toast } from "react-toastify";
 import AccountVerification from "../../Components/MyAccount/AccountVerification";
 import PersonalInformation from "../../Components/MyAccount/PersonalInformation";
 import { User } from "../../types";
-import React from "react";
 import Sidebar from "../Shared/Sidebar";
 import { checkPhoneIsValid } from "../Auth/PhoneValidation";
 
 const Account = () => {
   const { user, updateProfile, signIn, web3authStatus } = useAuth();
   const { updateUser, getUser } = UserService();
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(true);
   const [newUserDetail, setNewUserDetail] = useState<User | null>(null);
@@ -28,20 +27,19 @@ const Account = () => {
 
   useEffect(() => {
     (async () => {
-      let data = user;
-      const responseData = await getUser();
-      if (responseData) {
-        data = responseData;
-        signIn({ user: responseData });
+      let userData = user;
+      const { error, data } = await getUser();
+      if (!error) {
+        userData = data;
+        signIn({ user: data });
       }
-      if (data) {
-        setNewUserDetail({ ...data });
+      if (userData) {
+        setNewUserDetail({ ...userData });
       }
-    })()
+    })();
   }, [user?.KYCStatusId, user?.name, user?.phoneNumber, web3authStatus]);
 
   const updateDataHandler = async (e) => {
-
     e.preventDefault();
     if (!user || !newUserDetail) return toast.error("User not logged in");
 
@@ -81,7 +79,7 @@ const Account = () => {
         toast.error("Something went wrong");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
@@ -91,6 +89,7 @@ const Account = () => {
   const onVerifyMyAccount = async () => {
     setIsLoading(true);
     // @ts-ignore
+    // eslint-disable-next-line no-undef
     const client = await new Persona.Client({
       templateId: process.env.NEXT_PUBLIC_TEMPLATE_ID,
       referenceId: user?.id.toString(),
@@ -101,35 +100,27 @@ const Account = () => {
       },
       onComplete: async () => {
         const responseData = await getUser();
-        if (responseData) {
-          setNewUserDetail({ ...responseData })
-          signIn({ user: responseData });
+        if (!responseData.error) {
+          setNewUserDetail({ ...responseData.data });
+          signIn({ user: responseData.data });
         }
-      }
+      },
     });
   };
 
-
   return (
     <Fragment>
-      {isLoading &&
-        createPortal(
-          <Backdrop onClick={() => { }} />,
-          document.getElementById("backdrop-root")!
-        )}
-      {isLoading &&
-        createPortal(<Spinner />, document.getElementById("backdrop-root")!)}
+      {isLoading && createPortal(<Backdrop />, document.getElementById("backdrop-root")!)}
+      {isLoading && createPortal(<Spinner />, document.getElementById("backdrop-root")!)}
 
-      <div className="relative rounded bg-[#F6FAFF] h-screen w-screen flex items-center justify-center overflow-hidden">
+      <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden rounded bg-[#F6FAFF]">
         <Sidebar />
-        <div className="w-full h-full flex flex-col">
+        <div className="flex h-full w-full flex-col">
           <PageHeader pageTitle={"Account"} />
-          <section className="relative w-full h-full flex flex-col py-[29px] px-[21px] md:pl-[54.82px] md:pr-[47px] gap-[29px] md:mb-0 mb-[78.22px] overflow-y-auto">
+          <section className="relative flex h-full w-full flex-col gap-[29px] overflow-y-auto px-[21px] pb-32 pt-12 md:mb-0 md:pl-[54.82px] md:pr-[47px]">
             <div className="flex flex-col gap-[15px]">
-              <h2 className="text-[#222222] font-normal text-xl">My Profile</h2>
-              <p className="text-[#87878D] font-normal text-base">
-                Update your account settings
-              </p>
+              <h2 className="text-xl font-normal text-[#222222]">My Profile</h2>
+              <p className="text-base font-normal text-[#87878D]">Update your account settings</p>
             </div>
             {newUserDetail && (
               <>

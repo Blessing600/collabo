@@ -75,13 +75,7 @@ export const GiftIcon = ({ isActive }) => {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path
-        d="M23 17.2915V31.8748"
-        stroke="#4285F4"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <path d="M23 17.2915V31.8748" stroke="#4285F4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       <path
         d="M15.4166 15.4583C15.4166 14.1697 16.4613 13.125 17.75 13.125H18.9677C21.1947 13.125 23 14.9303 23 17.1573V17.1573C23 17.2315 22.9398 17.2917 22.8656 17.2917H17.25C16.2374 17.2917 15.4166 16.4709 15.4166 15.4583V15.4583Z"
         stroke="#4285F4"
@@ -949,13 +943,7 @@ export const CircledCloseIcon = () => {
 
 export const QuestionMarkIcon = () => {
   return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="12" cy="12" r="9" stroke="#0000FF" strokeWidth="2" />
       <circle cx="12" cy="18" r="0.5" fill="#0000FF" stroke="#0000FF" />
       <path
@@ -1062,34 +1050,10 @@ export const DropDownIcon = () => {
 };
 export const DeleteIcon = () => {
   return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M10 11V17"
-        stroke="#E04F64"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14 11V17"
-        stroke="#E04F64"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M4 7H20"
-        stroke="#E04F64"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 11V17" stroke="#E04F64" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M14 11V17" stroke="#E04F64" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M4 7H20" stroke="#E04F64" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       <path
         d="M6 7H12H18V18C18 19.6569 16.6569 21 15 21H9C7.34315 21 6 19.6569 6 18V7Z"
         stroke="#E04F64"

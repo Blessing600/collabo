@@ -46,7 +46,7 @@ const AuctionSearchMobile: React.FC<AuctionSearchMobileProps> = ({ searchTerm, s
 
   if (isMobile) {
     return (
-      <div className="fixed left-0 top-0 z-20 w-full bg-white p-4 text-center shadow-md">
+      <div className="z-20 w-full bg-white p-4 text-center shadow-md">
         <div className="flex items-center gap-4">
           <div onClick={() => setIsFilterOpen(!isFilterOpen)}>
             <GiSettingsKnobs />

@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import React, { useContext, useState } from "react";
 import { LocationPointIcon, CloseIcon } from "@/Components/Icons";
 import Image from "next/image";
@@ -58,6 +57,12 @@ const BidPreview: React.FC<BidPreviewProps> = ({
     }
 
     if (parseFloat(userUSDWalletBalance.amount) === 0) {
+      return toast.info(
+        "You don't have sufficient funds to perform this operation, please top up your wallet with some USD to continue"
+      );
+    }
+
+    if (currentUserBid && parseFloat(userUSDWalletBalance.amount) < currentUserBid) {
       return toast.info(
         "You don't have sufficient funds to perform this operation, please top up your wallet with some USD to continue"
       );

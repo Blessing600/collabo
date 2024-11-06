@@ -27,18 +27,6 @@ const PortfolioListMobile = ({
   onCloseModal,
   setSelectedAirspace,
 }: PropsI) => {
-  const { user } = useAuth();
-  const router = useRouter();
-  const [showPopup, setShowPopup] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (user && user.KYCStatusId === StatusTypes.NotAttempted) {
-      setShowPopup(true);
-    }
-  }, [user?.KYCStatusId]);
-
-  const modalRef = useRef(false);
-
   const {
     handleTabSwitch,
     handlePrevPage,
@@ -50,6 +38,37 @@ const PortfolioListMobile = ({
     setAirspaceList,
     refetchAirspaceRef,
   } = usePortfolioList();
+
+  const { user } = useAuth();
+  const router = useRouter();
+  const modalRef = useRef(false);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [uniqueAirspaceList, setUniqueAirspaceList] = useState<PropertyData[]>();
+
+  function getUniqueItemsByAssetId(items: PropertyData[]) {
+    const uniqueItemsMap = new Map<string, PropertyData>();
+
+    items.forEach((item) => {
+      //@ts-ignore
+      uniqueItemsMap.set(item?.auction?.assetId, item);
+    });
+
+    return Array.from(uniqueItemsMap.values());
+  }
+
+  useEffect(() => {
+    if (user && user.KYCStatusId === StatusTypes.NotAttempted) {
+      setShowPopup(true);
+    }
+  }, [user?.KYCStatusId]);
+
+  useEffect(() => {
+    if (airspaceList.length > 0) {
+      const uniqueList = getUniqueItemsByAssetId(airspaceList);
+      setUniqueAirspaceList(uniqueList);
+    }
+  }, [airspaceList]);
+
   const customItemRender = (current, type, originalElement) => {
     if (airspaceList.length <= 10) return;
     if (type === "next") {
@@ -100,7 +119,7 @@ const PortfolioListMobile = ({
 
         <div
           className={`${activeTab === PortfolioTabEnum.BIDS ? "border-b-4 border-[#6CA1F7] text-[#232F4A]" : "text-[#5D7285]"} cursor-pointer whitespace-nowrap px-6 py-2.5 text-base font-bold transition delay-75 ease-linear`}
-          onClick={() => handleTabSwitch(PortfolioTabEnum.PENDING_RENTAL)}
+          onClick={() => handleTabSwitch(PortfolioTabEnum.BIDS)}
         >
           Bids And Offers
         </div>
@@ -156,8 +175,8 @@ const PortfolioListMobile = ({
                 </div>
               </div>
             )}
-            {airspaceList && airspaceList[0] && airspaceList[0].address ?
-              airspaceList.map((airspace, index) => (
+            {airspaceList && airspaceList[0] ?
+              (activeTab === PortfolioTabEnum.BIDS ? uniqueAirspaceList : airspaceList)?.map((airspace, index) => (
                 <PortfolioItemMobile
                   activeTab={activeTab}
                   airspace={airspace}

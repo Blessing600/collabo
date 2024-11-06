@@ -34,7 +34,7 @@ const FilterTab: React.FC<FilterTabProps> = ({ title, range, setRange }) => {
           <div>
             <input
               type="text"
-              value={range[0] > 0 ? range[0].toString() : ""}
+              value={range[0]}
               onChange={(e) => handleInputChange(setRange, 0, +e.target.value)}
               className="max-w-[94px] rounded-[8px] border border-light-grey py-2 text-center focus:outline-none"
             />

@@ -717,7 +717,7 @@ const Airspaces: React.FC = () => {
 
       <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden rounded bg-[#F6FAFF]">
         <Sidebar />
-        <div className="flex h-full w-full flex-col overflow-scroll md:overflow-hidden">
+        <div className="flex h-full w-full flex-col overflow-scroll">
           {!showMobileMap && <PageHeader pageTitle={"Air Rights"} />}
           {((showMobileMap && isMobile) || (isOpen && currentStep === 1 && isMobile)) && (
             <ExplorerMobile
@@ -812,7 +812,7 @@ const Airspaces: React.FC = () => {
             className={`relative flex h-full w-full items-start justify-start md:mb-0 ${showMobileMap ? "" : "mb-[79px]"}`}
           >
             <div
-              className={`!absolute !left-0 !top-0 !m-0 !h-[100%] !w-[100%]`}
+              className={`!absolute !left-0 !top-0 !m-0 !h-[850px] !w-[100%]`}
               id="map"
               style={{
                 opacity:

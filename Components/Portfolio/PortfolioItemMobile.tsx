@@ -14,6 +14,8 @@ import { checkDocumentStatus } from "@/utils/propertyUtils/fileUpload";
 import { PortfolioTabEnum } from "@/hooks/usePortfolioList";
 import Modal from "./Modal";
 import CancelClaimModal from "./CancelClaimModal";
+import { calculateTimeLeft, shortenAddress } from "@/utils";
+import { useRouter } from "next/navigation";
 
 interface PropsI {
   activeTab: PortfolioTabEnum;
@@ -54,10 +56,14 @@ const PortfolioItemMobile = ({
   createdAt,
   airspace,
 }: PropsI) => {
+  const router = useRouter();
+
   const [showPopup, setShowPopup] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [underReview, setUnderReview] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
+  const documentStatus = checkDocumentStatus(airspace?.requestDocument);
+  const [showCancelModal, setShowCancelModal] = useState(false);
 
   const handleButtonClick = () => {
     setShowPopup(true);
@@ -78,8 +84,16 @@ const PortfolioItemMobile = ({
     modalRef.current = false;
     setShowModal(true);
   };
-  const documentStatus = checkDocumentStatus(airspace?.requestDocument);
-  const [showCancelModal, setShowCancelModal] = useState(false);
+
+  const getHighestBid = () => {
+    const highestBid = airspace?.auction?.currentPrice;
+
+    return `$${highestBid}`;
+  };
+
+  const handleOutBidCheck = () => {
+    return airspace.placedBid.price < airspace.auction.currentPrice;
+  };
 
   return (
     <div>
@@ -102,7 +116,38 @@ const PortfolioItemMobile = ({
       )}
 
       {airspace.type === "receivedBid" || airspace.type === "placedBid" ?
-        <></>
+        <div
+          onClick={handleOnClaim}
+          className="flex cursor-pointer items-center justify-between gap-[10px] rounded-lg bg-white p-[11px]"
+          style={{ boxShadow: "0px 12px 34px -10px #3A4DE926" }}
+        >
+          <div className="flex flex-1 items-center gap-[10px]">
+            <div className="h-6 w-6">
+              <LocationPointIcon />
+            </div>
+            <p className="flex-1 text-[14px] font-normal text-[#222222]">
+              {type === "receivedBid" && "My Airspace -"}{" "}
+              {shortenAddress(airspace?.auction?.layer?.property?.address, 35)}
+            </p>
+          </div>
+          <div className="flex items-center gap-6 text-sm">
+            {type === "placedBid" && airspace?.auction?.hasEnded && handleOutBidCheck() ?
+              <button
+                className="rounded bg-blue-500 p-1 px-2 text-white"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  router.push(`/buy?auctionId=${airspace?.auction?.id}&bid=true`);
+                }}
+              >
+                Place Higher Bid
+              </button>
+            : <button className="rounded bg-blue-500 p-1 px-2 text-white">Auction History</button>}
+
+            <div className="h-[14px] w-[7px]">
+              <ChevronRightIcon />
+            </div>
+          </div>
+        </div>
       : <div>
           <div className="w-screen cursor-pointer items-center justify-between gap-[10px] rounded-lg bg-white px-4 py-6 shadow-md">
             <div className="items-center justify-between gap-[10px] rounded-lg">

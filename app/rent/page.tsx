@@ -22,27 +22,17 @@ import RentSearchMobile from "@/Components/Rent/Explorer/RentSearchMobile";
 const Rent = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingAddresses, setLoadingAddresses] = useState<boolean>(false);
-  const [loadingRegAddresses, setLoadingRegAddresses] =
-    useState<boolean>(false);
+  const [loadingRegAddresses, setLoadingRegAddresses] = useState<boolean>(false);
   const [map, setMap] = useState<Map | null>(null);
   const { isMobile } = useMobile();
-  const [registeredAddress, setRegisteredAddress] = useState<PropertyData[]>(
-    [],
-  );
+  const [registeredAddress, setRegisteredAddress] = useState<PropertyData[]>([]);
   const [address, setAddress] = useState<string>("");
-  const defaultValueDate = dayjs()
-  .add(1, "h")
-  .set("minute", 30)
-  .startOf("minute");
+  const defaultValueDate = dayjs().add(1, "h").set("minute", 30).startOf("minute");
   const [date, setDate] = useState(defaultValueDate);
   const [addressData, setAddressData] = useState<
-    | { mapbox_id: string; short_code: string; wikidata: string }
-    | null
-    | undefined
+    { mapbox_id: string; short_code: string; wikidata: string } | null | undefined
   >();
-  const [addresses, setAddresses] = useState<
-    { id: string; place_name: string }[]
-  >([]);
+  const [addresses, setAddresses] = useState<{ id: string; place_name: string }[]>([]);
   const [flyToAddress, setFlyToAddress] = useState<string>("");
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
   const [marker, setMarker] = useState<Marker | null | undefined>();
@@ -66,11 +56,11 @@ const Rent = () => {
         center: [-104.718243, 40.413869],
         zoom: 5,
       });
-  
+
       newMap.on("render", function () {
         newMap.resize();
       });
-  
+
       newMap.on("load", function () {
         newMap.addLayer({
           id: "maine",
@@ -113,21 +103,22 @@ const Rent = () => {
             },
           });
 
-          const formattedProperties = responseData?.filter((property) => {
-            return (
-              property.longitude >= bounds._sw.lng &&
-              property.longitude <= bounds._ne.lng &&
-              property.latitude >= bounds._sw.lat &&
-              property.latitude <= bounds._ne.lat
-            );
-          }) || [];
+          const formattedProperties =
+            responseData?.filter((property) => {
+              return (
+                property.longitude >= bounds._sw.lng &&
+                property.longitude <= bounds._ne.lng &&
+                property.latitude >= bounds._sw.lat &&
+                property.latitude <= bounds._ne.lat
+              );
+            }) || [];
 
           markers.forEach((marker) => marker.remove());
-          setMarkers([]); 
+          setMarkers([]);
           setRegisteredAddress(formattedProperties);
           setLoadingRegAddresses(false);
           setResponseData(formattedProperties);
-        }, 3000); 
+        }, 3000);
       });
 
       setMap(newMap);
@@ -136,10 +127,9 @@ const Rent = () => {
     createMap();
 
     return () => {
-      if (map){
-        (map as Map).remove(); 
-      } 
-        
+      if (map) {
+        (map as Map).remove();
+      }
     };
   }, []);
 
@@ -164,20 +154,11 @@ const Rent = () => {
 
       const markerElement = marker.getElement();
       if (markerElement) {
-        handleMouseEvent(
-          isMobile,
-          markerElement,
-          marker,
-          map,
-          data,
-          setShowRentDetail,
-          setRentData
-        );
+        handleMouseEvent(isMobile, markerElement, marker, map, data, setShowRentDetail, setRentData);
       }
     });
 
     setMarkers(newMarkers);
-
   }, [responseData, isMobile, map, setShowRentDetail, setRentData]);
 
   useEffect(() => {
@@ -248,10 +229,10 @@ const Rent = () => {
       {isLoading && <Backdrop />}
       {isLoading && <Spinner />}
       {
-        <div className="relative flex h-screen w-screen items-center justify-center overflow-clip rounded  md:bg-[#F6FAFF] ">
+        <div className="relative flex h-screen w-screen items-center justify-center rounded md:bg-[#F6FAFF]">
           <Sidebar />
 
-          <div className="flex h-full w-full flex-col ">
+          <div className="flex h-full w-full flex-col">
             <div className="hidden md:block">
               <PageHeader pageTitle={"Marketplace: Rent"} />
             </div>
@@ -265,14 +246,9 @@ const Rent = () => {
               />
             )}
             <section
-              className={
-                "relative flex w-full h-full justify-start items-start md:mb-0 mb-[79px] "
-              }
+              className={"relative mb-[79px] flex h-full w-full items-start justify-start overflow-scroll md:mb-0"}
             >
-              <div
-                className={"!absolute !top-0 !left-0 !m-0 !w-screen !h-screen"}
-                id="map"
-              />
+              <div className={"!absolute !left-0 !top-0 !m-0 !h-[850px] !w-screen"} id="map" />
               <RentSearchMobile
                 address={address}
                 setAddress={setAddress}
@@ -280,7 +256,6 @@ const Rent = () => {
                 setFlyToAddress={setFlyToAddress}
                 setShowOptions={setShowOptions}
                 showOptions={showOptions}
-                
               />
 
               {!isMobile && (
@@ -303,17 +278,17 @@ const Rent = () => {
               )}
               {showRentDetail && (
                 <RentDetail
-                date={date}
-                setDate={setDate}
-                setShowRentPreview={setShowRentPreview}
-                setShowRentDetail={setShowRentDetail}
+                  date={date}
+                  setDate={setDate}
+                  setShowRentPreview={setShowRentPreview}
+                  setShowRentDetail={setShowRentDetail}
                   rentData={rentData}
                   isLoading={isLoading}
                 />
               )}
               {showRentPreview && (
                 <RentPreview
-                date={date}
+                  date={date}
                   setShowRentPreview={setShowRentPreview}
                   setShowRentDetail={setShowRentDetail}
                   rentData={rentData}

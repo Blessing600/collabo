@@ -62,10 +62,10 @@ const Dashboard: FC = () => {
 
         <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden rounded bg-[#F6FAFF]">
           <Sidebar />
-          <div className="flex h-full w-full flex-col overflow-scroll md:overflow-hidden">
+          <div className="flex h-full w-full flex-col overflow-y-auto">
             <PageHeader pageTitle={"Dashboard"} />
             <section className="relative h-full w-full md:flex lg:pl-8">
-              <div className="items-align flex flex-col-reverse justify-center lg:flex-row">
+              <div className="items-align mb-24 flex flex-col-reverse justify-center lg:flex-row">
                 <div className="md:my-[-53px] md:flex md:h-screen md:basis-[58%] md:flex-col md:gap-5 md:overflow-y-auto md:px-8 md:py-[53px] lg:px-0">
                   <h2 className="hidden pt-10 text-xl font-medium text-black md:flex">Welcome to SkyTrade!</h2>
                   <p className="hidden text-base font-normal text-[#87878D] md:flex">
@@ -85,7 +85,7 @@ const Dashboard: FC = () => {
                         />
                       </div>
                     </div>
-                    <div className="mx-auto mb-20 h-60 md:my-0 md:h-0">
+                    <div className="mb-20 h-60 md:mx-auto md:my-0 md:h-0">
                       <ReferralProgram />
                     </div>
                   </div>

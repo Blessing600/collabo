@@ -198,7 +198,7 @@ const Sidebar = () => {
           )}
         </>
       : <aside
-          className="no-scrollbar relative flex h-screen flex-col items-center gap-[14.64px] overflow-y-scroll border-e-2 bg-white px-[21.95px] py-[29.27px]"
+          className="no-scrollbar relative flex h-full flex-col items-center gap-[14.64px] overflow-y-scroll border-e-2 bg-white px-[21.95px] py-[29.27px]"
           style={{
             width: !isCollapsed ? "297.29px" : "98.2833px",
             height: "100vh",

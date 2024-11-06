@@ -30,21 +30,23 @@ const CookieConsent: React.FC = () => {
           of cookies on your device. You can manage your preferences or withdraw
           your consent at any time by accessing our Cookie Settings.
         </p>
-        <Button
-          onClick={acceptCookie}
-          label="Accept"
-          className="py-2 px-8 rounded "
-          color="bg-blue-400"
-          textColor="text-white"
-        />
+        <div className="w-[40%]">
+         <div className="w-full  md:flex items-center md:gap-6">
+         <Button
+            onClick={acceptCookie}
+            label="Accept"
+            textColor="text-white"
+          />
 
-        <Button
-          onClick={() => setShowConsent(false)}
-          label="Decline"
-          className="py-2 px-8 rounded"
-          color="bg-red-400"
-          textColor="text-white"
-        />
+          <Button
+            onClick={() => setShowConsent(false)}
+            label="Decline"
+            color="bg-white"
+            textColor="text-[#0653EA]"
+            className="border border-[#0653EA] mt-4 md:mt-0"
+          />
+         </div>
+        </div>
       </div>
     </div>
   );

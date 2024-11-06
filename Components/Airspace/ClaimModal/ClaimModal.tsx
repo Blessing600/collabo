@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState, useRef } from "react";
+import React, { Fragment, useEffect, useState, useRef , useContext} from "react";
 import LoadingButton from "../../../Components/LoadingButton/LoadingButton";
 import useAuth from "../../../hooks/useAuth";
 import { ArrowLeftIcon, CloseIconBlack, InfoIcon, LocationPointIcon, DropDownIcon } from "../../../Components/Icons";
@@ -22,6 +22,8 @@ import AirspaceOptions from "./AirspaceOptions/AirspaceOptions";
 import S3UploadServices from "@/services/s3upload";
 import ZoningPermission from "./PlanningPermission/ZoningPermission";
 import Button from "@/Components/Shared/Button";
+import { Web3authContext } from "@/providers/web3authProvider";
+
 
 interface PropsI {
   onCloseModal: () => void;
@@ -80,7 +82,10 @@ export const ClaimModal = ({
   const { generatePublicFileUploadUrls } = S3UploadServices();
   const [stepsCounter, setStepCounter] = useState(1);
 
-  const [steps, setSteps] = useState<ClaimAirspaceSteps>(ClaimAirspaceSteps.UNSELECTED);
+  const [steps, setSteps] = useState<ClaimAirspaceSteps>(
+    ClaimAirspaceSteps.UNSELECTED,
+  );
+  const { web3auth } = useContext(Web3authContext);
   const isDisabled = data.hasZoningPermission === null;
 
   const handleClaim = async () => {
@@ -88,7 +93,7 @@ export const ClaimModal = ({
 
     try {
       const imageList: string[] = [];
-      if (selectedFile.length > 0) {
+      if (selectedFile.length > 0 && (web3auth && web3auth.status === "connected")) {
         const contentTypes = selectedFile.map((file) => file.type);
 
         const params = await generatePublicFileUploadUrls({

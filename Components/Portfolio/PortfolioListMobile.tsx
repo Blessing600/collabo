@@ -30,6 +30,7 @@ const PortfolioListMobile = ({
   const { user } = useAuth();
   const router = useRouter();
   const [showPopup, setShowPopup] = useState<boolean>(false);
+  const pageSize = 10
 
   useEffect(() => {
     if (user && user.KYCStatusId === StatusTypes.NotAttempted) {
@@ -49,14 +50,16 @@ const PortfolioListMobile = ({
     activeTab,
     setAirspaceList,
     refetchAirspaceRef,
+    totalAirspace
   } = usePortfolioList();
+
   const customItemRender = (current, type, originalElement) => {
-    if (airspaceList.length <= 10) return;
-    if (type === "next") {
+
+    if (type === "next" && (current * pageSize) < totalAirspace) {
       return (
-        <button className="flex items-center gap-4 text-gray-700">
-          next
-          <HistoryArrowIcon />
+        <button className="flex items-center gap-4 text-gray-700 text-[16px] mt-1" disabled={current === pageNumber}>
+          Next
+          <HistoryArrowIcon style={{ opacity: current === pageNumber ? 0.5 : 1 }} />
         </button>
       );
     }
@@ -64,7 +67,7 @@ const PortfolioListMobile = ({
       return (
         <button
           className={`${
-            current === originalElement.props.children ? "bg-[#5D7285] text-white" : "text-gray-700"
+            current === pageNumber ? "bg-[#5D7285] text-white" : "text-gray-700"
           } rounded-full px-4 py-1`}
         >
           {originalElement.props.children}
@@ -177,9 +180,14 @@ const PortfolioListMobile = ({
               ))
             : <AirspacesEmptyMessage />}
           </div>
-          <div className="flex w-full flex-col text-gray-600">
-            <Pagination align="center" defaultCurrent={1} itemRender={customItemRender} />
-          </div>
+          <div className="flex w-full flex-col text-gray-600 items-center">
+              <Pagination align="center" current={pageNumber}
+                pageSize={pageSize}
+                total={totalAirspace}
+                onChange={(page) => {
+                  handleNextPage(page)
+                }} itemRender={customItemRender} />
+                    </div>
         </div>
       }
     </div>

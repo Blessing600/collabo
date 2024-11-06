@@ -3,13 +3,8 @@ import useAuth from "@/hooks/useAuth";
 import { PropertyData } from "@/types";
 import { Web3authContext } from "@/providers/web3authProvider";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-import {
-  setAirspaceList,
-  setAssetId,
-  setIsTriggerRefresh,
-  setUserUSDWalletBalance,
-} from "@/redux/slices/userSlice";
-import { LAMPORTS_PER_SOL, VersionedTransaction } from "@solana/web3.js";
+import { setAirspaceList, setAssetId, setIsTriggerRefresh, setUserUSDWalletBalance } from "@/redux/slices/userSlice";
+import { VersionedTransaction } from "@solana/web3.js";
 
 import { executeTransaction } from "@/utils/rent/transactionExecutor";
 import MarketplaceService from "@/services/MarketplaceService";
@@ -33,50 +28,31 @@ export enum TransactionStatusEnum {
 }
 
 const useAuction = () => {
-  const {
-    airspaceList,
-    isTriggerRefresh,
-    userSolBalance,
-    userUSDWalletBalance,
-    endDate,
-    minSalePrice,
-    assetId,
-  } = useAppSelector((state) => {
-    const {
-      airspaceList,
-      isTriggerRefresh,
-      userSolBalance,
-      userUSDWalletBalance,
-      endDate,
-      minSalePrice,
-      assetId,
-    } = state.userReducer;
-    return {
-      airspaceList,
-      isTriggerRefresh,
-      userSolBalance,
-      userUSDWalletBalance,
-      endDate,
-      minSalePrice,
-      assetId,
-    };
-  });
+  const { airspaceList, isTriggerRefresh, userSolBalance, userUSDWalletBalance, endDate, minSalePrice, assetId } =
+    useAppSelector((state) => {
+      const { airspaceList, isTriggerRefresh, userSolBalance, userUSDWalletBalance, endDate, minSalePrice, assetId } =
+        state.userReducer;
+      return {
+        airspaceList,
+        isTriggerRefresh,
+        userSolBalance,
+        userUSDWalletBalance,
+        endDate,
+        minSalePrice,
+        assetId,
+      };
+    });
   const { getAuctions } = MarketplaceService();
 
   const dispatch = useAppDispatch();
   const [selectedItems, setSelectedItems] = useState<SelectedPropertyI[]>([]);
   const [airspaceAddress, setAirspaceAddress] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [transactionStatus, setTransactionStatus] = useState(
-    TransactionStatusEnum.PENDING,
-  );
-  const [responseStatus, setResponseStatus] = useState<"SUCCESS" | "FAIL">(
-    "FAIL",
-  );
+  const [transactionStatus, setTransactionStatus] = useState(TransactionStatusEnum.PENDING);
+  const [responseStatus, setResponseStatus] = useState<"SUCCESS" | "FAIL">("FAIL");
   const [txHash, setTxHash] = useState<string | null | undefined>(null);
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
-  const { createAuction, submitAuction, getAuctionableAirspaces } =
-    MarketplaceService();
+  const { createAuction, submitAuction, getAuctionableAirspaces } = MarketplaceService();
   const { provider } = useContext(Web3authContext);
   const [pageNumber, setPageNumber] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -91,10 +67,6 @@ const useAuction = () => {
         if (web3auth && web3auth?.status !== "connected") return;
 
         setLoading(true);
-        const assetId =
-          airspaceList.length > 0
-            ? airspaceList[airspaceList.length - 1]?.id
-            : "";
 
         const airspaces = await getAuctionableAirspaces(pageNumber);
 
@@ -115,38 +87,34 @@ const useAuction = () => {
     if (user && user.blockchainAddress) {
       const interval = setInterval(async () => {
         try {
-          const response = await axios.post(
-            String(process.env.NEXT_PUBLIC_SOLANA_API),
-            {
-              jsonrpc: "2.0",
-              id: 1,
-              method: "getTokenAccountsByOwner",
-              params: [
-                user.blockchainAddress,
-                {
-                  mint: process.env.NEXT_PUBLIC_MINT_ADDRESS,
-                },
-                {
-                  encoding: "jsonParsed",
-                },
-              ],
-            },
-          );
+          const response = await axios.post(String(process.env.NEXT_PUBLIC_SOLANA_API), {
+            jsonrpc: "2.0",
+            id: 1,
+            method: "getTokenAccountsByOwner",
+            params: [
+              user.blockchainAddress,
+              {
+                mint: process.env.NEXT_PUBLIC_MINT_ADDRESS,
+              },
+              {
+                encoding: "jsonParsed",
+              },
+            ],
+          });
           const { value } = response.data.result;
           if (value.length < 1) {
             dispatch(
               setUserUSDWalletBalance({
                 amount: "0",
                 isLoading: false,
-              }),
+              })
             );
           } else {
             dispatch(
               setUserUSDWalletBalance({
-                amount:
-                  value[0].account.data.parsed.info.tokenAmount.uiAmountString,
+                amount: value[0].account.data.parsed.info.tokenAmount.uiAmountString,
                 isLoading: false,
-              }),
+              })
             );
           }
         } catch (error) {
@@ -155,7 +123,7 @@ const useAuction = () => {
             setUserUSDWalletBalance({
               amount: userUSDWalletBalance.amount,
               isLoading: false,
-            }),
+            })
           );
         }
       }, 5000);
@@ -181,15 +149,11 @@ const useAuction = () => {
     setAirspaceAddress(item?.address);
 
     setSelectedItems((prevSelectedItems) => {
-      const isItemSelected = prevSelectedItems.find(
-        (selectedItem) => selectedItem.propertyId === item.id,
-      );
+      const isItemSelected = prevSelectedItems.find((selectedItem) => selectedItem.propertyId === item.id);
 
       let updatedItems;
       if (isItemSelected) {
-        updatedItems = prevSelectedItems.filter(
-          (selectedItem) => selectedItem.propertyId !== item.id,
-        );
+        updatedItems = prevSelectedItems.filter((selectedItem) => selectedItem.propertyId !== item.id);
 
         setSelectedItemId(null);
       } else {
@@ -211,16 +175,10 @@ const useAuction = () => {
     });
   };
 
-  const handleUpdateItem = (
-    id: number,
-    minSalePrice: number,
-    endDate: Date | null,
-  ) => {
+  const handleUpdateItem = (id: number, minSalePrice: number, endDate: Date | null) => {
     setSelectedItems((prevSelectedItems) => {
       const updatedItems = prevSelectedItems.map((selectedItem) =>
-        selectedItem.propertyId === id
-          ? { ...selectedItem, minSalePrice, endDate }
-          : selectedItem,
+        selectedItem.propertyId === id ? { ...selectedItem, minSalePrice, endDate } : selectedItem
       );
 
       return updatedItems;
@@ -232,15 +190,9 @@ const useAuction = () => {
     console.log({ userSolBalance });
     console.log({ userUSDWalletBalance });
 
-    // If (userSolBalance === 0) {
-    //   Return toast.info(
-    //     " You don't have sufficient funds to perform this operation, please top up your wallet with some funds to continue"
-    //   );
-    // }
-
     if (parseFloat(userUSDWalletBalance.amount) === 0) {
       return toast.info(
-        "You don't have sufficient funds to perform this operation, please top up your wallet with some USD to continue",
+        "You don't have sufficient funds to perform this operation, please top up your wallet with some USD to continue"
       );
     }
 
@@ -275,9 +227,7 @@ const useAuction = () => {
       const response = await createAuction({ postData });
 
       if (response && response.tx[0]) {
-        const transaction1 = VersionedTransaction.deserialize(
-          new Uint8Array(Buffer.from(response.tx[0], "base64")),
-        );
+        const transaction1 = VersionedTransaction.deserialize(new Uint8Array(Buffer.from(response.tx[0], "base64")));
 
         const tx1 = await executeTransaction(transaction1, provider);
 

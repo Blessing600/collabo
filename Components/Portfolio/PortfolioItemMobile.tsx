@@ -131,13 +131,6 @@ const PortfolioItemMobile = ({
             </p>
           </div>
           <div className="flex items-center gap-6 text-sm">
-            {/* Show red badge with countdown for 7 days after auction ends */}
-            {/* {type === "placedBid" && airspace?.auction?.hasEnded && (
-            <div className="flex items-center gap-2 rounded bg-red-500 px-2 py-1 text-white">
-              <RxLapTimer className="h-4 w-4" /> {badgeCountdown}
-            </div>
-          )} */}
-
             {type === "placedBid" && airspace?.auction?.hasEnded && handleOutBidCheck() ?
               <button
                 className="rounded bg-blue-500 p-1 px-2 text-white"

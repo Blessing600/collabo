@@ -314,17 +314,6 @@ export const ClaimModal = ({
               >
                 {steps === ClaimAirspaceSteps.UNSELECTED ? "Cancel" : "Back"}
               </div>
-              {/* 
-              <LoadingButton
-                onClick={handleNextButton}
-                isLoading={true}
-                color="white"
-                className="Claim-airspacebtn2-step flex w-[75%] cursor-pointer justify-center rounded-[5px] bg-[#0653EA] px-[22px] py-[10px] text-white md:w-[25%]"
-              >
-                <div className="flex w-full items-center justify-center">
-                  {isClaimAirspace ? "Claim Air Right" : "Next"}
-                </div>
-              </LoadingButton> */}
               <div className="Claim-airspacebtn2-step flex w-[75%] cursor-pointer justify-center whitespace-nowrap rounded-[5px] bg-[#0653EA] px-[22px] text-white md:w-[25%]">
                 <Button
                   onClick={handleNextButton}

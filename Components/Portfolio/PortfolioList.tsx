@@ -80,9 +80,7 @@ const PortfolioList = ({
           disabled={current === pageNumber}
         >
           Next
-          <HistoryArrowIcon
-            style={{ opacity: current === pageNumber ? 0.5 : 1 }}
-          />
+          <HistoryArrowIcon />
         </button>
       );
     }

@@ -59,7 +59,7 @@ const PortfolioListMobile = ({
       return (
         <button className="flex items-center gap-4 text-gray-700 text-[16px] mt-1" disabled={current === pageNumber}>
           Next
-          <HistoryArrowIcon style={{ opacity: current === pageNumber ? 0.5 : 1 }} />
+          <HistoryArrowIcon/>
         </button>
       );
     }

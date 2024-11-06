@@ -1,5 +1,6 @@
 import { LocationPointIcon } from "../Icons";
 import LoadingButton from "../LoadingButton/LoadingButton";
+import Button from "../Shared/Button";
 
 export const SelectedAirspace = ({
   onClaim,
@@ -21,14 +22,11 @@ export const SelectedAirspace = ({
             <div className="w-[90%] text-[14px]">{placeName}</div>
           </div>
         </div>
-        <LoadingButton
+        <Button
           onClick={onClaim}
-          isLoading={false}
-          color={""}
-          className="max-w-[400px] mt-2 w-[301px] rounded-lg bg-[#0653EA] py-4 text-center text-white cursor-pointer"
-        >
-          Claim Air Rights
-        </LoadingButton>
+          label="Claim Air Rights"
+          className="mt-2"
+        />
       </div>
     </div>
   );

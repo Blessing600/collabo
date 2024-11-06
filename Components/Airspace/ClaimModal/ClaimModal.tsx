@@ -1,7 +1,13 @@
 import React, { Fragment, useEffect, useState, useRef } from "react";
 import LoadingButton from "../../../Components/LoadingButton/LoadingButton";
 import useAuth from "../../../hooks/useAuth";
-import { ArrowLeftIcon, CloseIconBlack, InfoIcon, LocationPointIcon, DropDownIcon } from "../../../Components/Icons";
+import {
+  ArrowLeftIcon,
+  CloseIconBlack,
+  InfoIcon,
+  LocationPointIcon,
+  DropDownIcon,
+} from "../../../Components/Icons";
 import Link from "next/link";
 import VariableFeeRentalRangesSelect from "./RentalDetails/VariableFeeRentalRangesSelect";
 import TimeZoneSelect from "./RentalDetails/TimeZoneSelect";
@@ -21,6 +27,7 @@ import PlanningPermission from "./PlanningPermission/PlanningPermission";
 import AirspaceOptions from "./AirspaceOptions/AirspaceOptions";
 import S3UploadServices from "@/services/s3upload";
 import ZoningPermission from "./PlanningPermission/ZoningPermission";
+import Button from "@/Components/Shared/Button";
 
 interface PropsI {
   onCloseModal: () => void;
@@ -57,7 +64,8 @@ export const ClaimModal = ({
     if (endOfDivRef.current && currentStep === 3) {
       const { scrollHeight, clientHeight } = endOfDivRef.current;
       const maxScrollTop = scrollHeight - clientHeight;
-      (endOfDivRef.current as any).scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
+      (endOfDivRef.current as any).scrollTop =
+        maxScrollTop > 0 ? maxScrollTop : 0;
     }
   }, [currentStep]);
 
@@ -79,12 +87,13 @@ export const ClaimModal = ({
   const { generatePublicFileUploadUrls } = S3UploadServices();
   const [stepsCounter, setStepCounter] = useState(1);
 
-  const [steps, setSteps] = useState<ClaimAirspaceSteps>(ClaimAirspaceSteps.UNSELECTED);
+  const [steps, setSteps] = useState<ClaimAirspaceSteps>(
+    ClaimAirspaceSteps.UNSELECTED,
+  );
   const isDisabled = data.hasZoningPermission === null;
 
   const handleClaim = async () => {
-    try{
-
+    try {
       const imageList: string[] = [];
       if (selectedFile.length > 0) {
         const contentTypes = selectedFile.map((file) => file.type);
@@ -96,7 +105,10 @@ export const ClaimModal = ({
 
         if (params) {
           const uploadPromises = params.map(async (param, index) => {
-            const imageRes = await uploadImage(param?.uploadUrl, selectedFile[index]);
+            const imageRes = await uploadImage(
+              param?.uploadUrl,
+              selectedFile[index],
+            );
 
             if (!imageRes || imageRes?.data?.status !== "SUCCESS") {
               throw new Error("Failed to upload file");
@@ -143,51 +155,53 @@ export const ClaimModal = ({
     }
   };
 
-const handleNextButton = async () => {
-  if (steps === ClaimAirspaceSteps.UNSELECTED) {
-    const byteSize = getByteSize(data?.title);
-    if(byteSize >= 32){
-      toast.error('Name of air right exceeds the character limit. Please use a shorter name!');
-      return;
-    }
-    setStepCounter(stepsCounter + 1);
-    setSteps(ClaimAirspaceSteps.ZONING_PERMISSION);
-    setCurrentMode("Air Rights Settings");  
-  } else if (steps === ClaimAirspaceSteps.ZONING_PERMISSION) {
-    setStepCounter(stepsCounter + 1);
-    if (data.rent) {
-      setSteps(ClaimAirspaceSteps.RENT);
-      setCurrentMode("Air Rights Renting Settings"); 
-    } else {
-      setSteps(ClaimAirspaceSteps.UPLOAD_IMAGE);
-      setCurrentMode("Air Rights Photos");
-    }
-  } else if (steps === ClaimAirspaceSteps.UPLOAD_IMAGE) {
-    try{
-      if (selectedFile.length > 5) {
+  const handleNextButton = async () => {
+    if (steps === ClaimAirspaceSteps.UNSELECTED) {
+      const byteSize = getByteSize(data?.title);
+      if (byteSize >= 32) {
         toast.error(
-          "You can only upload up to 5 files. Please adjust your selection and try again!",
+          "Name of air right exceeds the character limit. Please use a shorter name!",
         );
         return;
       }
-      setIsClaimLoading(true)
-      await handleClaim();
-      setIsClaimLoading(false)
-    }finally{
-      setIsClaimLoading(false);
+      setStepCounter(stepsCounter + 1);
+      setSteps(ClaimAirspaceSteps.ZONING_PERMISSION);
+      setCurrentMode("Air Rights Settings");
+    } else if (steps === ClaimAirspaceSteps.ZONING_PERMISSION) {
+      setStepCounter(stepsCounter + 1);
+      if (data.rent) {
+        setSteps(ClaimAirspaceSteps.RENT);
+        setCurrentMode("Air Rights Renting Settings");
+      } else {
+        setSteps(ClaimAirspaceSteps.UPLOAD_IMAGE);
+        setCurrentMode("Air Rights Photos");
+      }
+    } else if (steps === ClaimAirspaceSteps.UPLOAD_IMAGE) {
+      try {
+        if (selectedFile.length > 5) {
+          toast.error(
+            "You can only upload up to 5 files. Please adjust your selection and try again!",
+          );
+          return;
+        }
+        setIsClaimLoading(true);
+        await handleClaim();
+        setIsClaimLoading(false);
+      } finally {
+        setIsClaimLoading(false);
+      }
+    } else if (steps === ClaimAirspaceSteps.RENT) {
+      setStepCounter(stepsCounter + 1);
+      setSteps(ClaimAirspaceSteps.UPLOAD_IMAGE);
+      setCurrentMode("Air Rights Photos");
     }
-  } else if (steps === ClaimAirspaceSteps.RENT) {
-    setStepCounter(stepsCounter + 1);
-    setSteps(ClaimAirspaceSteps.UPLOAD_IMAGE);
-    setCurrentMode("Air Rights Photos");
-  }
-};
+  };
 
-const getByteSize = (str) => new Blob([str]).size;
-const handleChangeAirRightName = (e) =>{
-  const value = e.target.value;
-    setData((prev) => ({ ...prev, title: value }))
-}
+  const getByteSize = (str) => new Blob([str]).size;
+  const handleChangeAirRightName = (e) => {
+    const { value } = e.target;
+    setData((prev) => ({ ...prev, title: value }));
+  };
   const isClaimAirspace = steps === ClaimAirspaceSteps.UPLOAD_IMAGE;
   return (
     <div>
@@ -200,7 +214,9 @@ const handleChangeAirRightName = (e) =>{
             </div>
 
             <div className="flex w-[95%] items-center justify-center gap-2">
-              <h2 className="text-center text-xl font-medium text-[#222222]">{currentMode}</h2>
+              <h2 className="text-center text-xl font-medium text-[#222222]">
+                {currentMode}
+              </h2>
             </div>
 
             <div
@@ -213,7 +229,10 @@ const handleChangeAirRightName = (e) =>{
         </div>
         <div className="mt-3 overflow-y-scroll md:mt-0">
           {isMobile && (
-            <div onClick={onCloseModal} className="flex flex-col items-center justify-center">
+            <div
+              onClick={onCloseModal}
+              className="flex flex-col items-center justify-center"
+            >
               <div className="flex flex-col items-center">
                 <div className="mb-2 h-2.5 w-16 rounded-full bg-[#D9D9D9]"></div>
                 <h1 className="text-lg font-semibold">Claim Air Rights</h1>
@@ -230,7 +249,7 @@ const handleChangeAirRightName = (e) =>{
                   <div className="flex h-6 w-6 items-center justify-center">
                     <LocationPointIcon />
                   </div>
-                  {dontShowAddressOnInput ?
+                  {dontShowAddressOnInput ? (
                     <input
                       value={data?.address}
                       onChange={(e) => {
@@ -244,7 +263,8 @@ const handleChangeAirRightName = (e) =>{
                       autoComplete="off"
                       placeholder="Enter address"
                     />
-                  : <input
+                  ) : (
+                    <input
                       value={data?.address}
                       className="flex-1 text-[14px] text-[#222222] outline-none"
                       style={{ border: "none" }}
@@ -254,7 +274,7 @@ const handleChangeAirRightName = (e) =>{
                       autoComplete="off"
                       placeholder="Enter address"
                     />
-                  }
+                  )}
                 </div>
                 <div className="mt-3 flex flex-col gap-[5px] md:mt-4">
                   <label htmlFor="name">
@@ -263,9 +283,7 @@ const handleChangeAirRightName = (e) =>{
 
                   <input
                     value={data?.title}
-                    onChange={
-                      handleChangeAirRightName
-                    }
+                    onChange={handleChangeAirRightName}
                     className="py-[16px] px-[22px] rounded-lg text-[14px] outline-none text-[#222222] mt-0.5 md:mt-1"
                     style={{ border: "1px solid #87878D" }}
                     type="text"
@@ -298,9 +316,13 @@ const handleChangeAirRightName = (e) =>{
               </div>
             )}
 
-            {steps === ClaimAirspaceSteps.RENT && <RentalDetails data={data} setData={setData} />}
+            {steps === ClaimAirspaceSteps.RENT && (
+              <RentalDetails data={data} setData={setData} />
+            )}
 
-            {steps === ClaimAirspaceSteps.ZONING_PERMISSION && <ZoningPermission setData={setData} data={data} />}
+            {steps === ClaimAirspaceSteps.ZONING_PERMISSION && (
+              <ZoningPermission setData={setData} data={data} />
+            )}
 
             {steps === ClaimAirspaceSteps.UPLOAD_IMAGE && (
               <AirspacePhotoUpload
@@ -311,25 +333,23 @@ const handleChangeAirRightName = (e) =>{
               />
             )}
 
-            <div className="my-8 flex items-center gap-[20px] text-[14px] md:justify-between">
-              <div
+            <div className="my-8 flex items-center md:gap-[22rem] gap-6 text-[14px] md:justify-between">
+              <Button
                 onClick={handleCancelButton}
-                className="cursor-pointer rounded-[5px] px-[22px] py-[10px] text-[#0653EA]"
-                style={{ border: "1px solid #0653EA" }}
-              >
-                {steps === ClaimAirspaceSteps.UNSELECTED ? "Cancel" : "Back"}
-              </div>
+                label={
+                  steps === ClaimAirspaceSteps.UNSELECTED ? "Cancel" : "Back"
+                }
+                className="border border-[#0653EA] text-[0653EA]"
+                color="bg-[#FFFFFF]"
+                textColor="text-[#0653EA]"
 
-              <LoadingButton
+              />
+              <Button
                 onClick={handleNextButton}
                 isLoading={isClaimLoading}
-                color="white"
-                className="Claim-airspacebtn2-step flex w-[75%] cursor-pointer justify-center rounded-[5px] bg-[#0653EA] px-[22px] py-[10px] text-white md:w-[25%]"
-              >
-                <div className="flex w-full items-center justify-center">
-                  {isClaimAirspace ? "Claim Air right" : "Next"}
-                </div>
-              </LoadingButton>
+                label={isClaimAirspace ? "Claim Air right" : "Next"}
+                className="Claim-airspacebtn2-step"
+              />
             </div>
           </div>
         </div>

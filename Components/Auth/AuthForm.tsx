@@ -11,9 +11,9 @@ import useAuth from "@/hooks/useAuth";
 import EmailInput from "./EmailInput";
 import { Web3authContext } from "@/providers/web3authProvider";
 import { WALLET_ADAPTERS } from "@web3auth/base";
-import LoadingButton from "../LoadingButton/LoadingButton";
 import Sidebar from "../Shared/Sidebar";
 import { useMobile } from "@/hooks/useMobile";
+import Button from "../Shared/Button";
 
 interface AuthFormProps {
   isLogin: boolean;
@@ -136,15 +136,12 @@ const AuthForm: FC<AuthFormProps> = ({
             Send me newsletter to keep me updated
           </label>
         )}
-        <LoadingButton
-          color={""}
-          type="button"
+        <Button
+          label="Get started"
           onClick={() => loginUser(true)}
-          isLoading={isLoading}
-          className="w-full flex justify-center rounded-md bg-dark-blue px-24 py-4 text-[15px] text-white transition-all duration-500 ease-in-out hover:bg-blue-600"
-        >
-          Get started
-        </LoadingButton>
+          className="transition-all duration-500 ease-in-out"
+        />
+
         <div className="relative flex w-full items-center gap-[15px] text-center align-middle text-[#00000033]">
           <div
             style={{ width: "100%", height: "1px", background: "#00000033" }}
@@ -154,32 +151,29 @@ const AuthForm: FC<AuthFormProps> = ({
             style={{ width: "100%", height: "1px", background: "#00000033" }}
           />
         </div>
-        <LoadingButton
-          color={""}
-          type="button"
+        <Button
           onClick={() => loginUser(false)}
-          isLoading={isLoading}
-          className="w-full flex justify-center"
-        >
-          <div className="flex w-full items-center justify-between rounded-lg py-4 pl-[18px] pr-[42px] transition-all duration-500 ease-in-out hover:bg-bleach-blue border border-[#595959]">
+          className=" border border-[#595959]  justify-start"
+          label="Connect with Google"
+          icon={
             <Image
               src="/images/google-logo.png"
               alt="Google's logo"
               width={24}
               height={24}
             />
-            <p className="mx-auto text-[#595959] text-[15px]">Connect with Google</p>
-          </div>
-        </LoadingButton>
-        <LoadingButton
-          color={""}
-          type="button"
+          }
+          color="bg-white"
+          textColor="text-[#595959]"
+        />
+        <Button
           onClick={() => loginUser(false)}
-          isLoading={isLoading}
-          className="flex w-full items-center justify-center rounded-lg py-4 pl-[18px] text-[#595959] transition-all duration-500 ease-in-out hover:bg-bleach-blue border border-[#595959] text-[15px]"
-        >
-          More Options
-        </LoadingButton>
+          className=" border border-[#595959]  text-[#595959]"
+          label="More Options"
+          color="bg-white"
+          textColor="text-[#595959]"
+        />
+
         <p className="text-center text-sm text-[#87878D]">
           By creating an account I agree with{" "}
           <Link

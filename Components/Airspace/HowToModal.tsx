@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { CloseIcon, EarthIcon } from "../Icons";
+import Button from "../Shared/Button";
 
 interface PropsI {
   goBack: () => void;
@@ -31,7 +32,7 @@ const stepsData = [
 ];
 
 const Step = ({ number, title, description }) => (
-  <p className="text-[15px] w-full text-left">
+  <p className="text-[15px] w-full text-center">
     <span className="font-bold">
       {number}. {title}
     </span>
@@ -59,16 +60,14 @@ const HowToModal = ({ goBack, handleOpenAirspaceMap }: PropsI) => {
             Ready to claim your air rights? No registered air rights yet, but
             exciting times ahead! 🚀✨
           </p>
-          <div
+          <Button
             onClick={() => setSection(1)}
-            className="w-full cursor-pointer rounded-[8px] bg-[#0653EA] py-[16px] text-center text-white"
-          >
-            Next
-          </div>
+            label="Next"
+          />
         </div>
       )}
       {section === 1 && (
-        <div className="flex flex-col items-center justify-center gap-[15px] px-[60px] text-center text-[#222222]">
+        <div className="flex flex-col items-center justify-center gap-[15px] px-[30px] text-center text-[#222222]">
           <p className="text-[20px] font-medium">How to Claim My Air Rights?</p>
           <div className="flex flex-col items-center flex-start py-[30px] text-left">
             {stepsData.map((step, index) => (
@@ -85,12 +84,11 @@ const HowToModal = ({ goBack, handleOpenAirspaceMap }: PropsI) => {
             income from your skies. 🚀✨
           </p>
 
-          <div
+          <Button
             onClick={handleOpenAirspaceMap}
-            className="w-full cursor-pointer rounded-[8px] bg-[#0653EA] py-[16px] text-center text-white"
-          >
-            Claim Air Rights
-          </div>
+            label="Claim Air Rights"
+            className=" mt-4"
+          />
         </div>
       )}
       <div className="mt-[15px] flex items-center justify-center gap-[11px] pt-5">

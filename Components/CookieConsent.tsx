@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Button from "./Shared/Button";
 
 const CookieConsent: React.FC = () => {
   const [showConsent, setShowConsent] = useState(false);
@@ -29,20 +30,21 @@ const CookieConsent: React.FC = () => {
           of cookies on your device. You can manage your preferences or withdraw
           your consent at any time by accessing our Cookie Settings.
         </p>
-        <button
-          className="bg-blue-400 py-2 px-8 rounded text-white"
+        <Button
           onClick={acceptCookie}
-        >
-          Accept
-        </button>
-        <button
-          className="bg-red-400 py-2 px-8 rounded text-white"
-          onClick={() => {
-            setShowConsent(false);
-          }}
-        >
-          Decline
-        </button>
+          label="Accept"
+          className="py-2 px-8 rounded "
+          color="bg-blue-400"
+          textColor="text-white"
+        />
+
+        <Button
+          onClick={() => setShowConsent(false)}
+          label="Decline"
+          className="py-2 px-8 rounded"
+          color="bg-red-400"
+          textColor="text-white"
+        />
       </div>
     </div>
   );

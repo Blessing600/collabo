@@ -8,6 +8,7 @@ import {
   MagnifyingGlassIcon,
 } from "../../Icons";
 import AirRightEstimateMetadata from "./AirRightEstimateMetadata";
+import Button from "@/Components/Shared/Button";
 
 interface PropsI {
   address: string;
@@ -61,8 +62,8 @@ const Explorer = ({
         </div>
       </div>
       <p className="  text-[15px] font-normal text-[#222222] break-words">
-        Ready to claim your air rights? No registered air rights yet, but exciting
-        times ahead!
+        Ready to claim your air rights? No registered air rights yet, but
+        exciting times ahead!
       </p>
       <div
         className="enter-address-step relative w-full rounded-lg bg-white px-[22px] py-[16px]"
@@ -155,13 +156,11 @@ const Explorer = ({
               </>
             )}
 
-            <div
+            <Button
               onClick={onClaimAirspace}
-              className="Claim-airspacebtn-step w-full cursor-pointer rounded-lg bg-[#0653EA] py-[16px] text-center text-[15px] font-normal text-white"
-            >
-              Claim Air Rights
-            </div>
-
+              label="Claim Air Rights"
+              className=" Claim-airspacebtn-step "
+            />
             {!isLoadingEstimates && mainEstimate && (
               <div className="mt-2">
                 <span className="text-sm italic text-[#93B1ED]">

@@ -12,10 +12,10 @@ import {
   isValidFileType,
   uploadImage,
 } from "@/utils/propertyUtils/fileUpload";
-import LoadingButton from "../LoadingButton/LoadingButton";
 import { RequestDocumentStatus } from "@/types";
 import S3UploadServices from "@/services/s3upload";
 import ACCEPTED_FILE_TYPES from "@/utils/portfolio/fileTypes";
+import Button from "../Shared/Button";
 
 interface PopupProps {
   showPopup: boolean;
@@ -220,14 +220,12 @@ const AdditionalDocuments: React.FC<PopupProps> = ({
               </div>
             ))}
         </div>
-        <LoadingButton
+        <Button
           onClick={handleClick}
           isLoading={loading}
-          color={"white"}
-          className="mt-4 px-6 py-2 text-white bg-dark-blue text-base flex justify-center"
-        >
-          Submit Additional Documents
-        </LoadingButton>
+          label="Submit Additional Documents"
+          className="mt-4"
+        />
       </div>
     </div>
   );

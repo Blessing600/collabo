@@ -157,6 +157,7 @@ const RentPreview: React.FC<RentPreviewProps> = ({
         finalAns={finalAns}
         rentData={rentData}
         setShowRentDetail={setShowRentDetail}
+        setShowRentPreview={setShowRentPreview}
       />
     );
   }

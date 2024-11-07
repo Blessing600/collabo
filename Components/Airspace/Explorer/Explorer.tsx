@@ -33,7 +33,7 @@ const Explorer = ({
 
   return (
     <div
-      className="z-20 sm:z-[20000000000] m-[39px] hidden max-h-full max-w-[370px] flex-col items-center gap-[15px] rounded-[30px] bg-[#FFFFFFCC] px-[29px] py-[43px] md:flex"
+      className="z-20 m-[39px] hidden max-h-full max-w-[370px] flex-col items-center gap-[15px] rounded-[30px] bg-[#FFFFFFCC] px-[29px] py-[43px] md:flex"
       style={{ boxShadow: "0px 12px 34px -10px #3A4DE926" }}
     >
       <div className="flex items-center gap-[5px]">

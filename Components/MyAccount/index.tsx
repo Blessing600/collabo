@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
 import useAuth from "../../hooks/useAuth";
 import { createPortal } from "react-dom";
 
@@ -15,6 +15,7 @@ import PersonalInformation from "../../Components/MyAccount/PersonalInformation"
 import { User } from "../../types";
 import Sidebar from "../Shared/Sidebar";
 import { checkPhoneIsValid } from "../Auth/PhoneValidation";
+import { Web3authContext } from "@/providers/web3authProvider";
 
 const Account = () => {
   const { user, updateProfile, signIn, web3authStatus } = useAuth();
@@ -24,20 +25,23 @@ const Account = () => {
   const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(true);
   const [newUserDetail, setNewUserDetail] = useState<User | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
-
+  const { provider } = useContext(Web3authContext);
   useEffect(() => {
     (async () => {
       let userData = user;
-      const { error, data } = await getUser();
-      if (!error) {
-        userData = data;
-        signIn({ user: data });
-      }
-      if (userData) {
-        setNewUserDetail({ ...userData });
+      if(provider){
+
+        const { error, data } = await getUser();
+        if (!error) {
+          userData = data;
+          signIn({ user: data });
+        }
+        if (userData) {
+          setNewUserDetail({ ...userData });
+        }
       }
     })();
-  }, [user?.KYCStatusId, user?.name, user?.phoneNumber, web3authStatus]);
+  }, [user?.KYCStatusId, user?.name, user?.phoneNumber, web3authStatus , provider]);
 
   const updateDataHandler = async (e) => {
     e.preventDefault();

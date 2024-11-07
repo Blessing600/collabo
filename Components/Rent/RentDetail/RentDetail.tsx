@@ -36,7 +36,6 @@ const RentDetail: React.FC<RentDetailProps> = ({
 }) => {
   const maxDate = dayjs().add(29, "day");
   const [tokenBalance, setTokenBalance] = useState<string>("0");
-  const [showSuccess, setShowSuccess] = useState<boolean>(false);
   const { isMobile } = useMobile();
   const [finalAns, setFinalAns] = useState<
     { status: string; message?: string | undefined } | null | undefined
@@ -67,16 +66,6 @@ const RentDetail: React.FC<RentDetailProps> = ({
     }
   }, [rentData, web3authStatus]);
 
-  if (showSuccess) {
-    return (
-      <SuccessModal
-        setShowSuccess={setShowSuccess}
-        finalAns={finalAns}
-        rentData={rentData}
-        setShowRentDetail={setShowRentDetail}
-      />
-    );
-  }
 
   const shouldDisableTime = (value, view) => {
     if (view === "minutes" && value.minute() >= 1 && value.minute() <= 29) {

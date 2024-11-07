@@ -38,6 +38,7 @@ import Backdrop from "../Backdrop";
 import Spinner from "../Spinner";
 import Link from "next/link";
 import LoadingButton from "../LoadingButton/LoadingButton";
+import Button from "../Shared/Button";
 const defaultPaymentMethod = {
   icon: "",
   name: "",
@@ -334,13 +335,10 @@ const DepositAndWithdraw = ({
         />
         {activeSection === 0 && !selectedMethod.name && (
           <div>
-            <LoadingButton
+            <Button
               isLoading={false}
-              className="w-full h-[39px] py-[16px] bg-[#0653EA] cursor-pointer text-white flex items-center justify-center rounded-lg text-[15px]"
-              onClick={""}
-            >
-              Deposit
-            </LoadingButton>
+              label="Deposit"
+            />
             <div className="flex items-center gap-[15px] p-[15px] bg-[#F2F2F2] mt-4 ">
               <div className="w-6 h-6">
                 <WarningIcon />
@@ -598,13 +596,12 @@ const DepositAndWithdraw = ({
               selectedMethod.name === "Ramp" ||
               selectedMethod.name === "Native" ||
               selectedMethod.name === "LI.FI" ? (
-                <LoadingButton
-                  isLoading={false}
-                  className="w-full h-[39px] py-[16px] bg-[#0653EA] cursor-pointer text-white flex items-center justify-center rounded-lg text-[15px] mt-4"
-                  onClick={handleWithdraw}
-                >
-                  Withdraw
-                </LoadingButton>
+                <Button
+                isLoading={false}
+                onClick={handleWithdraw}
+                label="Withdraw"
+              />
+              
               ) : null}
             </>
           </div>

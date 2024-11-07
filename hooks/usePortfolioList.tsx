@@ -21,6 +21,7 @@ const usePortfolioList = () => {
   const [airspaceList, setAirspaceList] = useState<PropertyData[]>([]);
 
   const [loading, setLoading] = useState(true);
+  const [totalAirspace, setTotatAirspace] = useState(0)
 
   const [activeTab, setActiveTab] = useState<PortfolioTabEnum>(PortfolioTabEnum.VERIFIED);
   const { user } = useAuth();
@@ -43,6 +44,7 @@ const usePortfolioList = () => {
           return;
         }
         let airspaces = [];
+        let totalAirspace = 0
         setLoading(true);
         const assetId = airspaceList.length > 0 ? airspaceList.at(-1)?.id : "";
 
@@ -51,9 +53,11 @@ const usePortfolioList = () => {
         } else if (activeTab === PortfolioTabEnum.RENTED) {
           airspaces = await getPropertiesByUserAddress("rentalToken", 10, String(assetId));
         } else if (activeTab === PortfolioTabEnum.UNVERIFIED) {
-          const airspaceResp = await getUnverifiedAirspaces(pageNumber, 10);
+          const airspaceResp = await getUnverifiedAirspaces(pageNumber, 7);
+          console.log(airspaceResp, "airspaceRespairspaceResp")
           if (airspaceResp && airspaceResp.items) {
             airspaces = airspaceResp.items;
+            totalAirspace = airspaceResp.total
           }
         } else if (activeTab === PortfolioTabEnum.PENDING_RENTAL) {
           const airspaceResp = await getRetrievePendingRentalAirspace(pageNumber, 10);
@@ -74,6 +78,7 @@ const usePortfolioList = () => {
           }
         }
         setAirspaceList(airspaces);
+        setTotatAirspace(totalAirspace)
       } catch (error) {
         console.error(error);
       } finally {
@@ -82,9 +87,9 @@ const usePortfolioList = () => {
     })();
   }, [activeTab, web3auth?.status, pageNumber, refetchRef.current, user?.blockchainAddress]);
 
-  const handleNextPage = () => {
-    if (airspaceList?.length < 9) return;
-    setPageNumber((prevPageNumber) => prevPageNumber + 1);
+  const handleNextPage = (pageNumber: number) => {
+    if ((totalAirspace / pageNumber) <= 0) return;
+    setPageNumber(pageNumber);
   };
 
   const handlePrevPage = () => {
@@ -109,6 +114,7 @@ const usePortfolioList = () => {
     handleNextPage,
     setAirspaceList,
     refetchAirspaceRef: refetchRef,
+    totalAirspace
   };
 };
 

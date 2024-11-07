@@ -14,6 +14,7 @@ import { checkDocumentStatus } from "@/utils/propertyUtils/fileUpload";
 import { PortfolioTabEnum } from "@/hooks/usePortfolioList";
 import Modal from "./Modal";
 import CancelClaimModal from "./CancelClaimModal";
+import LoadingButton from "../LoadingButton/LoadingButton";
 
 interface PropsI {
   activeTab: PortfolioTabEnum;
@@ -70,8 +71,7 @@ const PortfolioItemMobile = ({
   const handleCancelClaim = () => {
     selectAirspace();
     setShowCancelModal(true);
-    refetchAirspaceRef.current = true;
-    modalRef.current = true;
+    refetchAirspaceRef.current = false;
   };
   const handleOnClaim = () => {
     selectAirspace();
@@ -117,12 +117,17 @@ const PortfolioItemMobile = ({
               <div className="">
                 <div className="mt-2 flex w-full items-center justify-between gap-[10px]">
                   {!!tags[0] && (
-                    <div
-                      onClick={handleOnClaim}
-                      className="flex h-[27px] cursor-pointer items-center justify-center rounded-[3px] bg-[#DBDBDB] p-2 text-sm font-normal text-[#222222]"
-                    >
-                      {type === "land" ? `Claim Date: ${formatDate(createdAt)}` : "On Rent"}
-                    </div>
+                   <LoadingButton
+                   onClick={handleOnClaim}
+                   isLoading={false}
+                   color={""}
+                   className="bg-[#DBDBDB] text-[#222222] text-[11.89px] font-normal px-[7px] cursor-pointer rounded-[3px] h-[27px]"
+                   disable={false}
+                 >
+                   {type === "land"
+                     ? `Claim Date: ${formatDate(createdAt)}`
+                     : "On Rent"}
+                 </LoadingButton>
                   )}
                   {!!tags[1] && (
                     <div className="cursor-pointer rounded-[3px] bg-[#E7E6E6] px-[7px] text-sm font-normal text-[#222222]">
@@ -139,14 +144,17 @@ const PortfolioItemMobile = ({
                       Review Offer
                     </div>
                   )}
-                  {activeTab === PortfolioTabEnum.UNVERIFIED && (
-                    <div
-                      onClick={handleCancelClaim}
-                      className="flex h-8 w-28 cursor-pointer items-center justify-center rounded-[3px] bg-[#4285F4] px-2 text-sm font-normal text-white"
-                    >
-                      Cancel Claim
-                    </div>
-                  )}
+                    {activeTab === PortfolioTabEnum.UNVERIFIED && (
+                  <LoadingButton
+                    onClick={handleCancelClaim}
+                    isLoading={false}
+                    color={""}
+                    disable={false}
+                    className="bg-[#4285F4] text-white text-[11.89px] font-normal px-[7px] cursor-pointer rounded-[3px] h-[27px]"
+                  >
+                    Cancel Claim
+                  </LoadingButton>
+                )}
 
                   {(documentStatus === "SUBMITTED" || underReview) && (
                     <div className="flex items-center justify-center gap-2">

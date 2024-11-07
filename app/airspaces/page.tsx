@@ -779,6 +779,7 @@ const Airspaces: React.FC = () => {
               onCloseModal={() => {
                 setSelectedAirspace(null);
               }}
+              requestDocument={selectedAirsSpace?.requestDocument || []}
             />
           )}
 

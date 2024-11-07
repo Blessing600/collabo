@@ -3,10 +3,11 @@ import { ArrowLeftIcon } from "../Icons";
 import AirspacesList from "./AirSpaceList";
 import AirSpaceEmptyList from "./AirSpaceEmptyList";
 import { PropertyData } from "@/types";
+import Button from "../Shared/Button";
 interface Props {
   setShowAirspacePage: React.Dispatch<React.SetStateAction<boolean>>;
   airspaces: PropertyData[];
-  setSelectedAirsspace: React.Dispatch<React.SetStateAction<PropertyData>>
+  setSelectedAirsspace: React.Dispatch<React.SetStateAction<PropertyData>>;
 }
 const MyMobileAirspacesPage = ({
   setShowAirspacePage,
@@ -28,19 +29,20 @@ const MyMobileAirspacesPage = ({
           </h1>
         </div>
 
-        <div className="flex flex-col justify-center items-center w-full  mt-[1rem] bg-white">
+        <div className="px-4 flex flex-col justify-center items-center w-full  mt-[1rem] bg-white">
           {}
           {airspaces.length === 0 ? (
             <AirSpaceEmptyList />
           ) : (
-            <AirspacesList airspaces={airspaces} handleSelectedAirspace={(space) => setSelectedAirsspace(space)}/>
+            <AirspacesList
+              airspaces={airspaces}
+              handleSelectedAirspace={(space) => setSelectedAirsspace(space)}
+            />
           )}
-          <button
+          <Button
             onClick={() => setShowAirspacePage(false)}
-            className="bg-[#0653EA] text-white p-3 rounded-lg w-[90%] mt-[6rem]"
-          >
-            Claim Air Rights
-          </button>
+            label="Claim Air Rights"
+          />
         </div>
       </div>
     </div>

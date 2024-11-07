@@ -10,6 +10,7 @@ import PreviousUploadedDocuments from "./PreviousUploadedDocuments";
 import useAuth from "@/hooks/useAuth";
 import { RequestDocumentStatus, StatusTypes } from "@/types";
 import { formatTextToReadable } from "@/utils/propertyUtils/fileUpload";
+import Button from "../Shared/Button";
 interface AccountVerificationProps {
   KYCStatusId: number;
   isLoading: boolean;
@@ -71,12 +72,10 @@ const AccountVerification = ({
               as a token of our appreciation! Don&apos;t delay - verify now and
               unlock the full potential of your air rights!
             </p>
-            <button
+            <Button
               onClick={onVerifyMyAccount}
-              className="text-sm font-medium w-full px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
-            >
-              Verify my identity Now
-            </button>
+              label="Verify my identity Now"
+            />
           </div>
           <div className="hidden md:block md:w-[50%]">
             <img

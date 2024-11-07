@@ -181,8 +181,8 @@ const RentPreview: React.FC<RentPreviewProps> = ({
     <div>
       {!isMobile && <Backdrop />}
       <div
-        style={{ boxShadow: "0px 12px 34px -10px #3A4DE926", zIndex: 100 }}
-        className="fixed bottom-[70px] left-0 z-[100] flex h-[426px] w-full touch-manipulation flex-col gap-[15px] overflow-auto rounded-t-[30px] bg-white pt-[30px] sm:left-1/2 sm:top-1/2 sm:h-[406px] sm:overflow-hidden sm:pb-[30px] md:z-40 md:w-[689px] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-[30px]"
+        style={{ boxShadow: "0px 12px 34px -10px #3A4DE926"}}
+        className="fixed bottom-[70px] left-0 z-[100] flex h-[426px] w-full touch-manipulation flex-col gap-[15px] overflow-auto rounded-t-[30px] bg-white pt-[30px] sm:left-1/2 sm:top-1/2 sm:h-[406px] sm:overflow-hidden sm:pb-[30px] md:z-[500] md:w-[689px] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-[30px]"
       >
         <div className="flex flex-col gap-[15px] px-[30px]">
           <div className="relative -mx-[29px] -mt-[30px] flex touch-manipulation items-center gap-[20px] px-[29px] pt-[20px] md:mx-0 md:my-0 md:p-0 md:shadow-none">

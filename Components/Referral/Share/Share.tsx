@@ -55,9 +55,7 @@ const Share: React.FC<ShareProps> = ({ referralCode, isLoading }) => {
 
   const handleCopy = (e: MouseEvent, text: string, isCode: boolean) => {
     e.preventDefault();
-    navigator.clipboard.writeText(
-      `🌍🚀 Join me on SkyTrade and start trading airspace and real estate! Sign up with my link and get exclusive rewards: ${text} 💸 #SkyTrade #EarnRewards #RealEstate`,
-    );
+    navigator.clipboard.writeText(text);
     setIsCopied((prev) => ({
       code: isCode ? true : prev.code,
       link: !isCode ? true : prev.link,

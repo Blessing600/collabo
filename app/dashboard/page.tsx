@@ -85,7 +85,7 @@ const Dashboard: FC = () => {
                         />
                       </div>
                     </div>
-                    <div className="mb-20 h-60 md:mx-auto md:my-0 md:h-0">
+                    <div className="mb-20 h-60 md:mx-auto md:mb-[21px] md:h-full">
                       <ReferralProgram />
                     </div>
                   </div>

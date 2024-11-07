@@ -27,7 +27,7 @@ const VerificationPopup: React.FC<VerificationPopupProps> = ({
       {isOpen && (
         <div>
           {<Backdrop onClick={handleClose} />}
-          <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="fixed inset-0 flex items-center justify-center z-50 sm:z-[20000000000] ">
             <div
               className="relative w-[465px] h-[379.01px] rounded-[30px] bg-white shadow-lg"
               style={{ boxShadow: "0px 12px 34px -10px #3A4DE926" }}

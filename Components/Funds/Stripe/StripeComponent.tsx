@@ -23,7 +23,7 @@ export default function StripeOnrampComponent({
   return (
     <div>
       {showOnramp && (
-        <div className="fixed  bottom-0 left-0 sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 bg-white sm:rounded-[30px] rounded-t-3xl  overflow-y-auto overflow-x-hidden z-[500] md:z-50 flex flex-col fund-table-scrollbar h-[500px] backdrop-blur-md  w-full sm:w-[635px] ">
+        <div className="fixed  bottom-0 left-0 sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 bg-white sm:rounded-[30px] rounded-t-3xl  overflow-y-auto overflow-x-hidden z-[500] sm:z-[20000000000]  flex flex-col fund-table-scrollbar h-[500px] backdrop-blur-md  w-full sm:w-[635px] ">
           <button
             onClick={handleClose}
             className="absolute top-3 right-4 w-[10px] h-[10px] cursor-pointer z-[501] flex items-center justify-center"

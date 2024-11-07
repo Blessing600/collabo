@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { RxCaretLeft, RxCaretRight } from "react-icons/rx";
 import PortfolioItem from "./PortfolioItem";
 import Spinner from "../Spinner";
@@ -35,8 +35,9 @@ const PortfolioList = ({
   const router = useRouter();
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
-  const [uniqueAirspaceList, setUniqueAirspaceList] =
-    useState<PropertyData[]>();
+  const [uniqueAirspaceList, setUniqueAirspaceList] = useState<PropertyData[]>();
+  const modalRef = useRef(false);
+
   const {
     handleTabSwitch,
     loading,
@@ -45,6 +46,7 @@ const PortfolioList = ({
     pageNumber,
     activeTab,
     setAirspaceList,
+    refetchAirspaceRef,
     totalAirspace,
   } = usePortfolioList();
 
@@ -58,7 +60,7 @@ const PortfolioList = ({
 
     return Array.from(uniqueItemsMap.values());
   }
-
+  
   useEffect(() => {
     if (user && user.KYCStatusId === StatusTypes.NotAttempted) {
       setShowPopup(true);
@@ -99,12 +101,7 @@ const PortfolioList = ({
   };
   return (
     <>
-      <div className="w-full flex justify-center">
-        {selectedAirspace !== null && (
-          <Modal airspace={selectedAirspace} onCloseModal={onCloseModal} />
-        )}
-
-        {showCancelModal && (
+      {showCancelModal && (
           <CancelClaimModal
             airspace={selectedAirspace}
             setShowCancelModal={setShowCancelModal}
@@ -112,6 +109,11 @@ const PortfolioList = ({
             setAirspaceList={setAirspaceList}
           />
         )}
+      <div
+        className="flex w-full flex-1 flex-col gap-[43px] rounded-[30px] bg-white px-[29px] py-[43px]"
+        style={{ boxShadow: "0px 12px 34px -10px #3A4DE926" }}
+      >
+        <h2 className="text-center text-xl font-medium text-[#222222]">My Air Rights</h2>
         <div
           className="flex  w-[900px] flex-1 flex-col gap-[43px] rounded-[30px] bg-white px-[29px] py-[43px]"
           style={{ boxShadow: "0px 12px 34px -10px #3A4DE926" }}
@@ -221,12 +223,21 @@ const PortfolioList = ({
                     : airspaceList
                   )?.map((airspace, index) => (
                     <PortfolioItem
-                      airspace={airspace}
-                      key={index}
-                      requestDocument={airspace?.requestDocument}
-                      selectAirspace={() => selectAirspace(airspace)}
-                      setUploadedDoc={setUploadedDoc}
-                    />
+                    airspace={airspace}
+                    key={index}
+                    requestDocument={airspace?.requestDocument}
+                    selectAirspace={() => selectAirspace(airspace)}
+                    setUploadedDoc={setUploadedDoc}
+                    activeTab={activeTab}
+                    createdAt={airspace.createdAt as Date}
+                    modalRef={modalRef}
+                    refetchAirspaceRef={refetchAirspaceRef}
+                    selectedAirspace={selectedAirspace}
+                    onCloseModal={onCloseModal}
+                    setAirspaceList={setAirspaceList} 
+                    setShowCancelModal={setShowCancelModal}    
+                    tags={[true, false, false, false]}           
+                     />
                   ))
                 ) : (
                   <AirspacesEmptyMessage />

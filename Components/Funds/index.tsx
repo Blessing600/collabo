@@ -31,12 +31,12 @@ const Funds = () => {
       </Head>
       <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden rounded bg-white sm:bg-[#F6FAFF]">
         <Sidebar />
-        <div className="flex h-full w-full flex-col">
+        <div className="sm:flex h-full w-full flex-col">
           <PageHeader pageTitle={"Funds"} />
-          <section className="relative mb-[78.22px] flex h-[calc(100%-91px)] w-full flex-col gap-8 overflow-y-scroll md:mb-0">
-            <div className="flex w-full justify-center gap-10 p-8">
+          <section className="relative  w-full h-[calc(100%-91px)]  flex flex-col gap-8 mb-[78.22px]  sm:mb-0 overflow-y-scroll">
+            <div className={`${isMobile ? "w-full p-6 gap-10 justify-center" : "flex w-full p-6 gap-10"}`} >
               <div
-                className={`${isMobile ? "flex w-full flex-col items-center gap-5 sm:items-start" : "flex flex-col items-center gap-5 sm:w-[468px] sm:items-start"} border`}
+                className={`${isMobile ? "flex w-full flex-col items-center gap-5 sm:items-start" : "flex flex-col items-center gap-5 sm:w-[40%] sm:items-start"}`}
               >
                 <AvailableBalance />
                 <DepositAndWithdraw
@@ -47,7 +47,7 @@ const Funds = () => {
                   tokenBalance={parseFloat(userUSDWalletBalance.amount)}
                 />
               </div>
-              <div className={`w-full sm:flex sm:w-auto sm:flex-grow`}>
+              <div className={`w-full sm:flex sm:w-auto sm:flex-grow sm:w-[50%]`}>
                 <TransactionHistory />
               </div>
             </div>

@@ -1,12 +1,6 @@
 import { useTour } from "@reactour/tour";
 import React, { useState } from "react";
-import {
-  BuildingsIcon,
-  CircleDollarIcon,
-  InfoIcon,
-  LocationPointIcon,
-  MagnifyingGlassIcon,
-} from "../../Icons";
+import { BuildingsIcon, CircleDollarIcon, InfoIcon, LocationPointIcon, MagnifyingGlassIcon } from "../../Icons";
 import AirRightEstimateMetadata from "./AirRightEstimateMetadata";
 import Button from "@/Components/Shared/Button";
 
@@ -36,9 +30,7 @@ const Explorer = ({
   const [isInfoVisible, setIsInfoVisible] = useState(false);
   const { isOpen } = useTour();
 
-  const mainEstimate = airRightEstimates
-    ? airRightEstimates.main.estimate
-    : undefined;
+  const mainEstimate = airRightEstimates ? airRightEstimates.main.estimate : undefined;
 
   return (
     <div
@@ -54,16 +46,14 @@ const Explorer = ({
           <InfoIcon />
           {isInfoVisible && (
             <div className="absolute -top-4 left-6 w-[189px] rounded-[4px] bg-[#CCE3FC] p-[12px] text-[10px] font-normal italic">
-              Note that we store your data securely with advanced encryption and
-              strict authentication measures to ensure utmost privacy and
-              protection.
+              Note that we store your data securely with advanced encryption and strict authentication measures to
+              ensure utmost privacy and protection.
             </div>
           )}
         </div>
       </div>
-      <p className="  text-[15px] font-normal text-[#222222] break-words">
-        Ready to claim your air rights? No registered air rights yet, but
-        exciting times ahead!
+      <p className="break-words text-[15px] font-normal text-[#222222]">
+        Ready to claim your air rights? No registered air rights yet, but exciting times ahead!
       </p>
       <div
         className="enter-address-step relative w-full rounded-lg bg-white px-[22px] py-[16px]"
@@ -83,7 +73,7 @@ const Explorer = ({
           <MagnifyingGlassIcon />
         </div>
         {showOptions && (
-          <div className="absolute left-0 top-[55px] w-full flex-col h-[279px] overflow-y-scroll bg-white rounded-lg mt-2 border-t-4 border-t-[#4285F4] rounded-t-[8px]">
+          <div className="absolute left-0 top-[55px] mt-2 h-[279px] w-full flex-col overflow-y-scroll rounded-lg rounded-t-[8px] border-t-4 border-t-[#4285F4] bg-white">
             {addresses.map((item) => {
               return (
                 <div
@@ -95,8 +85,8 @@ const Explorer = ({
                     borderBottom: "0.2px solid #DBDBDB",
                   }}
                 >
-                  <div className="flex  items-center ">
-                    <div className="w-[10%] h-6 mr-2">
+                  <div className="flex items-center">
+                    <div className="mr-2 h-6 w-[10%]">
                       <LocationPointIcon />
                     </div>
 
@@ -112,27 +102,22 @@ const Explorer = ({
       {((flyToAddress && address) || isOpen) && (
         <div>
           {isLoadingEstimates && (
-            <p className="text-[15px] text-light-black animate-pulse">
-              Estimating Air Right Value...
-            </p>
+            <p className="animate-pulse text-[15px] text-light-black">Estimating Air Right Value...</p>
           )}
 
           {!isLoadingEstimates && !mainEstimate && (
             <>
-              <p className="my-4 text-[20px] text-center font-medium">
-                My Air Rights
-              </p>
+              <p className="my-4 text-center text-[20px] font-medium">My Air Rights</p>
 
-              <p className="  text-[15px] font-normal text-[#222222]">
-                Please ensure the address entered matches the registered
-                property address to accurately claim this area.
+              <p className="text-[15px] font-normal text-[#222222]">
+                Please ensure the address entered matches the registered property address to accurately claim this area.
               </p>
             </>
           )}
 
-          <div className="bg-white w-[304px] mt-4 p-4 rounded-2xl">
-            <div className="flex items-center mb-3">
-              <div className="w-[10%] h-6 mr-2">
+          <div className="mt-4 w-[304px] rounded-2xl bg-white p-4">
+            <div className="mb-3 flex items-center">
+              <div className="mr-2 h-6 w-[10%]">
                 <LocationPointIcon />
               </div>
               <div className="w-[90%]">{address}</div>
@@ -156,16 +141,10 @@ const Explorer = ({
               </>
             )}
 
-            <Button
-              onClick={onClaimAirspace}
-              label="Claim Air Rights"
-              className=" Claim-airspacebtn-step "
-            />
+            <Button onClick={onClaimAirspace} label="Claim Air Rights" className="Claim-airspacebtn-step" />
             {!isLoadingEstimates && mainEstimate && (
               <div className="mt-2">
-                <span className="text-sm italic text-[#93B1ED]">
-                  *Estimated Property Value (USA Beta version)
-                </span>
+                <span className="text-sm italic text-[#93B1ED]">*Estimated Property Value (USA Beta version)</span>
               </div>
             )}
           </div>

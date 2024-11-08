@@ -3,7 +3,7 @@ const navbarTabs = [
   "/airspaces",
   "/rent",
   "/points",
-  "/marketplace",
+  "/buy",
   "/portfolio",
   "/funds",
 ];

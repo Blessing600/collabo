@@ -58,9 +58,9 @@ const CreateAuctionModal: React.FC<CreateAuctionModalProps> = ({ onClose, data }
     return (
       <>
         {isProcessing ?
-          <div className="fixed inset-0 z-50 flex items-start justify-center bg-[#294B63] bg-opacity-50 pt-32 backdrop-blur-[2px]">
+          <div className="fixed inset-0 !z-[500] flex items-start justify-center bg-[#294B63] bg-opacity-50 pt-32 backdrop-blur-[2px]">
             {transactionStatus === TransactionStatusEnum.PENDING ?
-              <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+              <div className="flex h-full w-screen flex-col items-center justify-center gap-4">
                 <Spinner />
                 <span className="animate-pulse font-semibold text-white">Processing...</span>
               </div>
@@ -76,7 +76,7 @@ const CreateAuctionModal: React.FC<CreateAuctionModalProps> = ({ onClose, data }
               />
             }
           </div>
-        : <div className="fixed bottom-0 left-0 z-50 flex h-full w-full items-end bg-black bg-opacity-50">
+        : <div className="fixed bottom-0 left-0 !z-[500] flex h-full w-screen items-end bg-black bg-opacity-50">
             <div className="relative flex h-[685px] w-full flex-col justify-between overflow-y-scroll rounded-t-[30px] bg-white p-8">
               <div onClick={onClose} className="absolute right-[1rem] top-[1rem] cursor-pointer">
                 <IoClose className="h-4 w-4" />
@@ -148,9 +148,12 @@ const CreateAuctionModal: React.FC<CreateAuctionModalProps> = ({ onClose, data }
   return (
     <>
       {isProcessing ?
-        <div className="fixed inset-0 z-50 flex items-start justify-center bg-[#294B63] bg-opacity-50 py-32 backdrop-blur-[2px]">
+        <div
+          style={{ zIndex: 99999 }}
+          className="fixed inset-0 flex items-start justify-center bg-[#294B63] bg-opacity-50 py-32 backdrop-blur-[2px]"
+        >
           {transactionStatus === TransactionStatusEnum.PENDING ?
-            <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+            <div className="!z-[500] flex h-full w-screen flex-col items-center justify-center gap-4">
               <Spinner />
               <span className="animate-pulse font-semibold text-white">Processing...</span>
             </div>
@@ -166,7 +169,7 @@ const CreateAuctionModal: React.FC<CreateAuctionModalProps> = ({ onClose, data }
             />
           }
         </div>
-      : <div className="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-50">
+      : <div className="fixed left-0 top-0 !z-[500] flex h-full w-screen items-center justify-center bg-black bg-opacity-50">
           <div className="dark:text-darkText relative flex h-[685px] w-full flex-col gap-8 rounded-[30px] bg-white px-8 py-6 md:w-[689px]">
             <div onClick={onClose} className="absolute right-[1rem] top-[1rem] cursor-pointer">
               <IoClose className="h-4 w-4" />

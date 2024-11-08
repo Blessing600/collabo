@@ -46,9 +46,14 @@ const AuctionSearchMobile: React.FC<AuctionSearchMobileProps> = ({ searchTerm, s
 
   if (isMobile) {
     return (
-      <div className="fixed left-0 top-0 z-20 w-full bg-white p-4 text-center shadow-md">
-        <div className="flex items-center justify-between gap-2">
-          <div className="text-[20px] leading-[30px] text-light-black">Buy</div>
+      <div className="z-20 w-full bg-white p-4 text-center shadow-md">
+        <div className="flex items-center gap-4">
+          <div onClick={() => setIsFilterOpen(!isFilterOpen)}>
+            <GiSettingsKnobs />
+          </div>
+          <div onClick={() => dispatch(setIsCreateAuctionModalOpen(true))} className="rounded-lg bg-dark-blue p-2">
+            <FiPlus className="text-white" />
+          </div>
           <div className="flex items-center justify-between overflow-hidden rounded-lg border p-2">
             <input
               placeholder="Search auctions..."
@@ -61,12 +66,6 @@ const AuctionSearchMobile: React.FC<AuctionSearchMobileProps> = ({ searchTerm, s
             <div className="h-4 w-4" onClick={handleSearchAuctions}>
               <MagnifyingGlassIcon />
             </div>
-          </div>
-          <div onClick={() => setIsFilterOpen(!isFilterOpen)}>
-            <GiSettingsKnobs />
-          </div>
-          <div onClick={() => dispatch(setIsCreateAuctionModalOpen(true))} className="rounded-lg bg-dark-blue p-2">
-            <FiPlus className="text-white" />
           </div>
         </div>
 

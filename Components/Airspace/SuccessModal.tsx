@@ -14,7 +14,7 @@ const SuccessModal = ({ closePopUp, isSuccess, errorMessages }: PropsI) => {
   };
 
   return (
-    <div className="claim-modal-step fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white md:rounded-[30px] w-full max-h-screen h-screen md:max-h-[640px] md:h-auto overflow-y-auto overflow-x-auto md:w-[689px] z-50 flex flex-col gap-[15px] ">
+    <div className="claim-modal-step fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white md:rounded-[30px] w-full max-h-screen h-screen md:max-h-[640px] md:h-auto overflow-y-auto overflow-x-auto md:w-[689px] z-50 sm:z-[20000000000]  flex flex-col gap-[15px] ">
       <div
         className={`w-[100%] h-screen   ${isSuccess ? "bg-[#34A853]" : "bg-[#F5AA5E]"}`}
       >

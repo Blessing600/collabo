@@ -27,19 +27,6 @@ const PortfolioListMobile = ({
   onCloseModal,
   setSelectedAirspace,
 }: PropsI) => {
-  const { user } = useAuth();
-  const router = useRouter();
-  const [showPopup, setShowPopup] = useState<boolean>(false);
-  const pageSize = 10
-
-  useEffect(() => {
-    if (user && user.KYCStatusId === StatusTypes.NotAttempted) {
-      setShowPopup(true);
-    }
-  }, [user?.KYCStatusId]);
-
-  const modalRef = useRef(false);
-
   const {
     handleTabSwitch,
     handlePrevPage,
@@ -50,25 +37,52 @@ const PortfolioListMobile = ({
     activeTab,
     setAirspaceList,
     refetchAirspaceRef,
-    totalAirspace
+    totalAirspace,
   } = usePortfolioList();
 
-  const customItemRender = (current, type, originalElement) => {
+  const { user } = useAuth();
+  const router = useRouter();
+  const modalRef = useRef(false);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [uniqueAirspaceList, setUniqueAirspaceList] = useState<PropertyData[]>();
+  const pageSize = 10;
+  function getUniqueItemsByAssetId(items: PropertyData[]) {
+    const uniqueItemsMap = new Map<string, PropertyData>();
 
-    if (type === "next" && (current * pageSize) < totalAirspace) {
+    items.forEach((item) => {
+      //@ts-ignore
+      uniqueItemsMap.set(item?.auction?.assetId, item);
+    });
+
+    return Array.from(uniqueItemsMap.values());
+  }
+
+  useEffect(() => {
+    if (user && user.KYCStatusId === StatusTypes.NotAttempted) {
+      setShowPopup(true);
+    }
+  }, [user?.KYCStatusId]);
+
+  useEffect(() => {
+    if (airspaceList.length > 0) {
+      const uniqueList = getUniqueItemsByAssetId(airspaceList);
+      setUniqueAirspaceList(uniqueList);
+    }
+  }, [airspaceList]);
+
+  const customItemRender = (current, type, originalElement) => {
+    if (type === "next" && current * pageSize < totalAirspace) {
       return (
-        <button className="flex items-center gap-4 text-gray-700 text-[16px] mt-1" disabled={current === pageNumber}>
+        <button className="mt-1 flex items-center gap-4 text-[16px] text-gray-700" disabled={current === pageNumber}>
           Next
-          <HistoryArrowIcon/>
+          <HistoryArrowIcon />
         </button>
       );
     }
     if (type === "page") {
       return (
         <button
-          className={`${
-            current === pageNumber ? "bg-[#5D7285] text-white" : "text-gray-700"
-          } rounded-full px-4 py-1`}
+          className={`${current === pageNumber ? "bg-[#5D7285] text-white" : "text-gray-700"} rounded-full px-4 py-1`}
         >
           {originalElement.props.children}
         </button>
@@ -103,7 +117,7 @@ const PortfolioListMobile = ({
 
         <div
           className={`${activeTab === PortfolioTabEnum.BIDS ? "border-b-4 border-[#6CA1F7] text-[#232F4A]" : "text-[#5D7285]"} cursor-pointer whitespace-nowrap px-6 py-2.5 text-base font-bold transition delay-75 ease-linear`}
-          onClick={() => handleTabSwitch(PortfolioTabEnum.PENDING_RENTAL)}
+          onClick={() => handleTabSwitch(PortfolioTabEnum.BIDS)}
         >
           Bids And Offers
         </div>
@@ -159,8 +173,8 @@ const PortfolioListMobile = ({
                 </div>
               </div>
             )}
-            {airspaceList && airspaceList[0] && airspaceList[0].address ?
-              airspaceList.map((airspace, index) => (
+            {airspaceList && airspaceList[0] ?
+              (activeTab === PortfolioTabEnum.BIDS ? uniqueAirspaceList : airspaceList)?.map((airspace, index) => (
                 <PortfolioItemMobile
                   activeTab={activeTab}
                   airspace={airspace}
@@ -180,14 +194,18 @@ const PortfolioListMobile = ({
               ))
             : <AirspacesEmptyMessage />}
           </div>
-          <div className="flex w-full flex-col text-gray-600 items-center">
-              <Pagination align="center" current={pageNumber}
-                pageSize={pageSize}
-                total={totalAirspace}
-                onChange={(page) => {
-                  handleNextPage(page)
-                }} itemRender={customItemRender} />
-                    </div>
+          <div className="flex w-full flex-col items-center text-gray-600">
+            <Pagination
+              align="center"
+              current={pageNumber}
+              pageSize={pageSize}
+              total={totalAirspace}
+              onChange={(page) => {
+                handleNextPage(page);
+              }}
+              itemRender={customItemRender}
+            />
+          </div>
         </div>
       }
     </div>

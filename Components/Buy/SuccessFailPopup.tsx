@@ -41,7 +41,7 @@ const SuccessFailPopup: React.FC<SuccessFailPopupProps> = ({
   return (
     <div
       ref={modalRef}
-      className={`fixed inset-0 z-50 flex items-start justify-center bg-[#294B63] bg-opacity-50 backdrop-blur-[2px] sm:pt-32`}
+      className={`fixed inset-0 !z-[600] flex items-start justify-center bg-[#294B63] bg-opacity-50 backdrop-blur-[2px] sm:pt-32`}
     >
       <div
         className={`relative z-40 flex h-[100vh] w-[100vw] flex-col items-center justify-center sm:h-[585px] sm:w-[422px] sm:rounded-3xl ${responseStatus === "SUCCESS" ? "bg-[#34A853]" : "bg-[#F5AA5E]"}`}

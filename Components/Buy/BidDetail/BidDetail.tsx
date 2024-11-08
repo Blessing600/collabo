@@ -28,13 +28,19 @@ const BidDetails: React.FC<BidDetailsProps> = ({
   currentUserBid,
 }) => {
   const { isMobile } = useMobile();
-
+  const [isBidValid, setIsBidValid] = useState(false);
   const handleCurrentBidInputChanged = (e) => {
     let inputValue = e.target.value;
     inputValue = inputValue.replace(/[^0-9.]/g, "");
     const decimalCount = inputValue.split(".").length - 1;
     if (decimalCount > 1) {
       inputValue = inputValue.slice(0, inputValue.lastIndexOf("."));
+    }
+
+    if (auctionDetailData && inputValue >= 0.1 * auctionDetailData?.currentPrice + auctionDetailData?.currentPrice) {
+      setIsBidValid(true);
+    } else {
+      setIsBidValid(false);
     }
 
     setCurrentUserBid(inputValue);
@@ -81,15 +87,8 @@ const BidDetails: React.FC<BidDetailsProps> = ({
   const isAuctionComplete = endDate ? new Date() > endDate : false;
 
   return (
-    <div className="fixed inset-0 bottom-[74px] z-50 flex items-start justify-center bg-[#294B63] bg-opacity-50 pt-32 backdrop-blur-[2px] sm:bottom-0">
+    <div className="fixed inset-0 bottom-[74px] !z-[500] flex w-screen items-start justify-center bg-[#294B63] bg-opacity-50 pt-32 backdrop-blur-[2px] sm:bottom-0">
       <div className="thin-scrollbar short-scrollbar fixed bottom-0 z-[500] flex w-full flex-col gap-[15px] overflow-x-auto overflow-y-auto rounded-t-[30px] bg-white sm:left-1/2 sm:top-1/2 sm:z-50 sm:-translate-x-1/2 sm:-translate-y-1/2 md:h-[640px] md:w-[689px] md:rounded-[30px] md:shadow-md">
-        {/* {isMobile && (
-          <div onClick={onCloseModal} className="mt-4 flex flex-col items-center justify-end md:mt-0">
-            <div className="flex w-[90%] items-center justify-center">
-              <RectangleIcon />
-            </div>
-          </div>
-        )} */}
         <div className="shadow-[0_12px_34px_-10px_rgba(58, 77, 233, 0.15)] sticky left-0 right-0 top-0 z-[100] -mt-[1px] flex flex-col gap-[15px] bg-white px-[29px] py-[20px]">
           <button className="text-right" onClick={onCloseModal}>
             <IoClose className="h-4 w-4" />
@@ -142,19 +141,15 @@ const BidDetails: React.FC<BidDetailsProps> = ({
             </div>
           : <>
               <div>
-                <div className="flex w-full justify-between gap-8 pb-[5px] text-sm sm:text-base">
+                <div className="flex w-full justify-between gap-8 pb-[5px]">
                   <div className="flex">
-                    <p className="whitespace-nowrap leading-[21px] text-[#838187]">Your Bid</p>
-                    <span className="text-[#E04F64]">*</span>
+                    <p className="whitespace-nowrap leading-[21px] text-[#838187]">
+                      Your Bid <span className="text-[#E04F64]">*</span>
+                    </p>
                   </div>
-                  <span className="hidden text-right text-gray-500 sm:block">
-                    <span className="text-[#E04F64]">*</span>You cannot bid lower than
-                    {` $${getMinBid()}`}
-                  </span>
                 </div>
                 <div
-                  className="flex h-[46px] w-full items-center rounded-lg px-[22px] py-[14px] text-[#232F4A]"
-                  style={{ border: "1px solid #87878D" }}
+                  className={`${!isBidValid ? "border border-red-500" : "border border-[#87878D]"} flex h-[46px] w-full items-center rounded-lg px-[22px] py-[14px] text-[#232F4A]`}
                 >
                   <label className="pr-2 text-[14px] font-normal leading-[21px]">$</label>
                   <input
@@ -168,15 +163,19 @@ const BidDetails: React.FC<BidDetailsProps> = ({
                     className="flex-1 appearance-none border-none text-[14px] leading-[21px] outline-none"
                   />
                 </div>
-                <span className="w-full text-right text-xs text-gray-500 sm:hidden">
-                  <span className="text-[#E04F64]">*</span> You cannot bid lower than
-                  {` $${getMinBid()}`}
-                </span>
+                {currentUserBid && !isBidValid && (
+                  <span className="w-full text-right text-sm italic text-gray-500">
+                    <span className="text-[#E04F64]">
+                      *Your bid must be higher than
+                      {` $${getMinBid()}`}
+                    </span>
+                  </span>
+                )}
               </div>
-              <div className="w-full rounded-lg bg-[#0653EA] text-white">
+              <div className="w-full text-white">
                 <button
-                  disabled={!currentUserBid}
-                  className={`h-[42px] w-full ${currentUserBid ? "cursor-pointer" : "cursor-not-allowed"}`}
+                  disabled={!currentUserBid || !isBidValid}
+                  className={`h-[42px] w-full ${currentUserBid && isBidValid ? "cursor-pointer bg-[#0653EA]" : "cursor-not-allowed bg-gray-300"} rounded-lg`}
                   onClick={onPlaceBid}
                 >
                   Place Bid

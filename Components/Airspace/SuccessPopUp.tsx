@@ -8,7 +8,7 @@ interface PropsI {
 const SuccessPopUp = ({ isVisible, setShowSuccessPopUp }: PropsI) => {
   return (
     <div
-      className={` z-20 absolute top-3.5 ${isVisible ? "right-0" : "-right-[100%]"} bg-white p-5 flex items-center gap-5`}
+      className={` z-20 sm:z-[20000000000]  absolute top-3.5 ${isVisible ? "right-0" : "-right-[100%]"} bg-white p-5 flex items-center gap-5`}
     >
       <div className="flex items-center justify-center w-5 h-5">
         <SuccessIcon />

@@ -87,7 +87,7 @@ const Modal = ({ airspace, onCloseModal, isOffer, pageNumber = 0 }: ModalProps) 
 
   return (
     <Fragment>
-      <div className="fixed inset-0 z-40 bg-black opacity-50"></div>
+      <div className="fixed inset-0 z-40 "></div>
       {airspace?.type === "placedBid" || airspace?.type === "receivedBid" ?
         <div className="fixed left-1/2 top-1/2 z-[500] flex h-full w-full -translate-x-1/2 -translate-y-1/2 flex-col gap-[15px] bg-white px-[29px] py-[30px] md:z-50 md:h-auto md:w-[689px] md:rounded-[30px]">
           <div

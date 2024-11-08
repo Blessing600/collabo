@@ -19,6 +19,8 @@ import {
 import AirspaceRentalService from "@/services/AirspaceRentalService";
 import PropertiesService from "@/services/PropertiesService";
 import { PropertyData } from "@/types";
+import Backdrop from "../Backdrop";
+import { useMobile } from "@/hooks/useMobile";
 
 interface airspaceDetailsProps {
   airspace: any;
@@ -159,6 +161,8 @@ const AirspaceDetails = ({
     const { user, activePortfolioTab } = state.userReducer;
     return { user, activePortfolioTab };
   });
+  const { isMobile } = useMobile();
+
 
   const handleGenerateCertificate = async () => {
     const rentalId = airspace?.id;
@@ -217,7 +221,12 @@ const AirspaceDetails = ({
   }, [airspace]);
   return (
     <div>
-      <div className="fixed left-1/2 top-1/2 z-[500] flex h-full w-full -translate-x-1/2 -translate-y-1/2 flex-col gap-[15px] bg-white px-[29px] py-[30px] md:z-50 md:h-auto md:w-[689px] md:rounded-[30px]">
+      {!isMobile && (
+        <Backdrop
+          onClick={onCloseModal}
+        />
+      )}
+      <div className="fixed left-1/2 top-1/2 z-[500] flex h-full w-full -translate-x-1/2 -translate-y-1/2 flex-col gap-[15px] bg-white px-[29px] py-[30px] sm:z-[20000000000] md:h-auto md:w-[689px] md:rounded-[30px]">
         <div
           className="relative -mx-[29px] -mt-[30px] flex items-center gap-[20px] px-[29px] py-[20px] md:mx-0 md:my-0 md:p-0 md:shadow-none"
           style={{ boxShadow: "0px 12px 34px -10px #3A4DE926" }}

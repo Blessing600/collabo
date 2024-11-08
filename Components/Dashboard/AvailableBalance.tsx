@@ -17,7 +17,7 @@ const AvailableBalance: FC = () => {
         <BalanceLoader />
       : <div className="flex items-center justify-between">
           <p className="absolute bottom-[12px] left-[26px] text-3xl font-medium text-[#4285F4]">
-            ${userUSDWalletBalance.amount}
+            ${Number(userUSDWalletBalance.amount).toFixed(2)}
           </p>
         </div>
       }

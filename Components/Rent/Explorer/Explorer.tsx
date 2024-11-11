@@ -32,14 +32,10 @@ const Explorer: React.FC<ExplorerProps> = ({
   setShowOptions,
 }) => {
   return (
-    <div className="hidden md:block w-[518px] h-[688px] z-20 bg-white m-8 rounded-[30px] p-6 shadow-md overflow-hidden ">    
+    <div className="z-20 m-8 hidden h-[688px] w-[518px] overflow-hidden rounded-[30px] bg-white p-6 shadow-md md:block">
       <div>
-      <div className="text-[18px] font-semibold text-center py-4">
-        SkyMarket Hub
-      </div>
-      <p className="text-[14px]">
-        Explore and Own Low-Altitude Air Rights, Your Gateway to Aerial Freedom.
-      </p>
+        <div className="py-4 text-center text-[18px] font-semibold">SkyMarket Hub</div>
+        <p className="mb-2 text-[14px]">Explore and Own Low-Altitude Air Rights, Your Gateway to Aerial Freedom.</p>
       </div>
       <SearchInput
         address={address}

@@ -246,9 +246,9 @@ const Rent = () => {
               />
             )}
             <section
-              className={"relative mb-[79px] flex h-full w-full items-start justify-start overflow-scroll md:mb-0"}
+              className={"relative mb-[79px] flex h-full w-full items-start justify-start overflow-x-hidden overflow-y-scroll md:mb-0"}
             >
-              <div className={"!absolute !left-0 !top-0 !m-0 !h-[850px] !w-screen"} id="map" />
+              <div className={"!absolute !left-0 !top-0 !m-0 min-h-[850px] !h-full !w-full"} id="map" />
               <RentSearchMobile
                 address={address}
                 setAddress={setAddress}

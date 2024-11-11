@@ -63,7 +63,7 @@ const AvailableBalance = () => {
 
   return (
     <div
-      className="relative bg-white flex items-center px-[20px] sm:px-[32px] py-[37px] rounded-[30px] w-full justify-between"
+      className="relative bg-white flex items-center px-[18px] sm:px-[32px] py-[37px] rounded-[30px] w-full justify-between"
       style={{ boxShadow: "0px 12px 34px -10px #3A4DE926" }}
     >
       <div className="flex flex-col justify-between w-full h-full ">

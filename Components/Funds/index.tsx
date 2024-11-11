@@ -31,7 +31,7 @@ const Funds = () => {
       </Head>
       <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden rounded bg-white sm:bg-[#F6FAFF]">
         <Sidebar />
-        <div className="flex h-full w-full flex-col">
+        <div className="h-full w-full flex-col sm:flex">
           <PageHeader pageTitle={"Funds"} />
           <section className="relative mb-[78.22px] flex h-[calc(100%-91px)] w-full flex-col gap-8 overflow-y-scroll md:mb-0">
             <div

@@ -159,6 +159,7 @@ const Buy = () => {
           <Spinner />
         </div>
       )}
+
       {
         <div className="relative flex h-screen w-screen items-center justify-center rounded bg-white">
           <Sidebar />

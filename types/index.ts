@@ -66,6 +66,8 @@ export type propertyStatus = {
 
 type metadata = {
   endTime: Date;
+  startTime: Date;
+
 };
 
 type BetaUserI = {
@@ -189,6 +191,7 @@ export type PropertyData = {
   metadata?: metadata;
   images?:string[];
   orderPhotoforGeneratedMap?:boolean;
+  currentPrice: number;
 };
 
 export type User = {

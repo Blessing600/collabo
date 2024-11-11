@@ -30,7 +30,6 @@ interface ModalProps {
   pageNumber?: number;
 }
 
-
 const Modal = ({ airspace, onCloseModal, isOffer, pageNumber = 0 }: ModalProps) => {
   const router = useRouter();
 
@@ -48,8 +47,6 @@ const Modal = ({ airspace, onCloseModal, isOffer, pageNumber = 0 }: ModalProps) 
     const { user, activePortfolioTab } = state.userReducer;
     return { user, activePortfolioTab };
   });
-
- 
 
   const handleGenerateAuctionCertificate = async () => {
     const auctionId = airspace?.auction?.id;
@@ -76,7 +73,6 @@ const Modal = ({ airspace, onCloseModal, isOffer, pageNumber = 0 }: ModalProps) 
     window.open(blobUrl, "_blank");
   };
 
-
   useEffect(() => {
     const handelAirspaceImage = async () => {
       const url = await fetchMapboxStaticImage(airspace?.latitude, airspace?.longitude);
@@ -87,7 +83,7 @@ const Modal = ({ airspace, onCloseModal, isOffer, pageNumber = 0 }: ModalProps) 
 
   return (
     <Fragment>
-      <div className="fixed inset-0 z-40 "></div>
+      <div className="fixed inset-0 z-40 bg-black opacity-50"></div>
       {airspace?.type === "placedBid" || airspace?.type === "receivedBid" ?
         <div className="fixed left-1/2 top-1/2 z-[500] flex h-full w-full -translate-x-1/2 -translate-y-1/2 flex-col gap-[15px] bg-white px-[29px] py-[30px] md:z-50 md:h-auto md:w-[689px] md:rounded-[30px]">
           <div
@@ -210,8 +206,7 @@ const Modal = ({ airspace, onCloseModal, isOffer, pageNumber = 0 }: ModalProps) 
             </button>
           </div>
         </div>
-      : <AirspaceDetails airspace={airspace} onCloseModal={ onCloseModal}/>
-      }
+      : <AirspaceDetails airspace={airspace} onCloseModal={onCloseModal} requestDocument={airspace?.requestDocument} />}
     </Fragment>
   );
 };

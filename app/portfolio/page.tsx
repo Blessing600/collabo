@@ -66,7 +66,7 @@ const Portfolio = () => {
               setSelectedAirspace={setSelectedAirspace}
             />
           </section>
-          <section className="relative flex h-full w-full flex-wrap gap-6 overflow-y-auto py-[10px] md:hidden">
+          <section className="relative flex w-full flex-wrap gap-6 overflow-y-auto py-[10px] md:hidden">
             <PortfolioListMobile
               onCloseModal={onCloseModal}
               selectAirspace={selectAirspace}

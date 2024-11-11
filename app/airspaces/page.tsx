@@ -20,7 +20,7 @@ import Sidebar from "../../Components/Shared/Sidebar";
 import PageHeader from "../../Components/PageHeader";
 import ExplorerMobile from "../../Components/Airspace/Explorer/ExplorerMobile";
 import HowToModal from "../../Components/Airspace/HowToModal";
-import { ClaimModal } from "../../Components/Airspace/ClaimModal/ClaimModal";
+
 import SuccessModal from "../../Components/Airspace/SuccessModal";
 import Explorer from "../../Components/Airspace/Explorer/Explorer";
 import Slider from "../../Components/Airspace/Slider";
@@ -44,6 +44,7 @@ import { AddressItem } from "@/Components/Airspace/AddressItem";
 import { SelectedAirspace } from "@/Components/Airspace/SelectedAirspace";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
+import ClaimModal from "@/Components/Airspace/ClaimModal/ClaimModal";
 
 interface Address {
   id: string;
@@ -782,6 +783,7 @@ const Airspaces: React.FC = () => {
               onCloseModal={() => {
                 setSelectedAirspace(null);
               }}
+              requestDocument={selectedAirsSpace?.requestDocument || []}
             />
           )}
 

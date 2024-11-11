@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState, useRef , useContext} from "react";
+import React, { Fragment, useEffect, useState, useRef } from "react";
 import LoadingButton from "../../../Components/LoadingButton/LoadingButton";
 import useAuth from "../../../hooks/useAuth";
 import { ArrowLeftIcon, CloseIconBlack, InfoIcon, LocationPointIcon, DropDownIcon } from "../../../Components/Icons";
@@ -22,8 +22,6 @@ import AirspaceOptions from "./AirspaceOptions/AirspaceOptions";
 import S3UploadServices from "@/services/s3upload";
 import ZoningPermission from "./PlanningPermission/ZoningPermission";
 import Button from "@/Components/Shared/Button";
-import { Web3authContext } from "@/providers/web3authProvider";
-
 
 interface PropsI {
   onCloseModal: () => void;
@@ -82,10 +80,7 @@ export const ClaimModal = ({
   const { generatePublicFileUploadUrls } = S3UploadServices();
   const [stepsCounter, setStepCounter] = useState(1);
 
-  const [steps, setSteps] = useState<ClaimAirspaceSteps>(
-    ClaimAirspaceSteps.UNSELECTED,
-  );
-  const { web3auth } = useContext(Web3authContext);
+  const [steps, setSteps] = useState<ClaimAirspaceSteps>(ClaimAirspaceSteps.UNSELECTED);
   const isDisabled = data.hasZoningPermission === null;
 
   const handleClaim = async () => {
@@ -93,7 +88,7 @@ export const ClaimModal = ({
 
     try {
       const imageList: string[] = [];
-      if (selectedFile.length > 0 && (web3auth && web3auth.status === "connected")) {
+      if (selectedFile.length > 0) {
         const contentTypes = selectedFile.map((file) => file.type);
 
         const params = await generatePublicFileUploadUrls({
@@ -186,11 +181,10 @@ export const ClaimModal = ({
 
   const getByteSize = (str) => new Blob([str]).size;
   const handleChangeAirRightName = (e) => {
-    const value = e.target.value;
+    const { value } = e.target;
     setData((prev) => ({ ...prev, title: value }));
   };
   const isClaimAirspace = steps === ClaimAirspaceSteps.UPLOAD_IMAGE;
-
   return (
     <div>
       <Backdrop />
@@ -311,21 +305,20 @@ export const ClaimModal = ({
               />
             )}
 
-            <div className="my-8 flex items-center gap-[20px] text-[14px] md:justify-between">
-              <div
+            <div className="my-8 flex items-center gap-6 text-[14px] md:justify-between md:gap-[22rem]">
+              <Button
                 onClick={handleCancelButton}
-                className="cursor-pointer rounded-[5px] px-[22px] py-[10px] text-[#0653EA]"
-                style={{ border: "1px solid #0653EA" }}
-              >
-                {steps === ClaimAirspaceSteps.UNSELECTED ? "Cancel" : "Back"}
-              </div>
-              <div className="Claim-airspacebtn2-step flex w-[75%] cursor-pointer justify-center whitespace-nowrap rounded-[5px] bg-[#0653EA] px-[22px] text-white md:w-[25%]">
-                <Button
-                  onClick={handleNextButton}
-                  label={isClaimAirspace ? "Claim Air Right" : "Next"}
-                  isLoading={isClaimLoading}
-                />
-              </div>
+                label={steps === ClaimAirspaceSteps.UNSELECTED ? "Cancel" : "Back"}
+                className="border border-[#0653EA] text-[0653EA]"
+                color="bg-[#FFFFFF]"
+                textColor="text-[#0653EA]"
+              />
+              <Button
+                onClick={handleNextButton}
+                isLoading={isClaimLoading}
+                label={isClaimAirspace ? "Claim Air right" : "Next"}
+                className="Claim-airspacebtn2-step"
+              />
             </div>
           </div>
         </div>

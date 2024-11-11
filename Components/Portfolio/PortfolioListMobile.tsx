@@ -37,6 +37,7 @@ const PortfolioListMobile = ({
     activeTab,
     setAirspaceList,
     refetchAirspaceRef,
+    totalAirspace,
   } = usePortfolioList();
 
   const { user } = useAuth();
@@ -44,7 +45,7 @@ const PortfolioListMobile = ({
   const modalRef = useRef(false);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [uniqueAirspaceList, setUniqueAirspaceList] = useState<PropertyData[]>();
-
+  const pageSize = 10;
   function getUniqueItemsByAssetId(items: PropertyData[]) {
     const uniqueItemsMap = new Map<string, PropertyData>();
 
@@ -70,11 +71,10 @@ const PortfolioListMobile = ({
   }, [airspaceList]);
 
   const customItemRender = (current, type, originalElement) => {
-    if (airspaceList.length <= 10) return;
-    if (type === "next") {
+    if (type === "next" && current * pageSize < totalAirspace) {
       return (
-        <button className="flex items-center gap-4 text-gray-700">
-          next
+        <button className="mt-1 flex items-center gap-4 text-[16px] text-gray-700" disabled={current === pageNumber}>
+          Next
           <HistoryArrowIcon />
         </button>
       );
@@ -82,9 +82,7 @@ const PortfolioListMobile = ({
     if (type === "page") {
       return (
         <button
-          className={`${
-            current === originalElement.props.children ? "bg-[#5D7285] text-white" : "text-gray-700"
-          } rounded-full px-4 py-1`}
+          className={`${current === pageNumber ? "bg-[#5D7285] text-white" : "text-gray-700"} rounded-full px-4 py-1`}
         >
           {originalElement.props.children}
         </button>
@@ -196,8 +194,17 @@ const PortfolioListMobile = ({
               ))
             : <AirspacesEmptyMessage />}
           </div>
-          <div className="flex w-full flex-col text-gray-600">
-            <Pagination align="center" defaultCurrent={1} itemRender={customItemRender} />
+          <div className="flex w-full flex-col items-center text-gray-600">
+            <Pagination
+              align="center"
+              current={pageNumber}
+              pageSize={pageSize}
+              total={totalAirspace}
+              onChange={(page) => {
+                handleNextPage(page);
+              }}
+              itemRender={customItemRender}
+            />
           </div>
         </div>
       }

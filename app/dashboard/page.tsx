@@ -11,6 +11,7 @@ import AirspaceRentalService from "@/services/AirspaceRentalService";
 import Sidebar from "@/Components/Shared/Sidebar";
 import { AvailableBalance, MyAirspaces, ReferralProgram } from "@/Components/Dashboard";
 import { InfoIcon, MagnifyingGlassIcon } from "@/Components/Shared/Icons";
+import Button from "@/Components/Shared/Button";
 
 const Dashboard: FC = () => {
   const [isLoadingAirspace, setIsLoadingAirspace] = useState(false);
@@ -125,9 +126,10 @@ const Dashboard: FC = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="mt-10 flex items-center justify-center rounded-lg bg-[#0653EA] px-[96px] py-[16px] text-[15px] font-normal text-white">
-                      Claim Air Rights
-                    </div>
+                    <Button
+                      label="Claim Air Rights"
+                      className=" mt-10 md:mt-[16rem]  md:w-[260px]"
+                    />
                   </Link>
                 </div>
               </div>

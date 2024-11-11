@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { RxCaretLeft, RxCaretRight } from "react-icons/rx";
 import PortfolioItem from "./PortfolioItem";
 import Spinner from "../Spinner";
@@ -36,15 +36,18 @@ const PortfolioList = ({
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [uniqueAirspaceList, setUniqueAirspaceList] = useState<PropertyData[]>();
+  const modalRef = useRef(false);
+
   const {
     handleTabSwitch,
-    handlePrevPage,
-    handleNextPage,
     loading,
     airspaceList,
+    handleNextPage,
     pageNumber,
     activeTab,
     setAirspaceList,
+    refetchAirspaceRef,
+    totalAirspace,
   } = usePortfolioList();
 
   function getUniqueItemsByAssetId(items: PropertyData[]) {
@@ -72,11 +75,10 @@ const PortfolioList = ({
   }, [airspaceList]);
 
   const customItemRender = (current, type, originalElement) => {
-    if (airspaceList.length <= 10) return;
-    if (type === "next") {
+    if (type === "next" && current * 3 < totalAirspace) {
       return (
-        <button className="flex items-center gap-4 text-gray-700">
-          next
+        <button className="mt-1 flex items-center gap-4 text-[16px] text-gray-700" disabled={current === pageNumber}>
+          Next
           <HistoryArrowIcon />
         </button>
       );
@@ -84,9 +86,7 @@ const PortfolioList = ({
     if (type === "page") {
       return (
         <button
-          className={`${
-            current === originalElement.props.children ? "bg-[#5D7285] text-white" : "text-gray-700"
-          } rounded-full px-4 py-1`}
+          className={`${current === pageNumber ? "bg-[#5D7285] text-white" : "text-gray-700"} rounded-full px-4 py-1`}
         >
           {originalElement.props.children}
         </button>
@@ -96,9 +96,6 @@ const PortfolioList = ({
   };
   return (
     <>
-    <div className="w-full flex justify-center">
-      {selectedAirspace !== null && <Modal airspace={selectedAirspace} onCloseModal={onCloseModal} />}
-
       {showCancelModal && (
         <CancelClaimModal
           airspace={selectedAirspace}
@@ -107,14 +104,15 @@ const PortfolioList = ({
           setAirspaceList={setAirspaceList}
         />
       )}
+
       <div
-        className="flex  w-[900px] flex-1 flex-col gap-[43px] rounded-[30px] bg-white px-[29px] py-[43px]"
+        className="flex w-[900px] flex-1 flex-col gap-[43px] rounded-[30px] bg-white px-[29px] py-[43px]"
         style={{ boxShadow: "0px 12px 34px -10px #3A4DE926" }}
       >
         <h2 className="text-center text-xl font-medium text-[#222222]">My Air Rights</h2>
         <div
           style={{ scrollbarWidth: "none", scrollbarColor: "none" }}
-          className="flex  w-full  items-center gap-[40px] overflow-x-auto no-scrollbar border-b-[1px] border-[#D5DCEB]"
+          className="no-scrollbar flex w-full items-center gap-[40px] overflow-x-auto border-b-[1px] border-[#D5DCEB]"
         >
           <div
             className={`${activeTab === PortfolioTabEnum.VERIFIED ? "border-b-4 border-[#6CA1F7] text-[#232F4A]" : "text-[#5D7285]"} cursor-pointer whitespace-nowrap px-6 py-2 text-base font-bold transition delay-75 ease-linear`}
@@ -204,17 +202,34 @@ const PortfolioList = ({
                     requestDocument={airspace?.requestDocument}
                     selectAirspace={() => selectAirspace(airspace)}
                     setUploadedDoc={setUploadedDoc}
+                    activeTab={activeTab}
+                    createdAt={airspace.createdAt as Date}
+                    modalRef={modalRef}
+                    refetchAirspaceRef={refetchAirspaceRef}
+                    selectedAirspace={selectedAirspace}
+                    onCloseModal={onCloseModal}
+                    setAirspaceList={setAirspaceList}
+                    setShowCancelModal={setShowCancelModal}
+                    tags={[true, false, false, false]}
                   />
                 ))
               : <AirspacesEmptyMessage />}
             </div>
 
-            <div className="flex w-full flex-col text-gray-600">
-              <Pagination align="center" defaultCurrent={1} itemRender={customItemRender} />
+            <div className="flex w-full flex-col items-center text-gray-600">
+              <Pagination
+                align="center"
+                current={pageNumber}
+                pageSize={10}
+                total={totalAirspace}
+                onChange={(page) => {
+                  handleNextPage(page);
+                }}
+                itemRender={customItemRender}
+              />
             </div>
           </>
         }
-      </div>
       </div>
     </>
   );

@@ -2,6 +2,7 @@ import { useTour } from "@reactour/tour";
 import React, { useState } from "react";
 import { BuildingsIcon, CircleDollarIcon, InfoIcon, LocationPointIcon, MagnifyingGlassIcon } from "../../Icons";
 import AirRightEstimateMetadata from "./AirRightEstimateMetadata";
+import Button from "@/Components/Shared/Button";
 
 interface PropsI {
   address: string;
@@ -140,13 +141,7 @@ const Explorer = ({
               </>
             )}
 
-            <div
-              onClick={onClaimAirspace}
-              className="Claim-airspacebtn-step w-full cursor-pointer rounded-lg bg-[#0653EA] py-[16px] text-center text-[15px] font-normal text-white"
-            >
-              Claim Air Rights
-            </div>
-
+            <Button onClick={onClaimAirspace} label="Claim Air Rights" className="Claim-airspacebtn-step" />
             {!isLoadingEstimates && mainEstimate && (
               <div className="mt-2">
                 <span className="text-sm italic text-[#93B1ED]">*Estimated Property Value (USA Beta version)</span>

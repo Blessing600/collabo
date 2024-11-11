@@ -3,10 +3,9 @@
 import React, { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
 import Image from "next/image";
 import { CloseIconBlack, LocationPointIcon } from "../Icons";
-import { PropertyData, StatusTypes } from "@/types";
+import { PropertyData } from "@/types";
 import PropertiesService from "@/services/PropertiesService";
 import { fetchMapboxStaticImage } from "@/utils/getMapboxStaticImage";
-import Backdrop from "../Backdrop";
 import LoadingButton from "../LoadingButton/LoadingButton";
 
 interface ModalProps {
@@ -18,7 +17,6 @@ interface ModalProps {
 
 const CancelClaimModal = ({ airspace, setShowCancelModal, setSelectedAirspace, setAirspaceList }: ModalProps) => {
   const [imageUrl, setImagaeUrl] = useState("");
-
   const [inputValue, setInputValue] = useState(airspace?.address);
   const { unclaimProperty } = PropertiesService();
   const [loading, setLoading] = useState(false);
@@ -30,14 +28,13 @@ const CancelClaimModal = ({ airspace, setShowCancelModal, setSelectedAirspace, s
     setLoading(true);
     setIsActive(true);
   };
+
   const handleUnclaim = async () => {
     await unclaimProperty(airspace?.id as number);
-    setAirspaceList((prev) => {
-      return prev.filter((p) => p.id !== airspace?.id);
-    });
+    setAirspaceList((prev) => prev.filter((p) => p.id !== airspace?.id));
     setSelectedAirspace(null);
     setShowCancelModal(false);
-    setLoading(true);
+    setLoading(false);
     setIsActive(false);
   };
 
@@ -47,12 +44,15 @@ const CancelClaimModal = ({ airspace, setShowCancelModal, setSelectedAirspace, s
       setImagaeUrl(url);
     };
     handelAirspaceImage();
-  }, []);
+  }, [airspace]);
 
   return (
-    <Fragment>
-      <Backdrop />
-      <div className="fixed left-1/2 top-1/2 z-[500] flex h-full w-full -translate-x-1/2 -translate-y-1/2 flex-col gap-[15px] bg-white px-[29px] py-[30px] md:z-50 md:h-auto md:w-[689px] md:rounded-[30px]">
+    <>
+      {/* Backdrop */}
+      <div className="fixed inset-0 w-screen bg-black opacity-50" onClick={() => setShowCancelModal(false)} />
+
+      {/* Modal */}
+      <div className="fixed left-1/2 top-1/2 z-[999] flex h-full w-full -translate-x-1/2 -translate-y-1/2 flex-col gap-[15px] bg-white px-[29px] py-[30px] md:z-50 md:h-auto md:w-[689px] md:rounded-[30px]">
         <div
           className="relative -mx-[29px] -mt-[30px] flex items-center gap-[20px] px-[29px] py-[20px] md:mx-0 md:my-0 md:p-0 md:shadow-none"
           style={{ boxShadow: "0px 12px 34px -10px #3A4DE926" }}
@@ -101,7 +101,7 @@ const CancelClaimModal = ({ airspace, setShowCancelModal, setSelectedAirspace, s
           </LoadingButton>
         </div>
       </div>
-    </Fragment>
+    </>
   );
 };
 

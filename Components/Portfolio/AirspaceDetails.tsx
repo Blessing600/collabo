@@ -7,26 +7,19 @@ import UploadVerifiedDocuments from "./UploadedVerifiedDocuments";
 import Image from "next/image";
 import { fetchMapboxStaticImage } from "@/utils/getMapboxStaticImage";
 import { useAppSelector } from "@/redux/store";
-import {
-  Page,
-  Text,
-  View,
-  Document,
-  StyleSheet,
-  pdf,
-  Image as Img,
-} from "@react-pdf/renderer";
+import { Page, Text, View, Document, StyleSheet, pdf, Image as Img } from "@react-pdf/renderer";
 import AirspaceRentalService from "@/services/AirspaceRentalService";
 import PropertiesService from "@/services/PropertiesService";
-import { PropertyData } from "@/types";
+import { PropertyData, RequestDocument } from "@/types";
 import Backdrop from "../Backdrop";
 import { useMobile } from "@/hooks/useMobile";
 
 interface airspaceDetailsProps {
-  airspace: any;
+  airspace: PropertyData;
   onCloseModal: () => void;
   isOffer?: boolean;
   pageNumber?: number;
+  requestDocument: RequestDocument[];
 }
 
 const formatPriceRange = (range) => {
@@ -38,23 +31,13 @@ const checkFacilities = (facilities) => {
 
   for (const [key, value] of Object.entries(facilities)) {
     if (value === true) {
-        trueFacilities.push(key);
+      trueFacilities.push(key);
     }
   }
 
-  return trueFacilities.length > 0
-    ? trueFacilities.join(", ")
-    : "No facilities available";
+  return trueFacilities.length > 0 ? trueFacilities.join(", ") : "No facilities available";
 };
-const Certificate = ({
-  user,
-  rentalId,
-  dateOfRent,
-  timeFrame,
-  longitude,
-  latitude,
-  amount,
-}) => {
+const Certificate = ({ user, rentalId, dateOfRent, timeFrame, longitude, latitude, amount }) => {
   const styles = StyleSheet.create({
     page: {
       backgroundColor: "#fff",
@@ -108,9 +91,8 @@ const Certificate = ({
         <Text style={styles.title}>Rental Certificate</Text>
         <View style={styles.section}>
           <Text>
-            This certifies that {user.name}, with the blockchain address{" "}
-            {user.blockchainAddress} has successfully rented an airspace on
-            SkyTrade with the following details:
+            This certifies that {user.name}, with the blockchain address {user.blockchainAddress} has successfully
+            rented an airspace on SkyTrade with the following details:
           </Text>
           <Text style={[styles.bold, styles.mb]}></Text>
           <Text style={styles.bold}>Rental ID: {rentalId}</Text>
@@ -126,15 +108,13 @@ const Certificate = ({
 
         <View style={styles.section}>
           <Text>
-            This rental agreement is valid for the specified date and time frame
-            mentioned above. This agreement is subject to SkyTrade&apos;s Rental
-            Agreement and Terms of Service.
+            This rental agreement is valid for the specified date and time frame mentioned above. This agreement is
+            subject to SkyTrade&apos;s Rental Agreement and Terms of Service.
           </Text>
 
           <Text>
-            If you have any questions or require more information, please
-            contact the SkyTrade team and we will reach out at our earliest
-            convenience.
+            If you have any questions or require more information, please contact the SkyTrade team and we will reach
+            out at our earliest convenience.
           </Text>
         </View>
         <View style={styles.footer}>
@@ -151,6 +131,7 @@ const AirspaceDetails = ({
   onCloseModal,
   isOffer,
   pageNumber = 0,
+  requestDocument,
 }: airspaceDetailsProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { editAirSpaceAddress } = PropertiesService();
@@ -162,7 +143,6 @@ const AirspaceDetails = ({
     return { user, activePortfolioTab };
   });
   const { isMobile } = useMobile();
-
 
   const handleGenerateCertificate = async () => {
     const rentalId = airspace?.id;
@@ -195,7 +175,7 @@ const AirspaceDetails = ({
       setIsLoading(true);
       const editResponse = await editAirSpaceAddress({
         address: inputValue,
-        propertyId: airspace.id,
+        propertyId: airspace.id as number,
       });
       if (editResponse) {
         const airspaceResp = await getUnverifiedAirspaces(pageNumber, 10);
@@ -210,22 +190,20 @@ const AirspaceDetails = ({
   };
   useEffect(() => {
     const handelAirspaceImage = async () => {
-      const url = await fetchMapboxStaticImage(
-        airspace?.latitude,
-        airspace?.longitude,
-      );
+      const url = await fetchMapboxStaticImage(airspace?.latitude, airspace?.longitude);
       setImagaeUrl(url);
     };
     if (!airspace) return;
     handelAirspaceImage();
   }, [airspace]);
+  let submittedDocumentsCount;
+  if (requestDocument) {
+    submittedDocumentsCount = requestDocument.filter((doc) => doc.status === "SUBMITTED").length;
+  }
+
   return (
     <div>
-      {!isMobile && (
-        <Backdrop
-          onClick={onCloseModal}
-        />
-      )}
+      {!isMobile && <Backdrop onClick={onCloseModal} />}
       <div className="fixed left-1/2 top-1/2 z-[500] flex h-full w-full -translate-x-1/2 -translate-y-1/2 flex-col gap-[15px] bg-white px-[29px] py-[30px] sm:z-[20000000000] md:h-auto md:w-[689px] md:rounded-[30px]">
         <div
           className="relative -mx-[29px] -mt-[30px] flex items-center gap-[20px] px-[29px] py-[20px] md:mx-0 md:my-0 md:p-0 md:shadow-none"
@@ -234,9 +212,7 @@ const AirspaceDetails = ({
           <div className="h-[12px] w-[16px] md:hidden" onClick={onCloseModal}>
             <ArrowLeftIcon />
           </div>
-          <h2 className="text-center text-xl font-medium text-light-black">
-            {inputValue}
-          </h2>
+          <h2 className="text-center text-xl font-medium text-light-black">{inputValue}</h2>
           <div
             onClick={onCloseModal}
             className="absolute right-0 top-0 ml-auto hidden h-[15px] w-[15px] cursor-pointer md:block"
@@ -260,20 +236,12 @@ const AirspaceDetails = ({
         </div>
 
         <div>
-          <Image
-            src={imageUrl}
-            alt="Map"
-            width={50}
-            height={50}
-            className="h-[130px] w-[631px] object-cover"
-          />
+          <Image src={imageUrl} alt="Map" width={50} height={50} className="h-[130px] w-[631px] object-cover" />
         </div>
 
         <div className="flex gap-[15px]">
           <p className="text-[14px] font-normal text-light-black">ID:</p>
-          <p className="break-all text-[14px] font-normal text-light-grey">
-            {airspace?.id}
-          </p>
+          <p className="break-all text-[14px] font-normal text-light-grey">{airspace?.id}</p>
         </div>
         <div className="flex gap-[15px]">
           <p className="text-[14px] font-normal text-light-black">Details:</p>
@@ -283,25 +251,17 @@ const AirspaceDetails = ({
         </div>
         {airspace?.isRentableAirspace && (
           <div className="flex gap-[15px]">
-            <p className="text-[14px] font-normal text-light-black">
-              Current Rental Price:
-            </p>
-            <p className="break-all text-[14px] font-normal text-light-grey">
-              {formatPriceRange(airspace.transitFee)}
-            </p>
+            <p className="text-[14px] font-normal text-light-black">Current Rental Price:</p>
+            <p className="break-all text-[14px] font-normal text-light-grey">{formatPriceRange(airspace.transitFee)}</p>
           </div>
         )}
 
         <div className="flex gap-[15px]">
           <p className="text-[14px] font-normal text-light-black">Time Zone:</p>
-          <p className="break-all text-[14px] font-normal text-light-grey">
-            {airspace?.timezone}
-          </p>
+          <p className="break-all text-[14px] font-normal text-light-grey">{airspace?.timezone}</p>
         </div>
         <div className="flex gap-[15px]">
-          <p className="text-[14px] font-normal text-light-black">
-            Extra features:
-          </p>
+          <p className="text-[14px] font-normal text-light-black">Extra features:</p>
           <p className="break-all text-[14px] font-normal text-light-grey">
             {checkFacilities({
               hasLandingDeck: airspace?.hasLandingDeck,
@@ -311,38 +271,28 @@ const AirspaceDetails = ({
           </p>
         </div>
         <div className="flex gap-[15px]">
-          <p className="text-[14px] font-normal text-light-black">
-            Availability:
-          </p>
-          <p className="break-all text-[14px] font-normal text-light-grey">
-            Monday to Sunday 9:00 - 21:00
-          </p>
+          <p className="text-[14px] font-normal text-light-black">Availability:</p>
+          <p className="break-all text-[14px] font-normal text-light-grey">Monday to Sunday 9:00 - 21:00</p>
         </div>
         {airspace?.metadata?.endTime && (
           <div className="flex gap-[15px]">
-            <p className="text-[14px] font-normal text-light-black">
-              Expiration Date:
-            </p>
-            <p className="text-[14px] font-normal text-light-grey">
-              {formatDate(airspace?.metadata?.endTime)}
-            </p>
+            <p className="text-[14px] font-normal text-light-black">Expiration Date:</p>
+            <p className="text-[14px] font-normal text-light-grey">{formatDate(airspace?.metadata?.endTime)}</p>
           </div>
         )}
-        <div>
-          <UploadVerifiedDocuments
-            requestDocument={airspace?.requestDocument || []}
-          />
-        </div>
+        {requestDocument && requestDocument?.length > 0 && submittedDocumentsCount > 0 && (
+          <div>
+            <UploadVerifiedDocuments requestDocument={airspace?.requestDocument || []} />
+          </div>
+        )}
 
-        {isOffer ? (
+        {isOffer ?
           <div
             className="-mx-[30px] -mb-[30px] mt-auto flex gap-[20px] px-[14px] py-[16px] md:mx-0 md:mb-0 md:mt-[15px] md:px-0 md:py-0 md:shadow-none"
             style={{ boxShadow: "0px 0px 4.199999809265137px 0px #00000040" }}
           >
             <div className="flex flex-col">
-              <p className="text-[12px] font-normal text-[#838187]">
-                Offer received
-              </p>
+              <p className="text-[12px] font-normal text-[#838187]">Offer received</p>
               <p className="text-2xl font-bold text-[#222222]"></p>
             </div>
             <div
@@ -359,8 +309,7 @@ const AirspaceDetails = ({
               Approve
             </div>
           </div>
-        ) : (
-          <div className="-mx-[30px] -mb-[30px] mt-auto flex gap-[20px] px-[14px] py-[16px] md:mx-0 md:mb-0 md:mt-[15px] md:px-0 md:py-0">
+        : <div className="-mx-[30px] -mb-[30px] mt-auto flex gap-[20px] px-[14px] py-[16px] md:mx-0 md:mb-0 md:mt-[15px] md:px-0 md:py-0">
             <div
               onClick={onCloseModal}
               className="flex flex-1 cursor-pointer items-center justify-center rounded-[5px] bg-white px-[20px] py-[10px] text-center text-[#0653EA]"
@@ -369,28 +318,15 @@ const AirspaceDetails = ({
               Cancel
             </div>
             <button
-              onClick={
-                activePortfolioTab === PortfolioTabEnum.RENTED
-                  ? handleGenerateCertificate
-                  : handleEdit
-              }
+              onClick={activePortfolioTab === PortfolioTabEnum.RENTED ? handleGenerateCertificate : handleEdit}
               className={`flex flex-1 items-center justify-center rounded-[5px] bg-blue-500 px-[20px] py-[10px] text-center text-white`}
             >
-              {isLoading ? (
-                <>
-                  {activePortfolioTab !== PortfolioTabEnum.RENTED &&
-                    "Editing..."}
-                </>
-              ) : (
-                <>
-                  {activePortfolioTab === PortfolioTabEnum.RENTED
-                    ? "Generate Certificate"
-                    : "Edit"}
-                </>
-              )}
+              {isLoading ?
+                <>{activePortfolioTab !== PortfolioTabEnum.RENTED && "Editing..."}</>
+              : <>{activePortfolioTab === PortfolioTabEnum.RENTED ? "Generate Certificate" : "Edit"}</>}
             </button>
           </div>
-        )}
+        }
       </div>
     </div>
   );

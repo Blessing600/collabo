@@ -12,16 +12,60 @@ import { useRouter } from "next/navigation";
 import UploadedDocuments from "./UploadedDocuments";
 import AdditionalDocuments from "./AdditionalDocuments";
 import VerificationSuccessPopup from "./VerificationSuccessPopup";
-import { RequestDocumentStatus } from "@/types";
+import { PropertyData, RequestDocument, RequestDocumentStatus } from "@/types";
 import { RxLapTimer } from "react-icons/rx";
+import CancelClaimModal from "./CancelClaimModal";
+import Modal from "./Modal";
+import { PortfolioTabEnum } from "@/hooks/usePortfolioList";
+import LoadingButton from "../LoadingButton/LoadingButton";
 
-const PortfolioItem = ({ airspace, selectAirspace, setUploadedDoc, requestDocument }) => {
+interface PropsI {
+  airspaceName: string;
+  activeTab: PortfolioTabEnum;
+  tags: Boolean[];
+  type: string | undefined;
+  requestDocument: RequestDocument[] | undefined;
+  selectAirspace: () => void;
+  setUploadedDoc: any;
+  refetchAirspaceRef: React.MutableRefObject<boolean>;
+  setShowCancelModal: React.Dispatch<React.SetStateAction<boolean>>;
+  onCloseModal: () => void;
+  setAirspaceList: React.Dispatch<React.SetStateAction<PropertyData[]>>;
+  selectedAirspace: any;
+  createdAt: Date;
+}
+
+function formatDate(isoDateStr) {
+  const date = new Date(isoDateStr);
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const month = String(date.getUTCMonth() + 1);
+  const year = date.getUTCFullYear();
+
+  return `${day}/${month}/${year}`;
+}
+
+const PortfolioItem = ({
+  airspace,
+  selectAirspace,
+  setUploadedDoc,
+  requestDocument,
+  activeTab,
+  createdAt,
+  modalRef,
+  refetchAirspaceRef,
+  selectedAirspace,
+  onCloseModal,
+  setAirspaceList,
+  setShowCancelModal,
+  tags,
+}) => {
   const router = useRouter();
   const { type, address, property } = airspace;
   const [showPopup, setShowPopup] = useState(false);
   const [underReview, setUnderReview] = useState<boolean>(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [badgeCountdown, setBadgeCountdown] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const handleButtonClick = () => {
     setShowPopup(true);
@@ -76,8 +120,26 @@ const PortfolioItem = ({ airspace, selectAirspace, setUploadedDoc, requestDocume
     }
   }, [type, airspace?.auction?.hasEnded, airspace?.auction?.endDate]);
 
+  const handleViewAirspace = () => {
+    selectAirspace();
+    modalRef.current = false;
+    setShowModal(true);
+  };
+  const handleAirspace = () => {
+    selectAirspace();
+    setShowCancelModal(true);
+  };
   return (
     <>
+      {showModal && (
+        <Modal
+          airspace={selectedAirspace}
+          onCloseModal={() => {
+            onCloseModal();
+            setShowModal(false);
+          }}
+        />
+      )}
       {type === "receivedBid" || type === "placedBid" ?
         <div
           onClick={selectAirspace}
@@ -126,13 +188,12 @@ const PortfolioItem = ({ airspace, selectAirspace, setUploadedDoc, requestDocume
               </button>
             : <button className="rounded bg-blue-500 p-1 px-2 text-white">Auction History</button>}
 
-            <div className="h-[14px] w-[7px]">
+            <div onClick={selectAirspace} className="h-[14px] w-[7px]">
               <ChevronRightIcon />
             </div>
           </div>
         </div>
       : <div
-          onClick={selectAirspace}
           className="cursor-pointer items-center justify-between gap-[10px] rounded-lg bg-white p-[11px]"
           style={{ boxShadow: "0px 12px 34px -10px #3A4DE926" }}
         >
@@ -145,21 +206,50 @@ const PortfolioItem = ({ airspace, selectAirspace, setUploadedDoc, requestDocume
             </div>
             <div className="flex items-center gap-[10px]">
               {property && property?.noFlyZone && (
-                <div className="cursor-pointer rounded-[3px] bg-[#222222] px-[7px] text-sm font-normal text-white">
+                <LoadingButton
+                  onClick={""}
+                  isLoading={false}
+                  color={""}
+                  disable={false}
+                  className="h-[27px] cursor-pointer rounded-[3px] bg-[#222222] px-[7px] text-[11.89px] font-normal text-white"
+                >
                   No Fly Zone
-                </div>
+                </LoadingButton>
               )}
 
               {property && property.layers[0].isCurrentlyInAuction && (
-                <div className="cursor-pointer rounded-[3px] bg-gray-300 px-[7px] text-sm font-normal text-black">
-                  on Sale
-                </div>
+                <LoadingButton
+                  onClick={""}
+                  isLoading={false}
+                  color={""}
+                  disable={false}
+                  className="h-[27px] cursor-pointer rounded-[3px] bg-[#E7E6E6] px-[7px] text-[11.89px] font-normal text-[#222222]"
+                >
+                  On Sale
+                </LoadingButton>
               )}
 
-              {property && property.isCurrentlyRented && (
-                <div className="cursor-pointer rounded-[3px] bg-gray-300 px-[7px] text-sm font-normal text-black">
-                  on Rent
-                </div>
+              {((property && property?.isCurrentlyRented) || !!tags[0]) && (
+                <LoadingButton
+                  onClick={handleViewAirspace}
+                  isLoading={false}
+                  color={""}
+                  className="h-[27px] cursor-pointer rounded-[3px] bg-[#DBDBDB] px-[7px] text-[11.89px] font-normal text-[#222222]"
+                  disable={false}
+                >
+                  {type === "land" ? `Claim Date: ${formatDate(createdAt)}` : "On Rent"}
+                </LoadingButton>
+              )}
+              {activeTab === PortfolioTabEnum.UNVERIFIED && (
+                <LoadingButton
+                  onClick={handleAirspace}
+                  isLoading={false}
+                  color={""}
+                  disable={false}
+                  className="h-[27px] cursor-pointer rounded-[3px] bg-[#4285F4] px-[7px] text-[11.89px] font-normal text-white"
+                >
+                  Cancel Claim
+                </LoadingButton>
               )}
 
               {requestDocument && requestDocument?.length > 0 && !requestDocument[0]?.document && !underReview && (
@@ -191,7 +281,7 @@ const PortfolioItem = ({ airspace, selectAirspace, setUploadedDoc, requestDocume
                   <p className="text-sm font-normal text-[#E04F64]">Documents rejected</p>
                 </div>
               )}
-              <div className="h-[14px] w-[7px]">
+              <div onClick={handleViewAirspace} className="h-[14px] w-[7px]">
                 <ChevronRightIcon />
               </div>
             </div>

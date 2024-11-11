@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
@@ -458,7 +459,7 @@ const DepositAndWithdraw = ({
           )}
       </div>
       {selectedMethod.name === "Native" && activeSection === 0 && (
-        <div>
+        <div className="sm:w-0 w-full">
           <div className="flex items-center justify-between w-full">
             <div className="flex flex-col items-start gap-[5px] flex-1">
               <label

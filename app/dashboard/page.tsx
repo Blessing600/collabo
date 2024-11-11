@@ -67,7 +67,7 @@ const Dashboard: FC = () => {
             <PageHeader pageTitle={"Dashboard"} />
             <section className="relative h-full w-full md:flex lg:pl-8">
               <div className="items-align mb-24 flex flex-col-reverse justify-center lg:flex-row">
-                <div className="md:my-[-53px] md:flex md:h-screen md:basis-[58%] md:flex-col md:gap-5 md:overflow-y-auto md:px-8 md:py-[53px] lg:px-0">
+                <div className="md:pt-[-15px] md:flex md:h-screen md:basis-[58%] md:flex-col md:gap-5 md:overflow-y-auto md:px-8 md:py-[53px] lg:px-0">
                   <h2 className="hidden pt-10 text-xl font-medium text-black md:flex">Welcome to SkyTrade!</h2>
                   <p className="hidden text-base font-normal text-[#87878D] md:flex">
                     Claim your air rights on the dashboard to kickstart your passive income journey. Don&apos;t forget
@@ -86,7 +86,7 @@ const Dashboard: FC = () => {
                         />
                       </div>
                     </div>
-                    <div className="mb-20 h-60 md:mx-auto md:mb-[21px] md:h-full">
+                    <div className="mb-20 h-60 md:mx-auto md:my-0 md:h-0">
                       <ReferralProgram />
                     </div>
                   </div>
@@ -94,7 +94,7 @@ const Dashboard: FC = () => {
                 <div className="lg:min-h-screen lg:w-1/2 lg:overflow-x-hidden lg:overflow-y-scroll">
                   <Link
                     href={"/airspaces"}
-                    className="flex h-[500px] flex-col gap-8 px-[18px] md:-mr-[53px] md:-mt-[53px] md:h-full md:flex-1 md:items-center md:overflow-y-scroll md:bg-cover md:bg-center md:bg-no-repeat md:pb-[40px] md:pt-[42px]"
+                    className="flex h-[500px] flex-col gap-8 px-[18px] md:-mr-[53px] md:h-full md:flex-1 md:items-center md:overflow-y-scroll md:bg-cover md:bg-center md:bg-no-repeat md:pb-[40px] md:pt-[42px]"
                     style={{ backgroundImage: "url('/images/map-bg.png')" }}
                   >
                     <div

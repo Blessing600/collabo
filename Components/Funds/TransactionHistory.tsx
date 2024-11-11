@@ -218,7 +218,7 @@ const TransactionHistory = () => {
               <thead className="sticky top-0 bg-white text-sm font-bold uppercase tracking-[0.5px] text-[#7D90B8] opacity-100 sm:bg-[#F6FAFF]">
                 <tr className="w-full">
                   <th className="px-5 py-5 text-start">Date</th>
-                  <th className="px-5 py-5 text-start">Transaction Id</th>
+                  <th className="px-5 py-5 text-start truncate">Transaction Id</th>
                   <th className="px-5 py-5 text-start">Type</th>
                   <th className="px-5 py-5 text-start">Amount</th>
                   <th className="px-5 py-5 text-start">Status</th>

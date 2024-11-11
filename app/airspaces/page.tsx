@@ -358,18 +358,21 @@ const Airspaces: React.FC = () => {
           lng: Number(coordinates.longitude),
           lat: Number(coordinates?.latitude),
         };
-        if (marker) {
-          marker.setLngLat(temp).addTo(map as mapboxgl.Map);
-          return;
+        let _marker = marker
+        if (_marker) {
+          _marker.setLngLat(temp).addTo(map as mapboxgl.Map);
+
+        } else {
+          _marker = new mapboxgl.Marker({
+            color: "#3FB1CE",
+            draggable: true,
+          })
+            .setLngLat(temp)
+            .addTo(map as mapboxgl.Map);
         }
-        const newMarker = new mapboxgl.Marker({
-          color: "#3FB1CE",
-          draggable: true,
-        })
-          .setLngLat(temp)
-          .addTo(map as mapboxgl.Map);
-        newMarker.on("dragend", async () => {
-          const lngLat = newMarker.getLngLat();
+
+        _marker.on("dragend", async () => {
+          const lngLat = _marker.getLngLat();
           const newLongitude = lngLat.lng;
           const newLatitude = lngLat.lat;
           setCoordinates({
@@ -387,7 +390,7 @@ const Airspaces: React.FC = () => {
             });
           }
         });
-        setMarker(newMarker);
+        setMarker(_marker);
       }
     };
     handlePin();

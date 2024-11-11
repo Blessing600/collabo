@@ -53,7 +53,7 @@ const BuyFilter = () => {
           Filter
           <button
             onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className="relative whitespace-nowrap rounded-[8px] bg-white px-[10px] py-[5px] transition transition-all duration-150 ease-in-out hover:bg-dark-blue hover:text-white"
+            className="relative whitespace-nowrap rounded-[8px] bg-white px-[10px] py-[5px] transition-all duration-150 ease-in-out hover:bg-dark-blue hover:text-white"
           >
             {activeFilters > 0 && (
               <div className="absolute -left-[5px] -top-[5px] h-4 w-4 rounded-full bg-dark-blue text-center text-xs text-white">
@@ -65,7 +65,10 @@ const BuyFilter = () => {
         </div>
         <div className="flex h-[54px] w-[283px] items-center justify-between gap-2 rounded-[8px] bg-white/50 p-[10px]">
           <div className="whitespace-nowrap">{"Didn't find location?"}</div>
-          <button className="whitespace-nowrap rounded-[8px] bg-white px-[10px] py-[5px] transition transition-all duration-150 ease-in-out hover:bg-dark-blue hover:text-white">
+          <button
+            disabled
+            className="cursor-not-allowed whitespace-nowrap rounded-[8px] bg-white px-[10px] py-[5px] transition-all duration-150 ease-in-out"
+          >
             Request it
           </button>
         </div>

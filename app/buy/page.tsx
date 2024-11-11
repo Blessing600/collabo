@@ -150,7 +150,7 @@ const Buy = () => {
   return (
     <Fragment>
       <Head>
-        <title>SkyTrade - Marketplace : Buy Airspace</title>
+        <title>SkyTrade - Marketplace : Buy Air Rights</title>
       </Head>
 
       {isLoading && <Backdrop />}
@@ -160,16 +160,15 @@ const Buy = () => {
         </div>
       )}
       {
-        <div className="relative flex h-screen w-screen items-center justify-center overflow-clip rounded bg-[#F6FAFF]">
+        <div className="relative flex h-screen w-screen items-center justify-center rounded bg-white">
           <Sidebar />
 
           <div className="flex h-full w-full flex-col">
-            <div className="hidden md:block">
+            <div className="relative hidden md:block">
               <PageHeader pageTitle={isMobile ? "Buy Airspace" : "Marketplace: Buy Airspace"} />
-            </div>
-
-            <div className="fixed right-10 top-[15%] z-50 hidden md:block">
-              {user?.betaUser?.isBetaUser && <BuyFilter />}
+              <div className="absolute right-10 top-[8rem] z-50 hidden md:block">
+                {user?.betaUser?.isBetaUser && <BuyFilter />}
+              </div>
             </div>
 
             {isCreateAuctionModalOpen && (
@@ -179,8 +178,10 @@ const Buy = () => {
             {user?.betaUser?.isBetaUser && (
               <AuctionSearchMobile searchTerm={searchTerm} setSearchTerm={(value: string) => setSearchTerm(value)} />
             )}
-            <section className={"relative mb-[79px] flex h-full w-full items-start justify-start md:mb-0"}>
-              <div className={"!absolute !left-0 !top-0 !m-0 !h-screen !w-screen"} id="map" style={{ zIndex: "10" }} />
+            <section
+              className={"oveflow-scroll relative mb-[79px] flex h-full w-full items-start justify-start md:mb-0"}
+            >
+              <div className={"!absolute !left-0 !top-0 !m-0 !h-[850px] !w-screen"} id="map" style={{ zIndex: "10" }} />
 
               {isMobile ?
                 <>

@@ -29,16 +29,16 @@ const Funds = () => {
       <Head>
         <title>SkyTrade - Wallet</title>
       </Head>
-      <div className="relative rounded bg-white sm:bg-[#F6FAFF] h-screen w-screen flex items-center justify-center overflow-hidden ">
+      <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden rounded bg-white sm:bg-[#F6FAFF]">
         <Sidebar />
-        <div className="w-full h-full flex flex-col">
+        <div className="flex h-full w-full flex-col">
           <PageHeader pageTitle={"Funds"} />
-          <section className="relative  w-full h-[calc(100%-91px)]  flex flex-col gap-8 mb-[78.22px]  md:mb-0 overflow-y-scroll">
+          <section className="relative mb-[78.22px] flex h-[calc(100%-91px)] w-full flex-col gap-8 overflow-y-scroll md:mb-0">
             <div
-              className={`${isMobile ? "flex w-full flex-wrap p-8 gap-10 justify-center" : "flex w-full p-8 gap-10"}`}
+              className={`${isMobile ? "flex w-full flex-wrap justify-center gap-10 p-8" : "flex w-full gap-10 p-8"}`}
             >
               <div
-                className={`${isMobile ? "w-full flex flex-col gap-5 items-center sm:items-start" : "flex flex-col gap-5 sm:w-[40%] items-center sm:items-start"}`}
+                className={`${isMobile ? "flex w-full flex-col items-center gap-5 sm:items-start" : "flex flex-col items-center gap-5 sm:w-[40%] sm:items-start"}`}
               >
                 <AvailableBalance />
                 <DepositAndWithdraw
@@ -49,7 +49,7 @@ const Funds = () => {
                   tokenBalance={parseFloat(userUSDWalletBalance.amount)}
                 />
               </div>
-              <div className={`w-full sm:w-auto sm:flex sm:flex-grow sm:w-[50%]`}>
+              <div className={`w-full sm:flex sm:w-[50%] sm:flex-grow`}>
                 <TransactionHistory />
               </div>
             </div>

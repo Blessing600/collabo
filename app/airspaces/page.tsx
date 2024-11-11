@@ -20,7 +20,7 @@ import Sidebar from "../../Components/Shared/Sidebar";
 import PageHeader from "../../Components/PageHeader";
 import ExplorerMobile from "../../Components/Airspace/Explorer/ExplorerMobile";
 import HowToModal from "../../Components/Airspace/HowToModal";
-import { ClaimModal } from "../../Components/Airspace/ClaimModal/ClaimModal";
+
 import SuccessModal from "../../Components/Airspace/SuccessModal";
 import Explorer from "../../Components/Airspace/Explorer/Explorer";
 import Slider from "../../Components/Airspace/Slider";
@@ -44,6 +44,7 @@ import { AddressItem } from "@/Components/Airspace/AddressItem";
 import { SelectedAirspace } from "@/Components/Airspace/SelectedAirspace";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
+import ClaimModal from "@/Components/Airspace/ClaimModal/ClaimModal";
 
 interface Address {
   id: string;
@@ -717,7 +718,7 @@ const Airspaces: React.FC = () => {
 
       <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden rounded bg-[#F6FAFF]">
         <Sidebar />
-        <div className="flex h-full w-full flex-col overflow-scroll md:overflow-hidden">
+        <div className="flex h-full w-full flex-col overflow-scroll">
           {!showMobileMap && <PageHeader pageTitle={"Air Rights"} />}
           {((showMobileMap && isMobile) || (isOpen && currentStep === 1 && isMobile)) && (
             <ExplorerMobile
@@ -813,7 +814,7 @@ const Airspaces: React.FC = () => {
             className={`relative flex h-full w-full items-start justify-start md:mb-0 ${showMobileMap ? "" : "mb-[79px]"}`}
           >
             <div
-              className={`!absolute !left-0 !top-0 !m-0 !h-[100%] !w-[100%]`}
+              className={`!absolute !left-0 !top-0 !m-0 !h-[850px] !w-[100%]`}
               id="map"
               style={{
                 opacity:

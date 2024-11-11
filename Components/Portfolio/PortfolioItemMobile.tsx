@@ -15,6 +15,8 @@ import { PortfolioTabEnum } from "@/hooks/usePortfolioList";
 import Modal from "./Modal";
 import CancelClaimModal from "./CancelClaimModal";
 import LoadingButton from "../LoadingButton/LoadingButton";
+import { calculateTimeLeft, shortenAddress } from "@/utils";
+import { useRouter } from "next/navigation";
 
 interface PropsI {
   activeTab: PortfolioTabEnum;
@@ -55,10 +57,14 @@ const PortfolioItemMobile = ({
   createdAt,
   airspace,
 }: PropsI) => {
+  const router = useRouter();
+
   const [showPopup, setShowPopup] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [underReview, setUnderReview] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
+  const documentStatus = checkDocumentStatus(airspace?.requestDocument);
+  const [showCancelModal, setShowCancelModal] = useState(false);
 
   const handleButtonClick = () => {
     setShowPopup(true);
@@ -78,8 +84,16 @@ const PortfolioItemMobile = ({
     modalRef.current = false;
     setShowModal(true);
   };
-  const documentStatus = checkDocumentStatus(airspace?.requestDocument);
-  const [showCancelModal, setShowCancelModal] = useState(false);
+
+  const getHighestBid = () => {
+    const highestBid = airspace?.auction?.currentPrice;
+
+    return `$${highestBid}`;
+  };
+
+  const handleOutBidCheck = () => {
+    return airspace.placedBid.price < airspace.auction.currentPrice;
+  };
 
   return (
     <div>
@@ -102,7 +116,38 @@ const PortfolioItemMobile = ({
       )}
 
       {airspace.type === "receivedBid" || airspace.type === "placedBid" ?
-        <></>
+        <div
+          onClick={handleOnClaim}
+          className="flex cursor-pointer items-center justify-between gap-[10px] rounded-lg bg-white p-[11px]"
+          style={{ boxShadow: "0px 12px 34px -10px #3A4DE926" }}
+        >
+          <div className="flex flex-1 items-center gap-[10px]">
+            <div className="h-6 w-6">
+              <LocationPointIcon />
+            </div>
+            <p className="flex-1 text-[14px] font-normal text-[#222222]">
+              {type === "receivedBid" && "My Airspace -"}{" "}
+              {shortenAddress(airspace?.auction?.layer?.property?.address, 35)}
+            </p>
+          </div>
+          <div className="flex items-center gap-6 text-sm">
+            {type === "placedBid" && airspace?.auction?.hasEnded && handleOutBidCheck() ?
+              <button
+                className="rounded bg-blue-500 p-1 px-2 text-white"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  router.push(`/buy?auctionId=${airspace?.auction?.id}&bid=true`);
+                }}
+              >
+                Place Higher Bid
+              </button>
+            : <button className="rounded bg-blue-500 p-1 px-2 text-white">Auction History</button>}
+
+            <div className="h-[14px] w-[7px]">
+              <ChevronRightIcon />
+            </div>
+          </div>
+        </div>
       : <div>
           <div className="w-screen cursor-pointer items-center justify-between gap-[10px] rounded-lg bg-white px-4 py-6 shadow-md">
             <div className="items-center justify-between gap-[10px] rounded-lg">
@@ -117,17 +162,15 @@ const PortfolioItemMobile = ({
               <div className="">
                 <div className="mt-2 flex w-full items-center justify-between gap-[10px]">
                   {!!tags[0] && (
-                   <LoadingButton
-                   onClick={handleOnClaim}
-                   isLoading={false}
-                   color={""}
-                   className="bg-[#DBDBDB] text-[#222222] text-[11.89px] font-normal px-[7px] cursor-pointer rounded-[3px] h-[27px]"
-                   disable={false}
-                 >
-                   {type === "land"
-                     ? `Claim Date: ${formatDate(createdAt)}`
-                     : "On Rent"}
-                 </LoadingButton>
+                    <LoadingButton
+                      onClick={handleOnClaim}
+                      isLoading={false}
+                      color={""}
+                      className="h-[27px] cursor-pointer rounded-[3px] bg-[#DBDBDB] px-[7px] text-[11.89px] font-normal text-[#222222]"
+                      disable={false}
+                    >
+                      {type === "land" ? `Claim Date: ${formatDate(createdAt)}` : "On Rent"}
+                    </LoadingButton>
                   )}
                   {!!tags[1] && (
                     <div className="cursor-pointer rounded-[3px] bg-[#E7E6E6] px-[7px] text-sm font-normal text-[#222222]">
@@ -144,17 +187,17 @@ const PortfolioItemMobile = ({
                       Review Offer
                     </div>
                   )}
-                    {activeTab === PortfolioTabEnum.UNVERIFIED && (
-                  <LoadingButton
-                    onClick={handleCancelClaim}
-                    isLoading={false}
-                    color={""}
-                    disable={false}
-                    className="bg-[#4285F4] text-white text-[11.89px] font-normal px-[7px] cursor-pointer rounded-[3px] h-[27px]"
-                  >
-                    Cancel Claim
-                  </LoadingButton>
-                )}
+                  {activeTab === PortfolioTabEnum.UNVERIFIED && (
+                    <LoadingButton
+                      onClick={handleCancelClaim}
+                      isLoading={false}
+                      color={""}
+                      disable={false}
+                      className="h-[27px] cursor-pointer rounded-[3px] bg-[#4285F4] px-[7px] text-[11.89px] font-normal text-white"
+                    >
+                      Cancel Claim
+                    </LoadingButton>
+                  )}
 
                   {(documentStatus === "SUBMITTED" || underReview) && (
                     <div className="flex items-center justify-center gap-2">

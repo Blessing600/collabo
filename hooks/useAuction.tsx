@@ -4,7 +4,7 @@ import { PropertyData } from "@/types";
 import { Web3authContext } from "@/providers/web3authProvider";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { setAirspaceList, setAssetId, setIsTriggerRefresh, setUserUSDWalletBalance } from "@/redux/slices/userSlice";
-import { LAMPORTS_PER_SOL, VersionedTransaction } from "@solana/web3.js";
+import { VersionedTransaction } from "@solana/web3.js";
 
 import { executeTransaction } from "@/utils/rent/transactionExecutor";
 import MarketplaceService from "@/services/MarketplaceService";
@@ -67,7 +67,6 @@ const useAuction = () => {
         if (web3auth && web3auth?.status !== "connected") return;
 
         setLoading(true);
-        const assetId = airspaceList.length > 0 ? airspaceList[airspaceList.length - 1]?.id : "";
 
         const airspaces = await getAuctionableAirspaces(pageNumber);
 
@@ -102,21 +101,22 @@ const useAuction = () => {
               },
             ],
           });
-          const value = response.data.result.value;
-          if (value.length < 1)
+          const { value } = response.data.result;
+          if (value.length < 1) {
             dispatch(
               setUserUSDWalletBalance({
                 amount: "0",
                 isLoading: false,
               })
             );
-          else
+          } else {
             dispatch(
               setUserUSDWalletBalance({
                 amount: value[0].account.data.parsed.info.tokenAmount.uiAmountString,
                 isLoading: false,
               })
             );
+          }
         } catch (error) {
           console.error(error);
           dispatch(
@@ -189,12 +189,6 @@ const useAuction = () => {
     const userSolBalance = await fetchsolbalance(provider);
     console.log({ userSolBalance });
     console.log({ userUSDWalletBalance });
-
-    if (userSolBalance === 0) {
-      return toast.info(
-        " You don't have sufficient funds to perform this operation, please top up your wallet with some funds to continue"
-      );
-    }
 
     if (parseFloat(userUSDWalletBalance.amount) === 0) {
       return toast.info(

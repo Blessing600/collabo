@@ -9,6 +9,7 @@ interface SuccessModalProps {
   finalAns: { status: string; message?: string | undefined } | null | undefined;
   rentData: PropertyData | undefined | null;
   setShowRentDetail: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowRentPreview: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SuccessModal: React.FC<SuccessModalProps> = ({
@@ -16,6 +17,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
   finalAns,
   rentData,
   setShowRentDetail,
+  setShowRentPreview
 }) => {
   const modalRef = useRef<HTMLDivElement | null>(null);
 
@@ -24,6 +26,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         setShowSuccess(false);
         setShowRentDetail(false);
+        setShowRentPreview(false)
       }
     };
 
@@ -36,22 +39,28 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
   const handalClosePop = () => {
     setShowSuccess(false);
     setShowRentDetail(false);
+    setShowRentPreview(false)
   };
+  const onPortfolioClick = () =>{
+    setShowRentDetail(false);
+    setShowRentPreview(false)
+  }
 
   return (
     <div>
       <Backdrop />
       <div
         ref={modalRef}
-        className={`md:max-w-sm fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white md:rounded-[30px] w-full  z-50`}
+        className={`md:max-w-sm fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white md:rounded-[30px] w-full  z-50 sm:z-[20000000000]`}
       >
         <div
-          className={`w-[100%] md:h-[100%] h-screen py-10 z-40 flex flex-col gap-[15px] items-center  md:rounded-3xl ${finalAns?.status === "Rent Successful" ? "bg-[#34A853]" : "bg-[#F5AA5E]"}`}
+          className={`w-[100%] md:h-[100%] h-screen py-10 z-40 sm:z-[2000000000] flex flex-col gap-[15px] items-center  md:rounded-3xl ${finalAns?.status === "Rent Successful" ? "bg-[#34A853]" : "bg-[#F5AA5E]"}`}
         >
           <div
             onClick={() => {
               setShowSuccess(false);
               setShowRentDetail(false);
+              setShowRentPreview(false)
             }}
             className="w-[26px] h-[26px] absolute top-[10px] right-[10px] "
           >
@@ -135,7 +144,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
           {finalAns?.status === "Rent Successful" ? (
             <>
               <button
-                onClick={() => setShowRentDetail(false)}
+                onClick={onPortfolioClick}
                 className=" py-2 w-[50%] h-[41px]  border rounded-md gap-10 bg-[#34A853] text-center text-[#FFFFFF] text-lg"
               >
                 Portfolio

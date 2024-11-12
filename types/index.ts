@@ -192,6 +192,8 @@ export type PropertyData = {
   images?:string[];
   orderPhotoforGeneratedMap?:boolean;
   currentPrice: number;
+  rentedAt?:string;
+  amount?:number | string;
 };
 
 export type User = {

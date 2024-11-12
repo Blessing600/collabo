@@ -144,11 +144,16 @@ const AirspaceDetails = ({
   });
   const { isMobile } = useMobile();
 
+  function endTime(date, minutes) {
+    if(date){
+      return new Date(date.getTime() + minutes * 60000);
+    }
+  }
   const handleGenerateCertificate = async () => {
     const rentalId = airspace?.id;
-    const dateOfRent = formatDate(airspace?.metadata?.startTime);
-    const timeFrame = formatDate(airspace?.metadata?.endTime);
-    const amount = `$${airspace?.currentPrice}`;
+    const dateOfRent = formatDate(airspace?.rentedAt);
+    const timeFrame = formatDate(endTime(airspace?.rentedAt, 30));
+    const amount = `$${airspace?.amount}`;
     const longitude = airspace?.property?.longitude;
     const latitude = airspace?.property?.latitude;
 

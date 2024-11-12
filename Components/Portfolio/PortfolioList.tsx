@@ -68,7 +68,7 @@ const PortfolioList = ({
   }, [user?.KYCStatusId]);
 
   useEffect(() => {
-    if (airspaceList.length > 0) {
+    if (airspaceList?.length > 0) {
       const uniqueList = getUniqueItemsByAssetId(airspaceList);
       setUniqueAirspaceList(uniqueList);
     }

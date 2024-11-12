@@ -24,9 +24,7 @@ const ComingSoon = () => {
     setIsJoiningWaitlist(true);
     try {
       if (!isLoggedIn) {
-        toast.error(
-          "You need to login to enable this feature"
-        );
+        toast.error("You need to login to enable this feature");
         return;
       }
       const response = await joinWaitlist();
@@ -47,9 +45,7 @@ const ComingSoon = () => {
     setIsSubscribing(true);
     try {
       if (!isLoggedIn) {
-        toast.error(
-          "You need to login to enable this feature"
-        );
+        toast.error("You need to login to enable this feature");
         return;
       }
       const response = await subscribeNewsLetters();
@@ -72,7 +68,7 @@ const ComingSoon = () => {
   };
 
   return (
-    <div className="z-20 m-2 flex flex-col gap-4 overflow-hidden rounded-[30px] bg-white p-6 text-sml text-gray-600 shadow-md md:m-8 md:h-[668px] md:w-[518px]">
+    <div className="z-20 m-2 flex flex-col gap-4 overflow-hidden rounded-[30px] bg-white p-6 text-sml text-gray-600 shadow-md md:m-8 md:h-[678px] md:w-[518px]">
       <p className="text-center font-bold text-blue-500">
         <span className="text-lg font-bold">Access Coming Soon!</span>
       </p>
@@ -109,7 +105,9 @@ const ComingSoon = () => {
         </div>
       </p>
       <p>Thank you for your patience and enthusiasm — we can’t wait for you to join us!</p>
-      {isLoggedIn && <Button isLoading={isJoiningWaitlist} label="Join the Waitlist Now!" onClick={handleJoinWaitlist} />}
+      {isLoggedIn && (
+        <Button isLoading={isJoiningWaitlist} label="Join the Waitlist Now!" onClick={handleJoinWaitlist} />
+      )}
       {isLoggedIn && (
         <Button isLoading={isSubscribing} secondary label="Subscribe to our Newsletter" onClick={handleSubscribe} />
       )}

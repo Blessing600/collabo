@@ -62,12 +62,12 @@ const RentableAirspaceLists: React.FC<RentableAirspaceListsProps> = ({
   return (
     <div className="w-full">
       {loadingReg && (
-        <div className="mt-2 flex w-full justify-center">
+        <div className="mt-8 flex w-full justify-center">
           <BalanceLoader />
         </div>
       )}
       {(!registeredAddress || (registeredAddress && registeredAddress?.length === 0 && !loadingReg)) && (
-        <div className="mt-2 flex w-full justify-center">no air rights for rent</div>
+        <div className="mt-8 flex w-full justify-center text-gray-500">No available air rights for rent</div>
       )}
 
       {regAdressShow && (

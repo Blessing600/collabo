@@ -220,7 +220,7 @@ const Rent = () => {
       setFlyToAddress(parsedInitialRentData.address);
       setShowRentDetail(true);
     } else {
-      console.info("no initial datta");
+      console.info("no initial data");
     }
   }, []);
 
@@ -229,7 +229,7 @@ const Rent = () => {
       {isLoading && <Backdrop />}
       {isLoading && <Spinner />}
       {
-        <div className="relative flex h-screen w-screen items-center justify-center rounded md:bg-[#F6FAFF]">
+        <div className="relative flex h-screen w-screen items-center justify-center rounded md:bg-white">
           <Sidebar />
 
           <div className="flex h-full w-full flex-col">
@@ -246,9 +246,11 @@ const Rent = () => {
               />
             )}
             <section
-              className={"relative mb-[79px] flex h-full w-full items-start justify-start overflow-x-hidden overflow-y-scroll md:mb-0"}
+              className={
+                "relative mb-[79px] flex h-full w-full items-start justify-start overflow-x-hidden overflow-y-scroll md:mb-0"
+              }
             >
-              <div className={"!absolute !left-0 !top-0 !m-0 min-h-[850px] !h-full !w-full"} id="map" />
+              <div className={"!absolute !left-0 !top-0 !m-0 !h-full min-h-[850px] !w-full"} id="map" />
               <RentSearchMobile
                 address={address}
                 setAddress={setAddress}

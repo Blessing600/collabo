@@ -20,7 +20,7 @@ const NotificationBanner: React.FC = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="z-50 flex w-full cursor-pointer items-center justify-between gap-3 bg-[#2279FF] px-8 py-2 text-white top-0">
+    <div className="z-50 flex w-full cursor-pointer items-center justify-between gap-3 bg-[#2279FF] px-8 py-2 text-white">
       <div onClick={() => router.push("/points")} className="flex items-center gap-5">
         <p>🚀</p>
         <p className="font-normal">

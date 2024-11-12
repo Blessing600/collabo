@@ -10,7 +10,7 @@ const S3UploadServices = () => {
   const { postRequest } = Service();
 
   const generatePublicFileUploadUrls = async (
-    postData: GeneratePublicFileUploadUrlParams,
+    postData: GeneratePublicFileUploadUrlParams
   ): Promise<GeneratePublicFileUploadUrlResponse[] | void> => {
     try {
       if (!postData.referenceId || postData.contentTypes.length === 0) return;
@@ -26,7 +26,7 @@ const S3UploadServices = () => {
   };
 
   const generatePrivateFileUploadUrls = async (
-    postData: GeneratePrivateFileUploadUrlParams,
+    postData: GeneratePrivateFileUploadUrlParams
   ): Promise<GeneratePrivateFileUploadUrlResponse[] | void> => {
     try {
       if (!postData.requestId || postData.contentTypes.length === 0) return;

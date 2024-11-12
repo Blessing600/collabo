@@ -23,7 +23,7 @@ const RentSearchMobile: React.FC<RentSearchMobileProps> = ({
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   return (
-    <div className="fixed left-0 top-0 z-20 w-full bg-white p-4 text-center shadow-md md:hidden">
+    <div className="fixed left-0 sm:top-0 z-20 w-full bg-white p-4 text-center shadow-md md:hidden">
       <div className="flex items-center justify-between gap-2">
         Rent
         <div className="flex items-center justify-between overflow-hidden rounded-lg border p-2">

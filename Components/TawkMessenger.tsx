@@ -8,8 +8,8 @@ const TawkMessengerComponent = () => {
   const customStyle = {
     visibility: {
       mobile: {
-        xOffset: 10,
-        yOffset: 70,
+        xOffset: 15,
+        yOffset: 100,
         position: "tr"
       },
     },

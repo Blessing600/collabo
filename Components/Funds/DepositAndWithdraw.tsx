@@ -459,7 +459,7 @@ const DepositAndWithdraw = ({
           )}
       </div>
       {selectedMethod.name === "Native" && activeSection === 0 && (
-        <div className="sm:w-0 w-full">
+        <div className="w-full">
           <div className="flex items-center justify-between w-full">
             <div className="flex flex-col items-start gap-[5px] flex-1">
               <label
@@ -509,28 +509,26 @@ const DepositAndWithdraw = ({
             </CopyToClipboard>
           </div>
           <hr className="sm:hidden border border-black border-opacity-20 h-[1px] w-full" />
-          <div className="flex items-center gap-[15px] p-[15px] bg-[#F2F2F2] mt-4">
-            <div className="w-6 h-6">
+          <div className="flex items-center gap-[15px] p-4 bg-[#F2F2F2] mt-4">
+            <div className="w-5 h-5 flex-shrink-0">
               <WarningIcon />
             </div>
-            <div className="text-[#222222] sm:text-[14px] font-normal w-[341px]">
-              <div>
+            <div className="w-full sm:w-[calc(100%-40px)]">
+              <div className="text-[#222222] text-[14px] font-normal w-full">
                 To complete your deposit, please use your crypto wallet to
                 deposit USDC to the following address:
-                <br />
-                <div className="w-full">
-                  <p
-                    className="break-words w-[250px] sm:w-full text-[10px] sm:text-[13px]"
-                    style={{ color: "#0653EA" }}
-                  >
-                    {walletId}
-                  </p>
-                </div>
               </div>
+              <p
+                className="w-full text-[13px] sm:truncate overflow-hidden text-ellipsis break-all"
+                style={{ color: "#0653EA" }}
+              >
+                {walletId}
+              </p>
             </div>
           </div>
-          <div className="flex items-center gap-[15px] p-[15px] bg-[#F2F2F2] mt-4">
-            <div className="w-6 h-6">
+
+          <div className="flex items-center gap-[15px] p-4 bg-[#F2F2F2] mt-4">
+            <div className="w-5 h-5 flex-shrink-0">
               <WarningIcon />
             </div>
             <div className="text-[#222222] text-[14px] font-normal w-full">
@@ -598,11 +596,10 @@ const DepositAndWithdraw = ({
               selectedMethod.name === "Native" ||
               selectedMethod.name === "LI.FI" ? (
                 <Button
-                isLoading={false}
-                onClick={handleWithdraw}
-                label="Withdraw"
-              />
-              
+                  isLoading={false}
+                  onClick={handleWithdraw}
+                  label="Withdraw"
+                />
               ) : null}
             </>
           </div>

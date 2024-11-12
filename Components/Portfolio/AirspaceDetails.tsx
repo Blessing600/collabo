@@ -144,10 +144,12 @@ const AirspaceDetails = ({
   });
   const { isMobile } = useMobile();
 
-  function endTime(date, minutes) {
-    if(date){
-      return new Date(date.getTime() + minutes * 60000);
-    }
+
+  function endTime(date: Date | string | undefined, minutes: number): Date | undefined {
+    if (!date) return undefined;
+  
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return new Date(dateObj.getTime() + minutes * 60000);
   }
   const handleGenerateCertificate = async () => {
     const rentalId = airspace?.id;

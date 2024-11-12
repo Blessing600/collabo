@@ -180,9 +180,11 @@ const Buy = () => {
               <AuctionSearchMobile searchTerm={searchTerm} setSearchTerm={(value: string) => setSearchTerm(value)} />
             )}
             <section
-              className={"oveflow-scroll relative mb-[79px] flex h-full w-full items-start justify-start md:mb-0"}
+              className={
+                "relative mb-[79px] flex h-full w-full items-start justify-start overflow-x-hidden overflow-y-scroll md:mb-0"
+              }
             >
-              <div className={"!absolute !left-0 !top-0 !m-0 !h-[850px] !w-screen"} id="map" style={{ zIndex: "10" }} />
+              <div className={"!absolute !left-0 !top-0 !m-0 !h-full min-h-[850px] !w-full"} id="map" />
 
               {isMobile ?
                 <>

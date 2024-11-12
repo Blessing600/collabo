@@ -118,7 +118,7 @@ const Popup: React.FC<PopupProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 !z-[200] flex items-center justify-center bg-black bg-opacity-50 border border-red-500">
+    <div className="fixed inset-0 !z-[200] flex items-center justify-center bg-black bg-opacity-50 ">
       <div
         className="fixed bottom-0 flex h-[75%] flex-col gap-[15px] overflow-auto rounded-t-[30px] bg-white px-[30px] py-[30px] md:relative md:top-0 md:min-h-[350px] md:w-[566px] md:rounded-[15px] md:px-[20px] md:py-[20px]"
         style={{ boxShadow: "0px 12px 34px -10px #3A4DE926" }}

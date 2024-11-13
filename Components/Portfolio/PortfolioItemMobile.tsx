@@ -187,17 +187,7 @@ const PortfolioItemMobile = ({
                       Review Offer
                     </div>
                   )}
-                  {activeTab === PortfolioTabEnum.UNVERIFIED && (
-                    <LoadingButton
-                      onClick={handleCancelClaim}
-                      isLoading={false}
-                      color={""}
-                      disable={false}
-                      className="h-[27px] cursor-pointer rounded-[3px] bg-[#4285F4] px-[7px] text-[11.89px] font-normal text-white"
-                    >
-                      Cancel Claim
-                    </LoadingButton>
-                  )}
+                  
 
                   {(documentStatus === "SUBMITTED" || underReview) && (
                     <div className="flex items-center justify-center gap-2">
@@ -241,17 +231,29 @@ const PortfolioItemMobile = ({
                     )}
                   </div>
                 }
-
+                <div className="mt-4 flex w-full items-center justify-between gap-12 ">
+                
                 {documentStatus === "NOT_SUBMITTED" && !underReview && airspace?.requestDocument && (
-                  <div className="mt-4 flex w-full items-center justify-between gap-12">
+                  <div>
                     <div onClick={handleButtonClick} className="rounded-md border border-orange-500 p-2">
                       <p className="text-sm font-normal text-orange-500">Additional documents requested</p>
                     </div>
-                    <div className="h-[14px] w-[7px]">
-                      <ChevronRightIcon />
-                    </div>
                   </div>
                 )}
+                {activeTab === PortfolioTabEnum.UNVERIFIED && (
+                  <LoadingButton
+                    onClick={handleCancelClaim}
+                    isLoading={false}
+                    color={""}
+                    disable={false}
+                    className="p-2 cursor-pointer rounded-[3px] bg-[#4285F4] text-[11.89px] font-normal text-white"
+                  >
+                    Cancel Claim
+                  </LoadingButton>
+                )}
+                </div>
+
+
 
                 {(documentStatus === "SUBMITTED" || underReview) && airspace?.requestDocument && (
                   <UploadedDocuments requestDocument={airspace?.requestDocument} />

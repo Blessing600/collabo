@@ -166,7 +166,7 @@ const PortfolioItemMobile = ({
                       onClick={handleOnClaim}
                       isLoading={false}
                       color={""}
-                      className="h-[27px] cursor-pointer rounded-[3px] bg-[#DBDBDB] px-[7px] text-[11.89px] font-normal text-[#222222]"
+                      className="p-2 cursor-pointer rounded-[3px] bg-[#DBDBDB] text-[11.89px] font-normal text-[#222222]"
                       disable={false}
                     >
                       {type === "land" ? `Claim Date: ${formatDate(createdAt)}` : "On Rent"}

@@ -1,3 +1,4 @@
+'use client'
 import React from "react";
 import { LiFiWidget, WidgetConfig, ChainType } from "@lifi/widget";
 import { CloseIconBlack } from "../Icons";

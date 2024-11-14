@@ -596,6 +596,7 @@ const DepositAndWithdraw = ({
               selectedMethod.name === "Native" ||
               selectedMethod.name === "LI.FI" ? (
                 <Button
+                  className="mt-6"
                   isLoading={false}
                   onClick={handleWithdraw}
                   label="Withdraw"

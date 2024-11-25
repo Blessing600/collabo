@@ -3,7 +3,7 @@ import Service from "./Service";
 const BetaUserService = () => {
   const { getRequest, postRequest, patchRequest } = Service();
 
-  
+
 
   const joinWaitlist = async () => {
     try {

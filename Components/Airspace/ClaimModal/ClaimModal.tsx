@@ -23,6 +23,8 @@ import S3UploadServices from "@/services/s3upload";
 import ZoningPermission from "./PlanningPermission/ZoningPermission";
 import Button from "@/Components/Shared/Button";
 
+
+
 interface PropsI {
   onCloseModal: () => void;
   data: any;
@@ -179,6 +181,13 @@ export const ClaimModal = ({
     }
   };
 
+// check if address is usa
+  const ShowApn = data?.address?.toLowerCase().includes("usa") ||
+  data?.address?.toLowerCase().includes("united states") ||
+  data?.address?.toLowerCase().includes("united states of america");
+
+
+
   const getByteSize = (str) => new Blob([str]).size;
   const handleChangeAirRightName = (e) => {
     const { value } = e.target;
@@ -268,7 +277,9 @@ export const ClaimModal = ({
                     autoComplete="off"
                   />
                 </div>
-                <div className="mt-3 flex flex-col gap-[5px] md:mt-4">
+                {
+                  ShowApn &&(
+                    <div className="mt-3 flex flex-col gap-[5px] md:mt-4">
                   <label htmlFor="apn">APN (Assessor Parcel Number)</label>
 
                   <input
@@ -287,6 +298,8 @@ export const ClaimModal = ({
                     autoComplete="off"
                   />
                 </div>
+                  )
+                }
 
                 <PlanningPermission data={data} setData={setData} />
               </div>

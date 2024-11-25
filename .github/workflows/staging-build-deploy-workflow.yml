@@ -1,0 +1,98 @@
+name: Staging Build/Deploy
+
+on:
+  push:
+    branches: [ "staging" ]
+  workflow_dispatch:
+env:
+  SRV_IP: "167.235.66.199"
+  
+jobs:
+  # Build job
+  build_and_deploy:
+    runs-on: sky-trade-staging
+    env:
+      SSH_KEY: ${{secrets.DEV_EC2_DEPLOY_KEY}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check branch
+        if: ${{ github.ref == 'refs/heads/staging' }}
+        run: |
+          echo "This workflow can only run on the Staging branch"
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.11.1"
+          cache: ${{ steps.detect-package-manager.outputs.manager }}
+      - name: Check if Yarn is installed
+        run: |
+          if ! command -v yarn > /dev/null; then
+            echo "Yarn is not installed. Installing yarn..."
+            npm install -g yarn
+          else
+            echo "Yarn is already installed."
+          fi
+      - name: Detect package manager
+        id: detect-package-manager
+        run: |
+          if [ -f "${{ github.workspace }}/yarn.lock" ]; then
+            echo "manager=yarn" >> $GITHUB_OUTPUT
+            echo "command=install" >> $GITHUB_OUTPUT
+            echo "runner=yarn" >> $GITHUB_OUTPUT
+            exit 0
+          elif [ -f "${{ github.workspace }}/package.json" ]; then
+            echo "manager=npm" >> $GITHUB_OUTPUT
+            echo "command=ci" >> $GITHUB_OUTPUT
+            echo "runner=npx --no-install" >> $GITHUB_OUTPUT
+            exit 0
+          else
+            echo "Unable to determine package manager"
+            exit 1
+          fi
+      - name: Restore cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .next/cache
+          # Generate a new cache whenever packages or source files change.
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          # If source files changed but packages didn't, rebuild from a prior cache.
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
+      - name: Install dependencies
+        run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+      - name: Build App
+        run: cat settings/env.staging > .env.local && cat .env.local && yarn build
+      - name: Create deployment artifact 
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: ls -all && cd out && tar -czf ../"ac-${GITHUB_SHA}".tar.gz `ls -A -1`
+      - name: Print Artifact location
+        shell: bash
+        run: pwd && ls ./
+      
+      - name: Prepare SSH-client on Agent
+        run: | 
+            mkdir -p ~/.ssh          
+            [ -e ~/.ssh/github-action ] && rm ~/.ssh/github-action
+            echo "$SSH_KEY" > ~/.ssh/github-action && chmod 400 ~/.ssh/github-action
+            echo -e "User sky-staging\n\tIdentityFile ~/.ssh/github-action\n\tStrictHostKeyChecking No" > ~/.ssh/config
+                
+      - name: Send Artifact to Server 
+        run: | 
+            ssh -T sky-staging@$SRV_IP -p 4578 -i ~/.ssh/github-action 'mkdir -p address-claiming'
+            scp -P 4578 -i ~/.ssh/github-action ac-${GITHUB_SHA}.tar.gz sky-staging@$SRV_IP:~/address-claiming/
+
+      - name: Change Symlink/Deploy/Restart
+        run: |
+            ssh -T sky-staging@$SRV_IP -p 4578 -i ~/.ssh/github-action <<'EOL'
+              TIMESTAMP=$(date +%F_%H-%M-%S)
+              NEW_DEPLOY_SOURCE="ac_${TIMESTAMP}"
+              cd address-claiming && \
+              mkdir $NEW_DEPLOY_SOURCE && \
+              tar -xzf ac-${{ github.sha }}.tar.gz -C $NEW_DEPLOY_SOURCE && \
+              rm -f ac-${{ github.sha }}.tar.gz && \
+              ln -sfn `pwd`/$NEW_DEPLOY_SOURCE current && cd current && \
+              cd .. && ./clean_builds.sh
+            EOL

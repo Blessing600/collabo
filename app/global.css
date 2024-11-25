@@ -1,0 +1,243 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "mapbox-gl/dist/mapbox-gl.css";
+@import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
+
+* {
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+  font-family: "Poppins", sans-serif;
+  overflow-x: hidden;
+}
+
+#map {
+  width: 90%;
+  margin: auto;
+  margin-top: 2rem;
+  height: 70vh;
+}
+
+button {
+  cursor: pointer;
+}
+
+#markerWithExternalCss {
+  background-image: url("https://maps.locationiq.com/v3/samples/marker50px.png");
+  background-size: cover;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+#marker2 {
+  background-color: #0653ea;
+
+  background-size: cover;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  z-index: 40;
+}
+
+.mapboxgl-popup {
+  max-width: 200px;
+
+  left: 0;
+  top: 0;
+}
+
+.mapbox-logo {
+  display: none !important;
+}
+
+.mapboxgl-ctrl-logo {
+  display: none !important;
+}
+
+.mapbox-improve-map {
+  display: none !important;
+}
+
+.mapboxgl-ctrl-compass {
+  display: none !important;
+}
+
+.mapboxgl-control-container {
+  display: none !important;
+}
+
+.marker {
+  display: block;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+.paginationBttns {
+  width: 100%;
+  height: 20px;
+  list-style: none;
+  display: flex;
+  justify-content: flex-end;
+  margin: 3rem 0;
+}
+
+.paginationBttns a {
+  padding: 5px;
+  margin: 8px;
+  border-radius: 5px;
+  border: 1px solid #0653ea;
+  color: #0653ea;
+  cursor: pointer;
+}
+
+.paginationBttns a:hover {
+  color: white;
+  background-color: #0653ea;
+}
+
+.paginationActive a {
+  color: white;
+  background-color: #0653ea;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #fff;
+  border-bottom-color: #0653ea;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  position: absolute;
+  top: 40vh;
+  z-index: 50;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 992px) {
+  /* body{
+    background-color: ;
+  } */
+}
+.short-scrollbar::-webkit-scrollbar-track {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+.fund-table-scrollbar::-webkit-scrollbar-track {
+  margin-top: 56px;
+  background-color: white;
+  background: transparent;
+}
+.fund-table-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #b8cce3;
+}
+
+.fund-table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+.fund-table-scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 8px;
+}
+.react-international-phone-input-container .react-international-phone-input {
+  border: none !important;
+  margin-left: 10px !important;
+  width: 75% !important;
+  padding: 0px !important;
+  height: auto !important;
+  font-size: 14px !important;
+  color: #222222 !important;
+  line-height: 21px !important;
+  font-weight: 400 !important;
+}
+.react-international-phone-input-container .react-international-phone-country-selector-button {
+  border: none !important;
+  padding: 0px !important;
+  height: auto !important;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+@media screen and (max-width: 520px) {
+  .Toastify__toast-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100% !important;
+  }
+
+  .Toastify__toast {
+    width: 100% !important;
+    font-family: "Inter", sans-serif;
+  }
+}
+#transakCloseIcon {
+  top: 4px !important;
+  right: 4px !important;
+  width: 22px !important;
+  height: 22px !important;
+}
+.history-table-scrollbar {
+  overflow-x: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+.history-table-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.history-table-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.ant-pagination-item-active {
+  border-style: none !important;
+}

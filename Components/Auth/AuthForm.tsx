@@ -1,0 +1,230 @@
+import React, { FC, useState, useRef, useContext } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { toast } from "react-toastify";
+
+import Link from "next/link";
+
+import useInitAuth from "@/hooks/useInitAuth";
+import useAuth from "@/hooks/useAuth";
+
+import EmailInput from "./EmailInput";
+import { Web3authContext } from "@/providers/web3authProvider";
+import { WALLET_ADAPTERS } from "@web3auth/base";
+import LoadingButton from "../LoadingButton/LoadingButton";
+import Sidebar from "../Shared/Sidebar";
+import { useMobile } from "@/hooks/useMobile";
+import { FaDiscord, FaFacebookF, FaRedditAlien, FaXTwitter } from "react-icons/fa6";
+interface AuthFormProps {
+  isLogin: boolean;
+  setIsLogin: (value: boolean) => void;
+  isNewsletterChecked: boolean;
+  setIsNewsletterChecked: (value: boolean) => void;
+}
+
+const socialMediaOptions = [
+  { provider: "twitter", icon: <FaXTwitter className="h-4 w-4" />, text: "Connect with Twitter" },
+  { provider: "facebook", icon: <FaFacebookF className="h-4 w-4" />, text: "Connect with Facebook" },
+  { provider: "discord", icon: <FaDiscord className="h-4 w-4" />, text: "Connect with Discord" },
+  { provider: "reddit", icon: <FaRedditAlien className="h-4 w-4" />, text: "Connect with Reddit" },
+];
+
+const AuthForm: FC<AuthFormProps> = ({ isLogin, setIsLogin, isNewsletterChecked, setIsNewsletterChecked }) => {
+  const [emailValid, setEmailValid] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+  const { isMobile } = useMobile();
+  const { init } = useInitAuth();
+  const { web3auth, provider, setProvider } = useContext(Web3authContext);
+  const [showMoreOptions, setShowMoreOptions] = useState(false);
+
+  const isEmailValid = (email: string): boolean => {
+    const regex = /^\S+@\S+\.\S+$/;
+    return regex.test(email);
+  };
+
+  const loginUser = async (isEmail: boolean, provider?: string) => {
+    try {
+      await init();
+      if (!web3auth) {
+        toast.error("Web3auth not initialized yet");
+        return;
+      }
+
+      setIsLoading(true);
+      let web3authProvider = null;
+
+      if (isEmail && emailRef.current) {
+        const email = emailRef.current.value;
+        if (!isEmailValid(email)) {
+          toast.error("Login: email is not valid");
+          setEmailValid(false);
+          setIsLoading(false);
+          return;
+        }
+
+        web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+          loginProvider: "email_passwordless",
+          extraLoginOptions: {
+            login_hint: email,
+          },
+        });
+      } else {
+        let loginProvider;
+        switch (provider) {
+          case "google":
+            loginProvider = "google";
+            break;
+          case "facebook":
+            loginProvider = "facebook";
+            break;
+          case "twitter":
+            loginProvider = "twitter";
+            break;
+          case "discord":
+            loginProvider = "discord";
+            break;
+          case "reddit":
+            loginProvider = "reddit";
+            break;
+          default:
+            loginProvider = "google";
+            break;
+        }
+
+        web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+          loginProvider: loginProvider,
+        });
+      }
+
+      localStorage.setItem("showbanner", "true");
+      setProvider(web3authProvider);
+    } catch (error) {
+      console.error("Error occurred:", error);
+      toast.error("An error occurred while logging in.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSwitchingBetweenLoginAndRegister = () => {
+    setIsLogin(!isLogin);
+    setIsNewsletterChecked(!isNewsletterChecked);
+  };
+
+  return (
+    <div className="mx-auto flex h-screen w-screen items-center justify-center bg-[#F6FAFF] max-sm:bg-[white] md:h-full md:w-full">
+      {isMobile && <Sidebar />}
+      <form
+        className="m-auto flex w-full flex-col items-center justify-center gap-[15px] bg-white px-[30px] py-[40px] md:w-[449px]"
+        id="login"
+        name="login"
+        onSubmit={(e) => {
+          e.preventDefault();
+          loginUser(true);
+        }}
+      >
+        <Image src={"/images/logo-1.svg"} alt="Company's logo" width={199} height={77} />
+
+        <p className="mt-[25px] text-xl font-medium text-light-black">Welcome{isLogin && " back"} to SkyTrade</p>
+        <p className="text-base text-light-black">{isLogin ? "Login" : "Register"}</p>
+        {isLogin && (
+          <p className="text-center text-sm text-light-grey">
+            Sign in effortlessly using the authentication method you chose during sign up.
+          </p>
+        )}
+        <EmailInput emailRef={emailRef} emailValid={emailValid} setEmailValid={setEmailValid} />
+        {!isLogin && (
+          <label className="flex w-full gap-[11px] text-[14px] text-[#87878D]">
+            <input
+              className="h-[18px] w-[18px] cursor-pointer"
+              type="checkbox"
+              id="newsletterCheckbox"
+              name="newsletterCheckbox"
+              checked={isNewsletterChecked}
+              onChange={() => setIsNewsletterChecked(!isNewsletterChecked)}
+            />
+            Send me newsletter to keep me updated
+          </label>
+        )}
+        <LoadingButton
+          color={""}
+          type="button"
+          onClick={() => loginUser(true)}
+          isLoading={isLoading}
+          className="flex w-full justify-center rounded-md bg-dark-blue px-24 py-4 text-[15px] text-white transition-all duration-500 ease-in-out hover:bg-blue-600"
+        >
+          Get started
+        </LoadingButton>
+        <div className="relative flex w-full items-center gap-[15px] text-center align-middle text-[#00000033]">
+          <div style={{ width: "100%", height: "1px", background: "#00000033" }} />
+          <p className="text-sm">or</p>
+          <div style={{ width: "100%", height: "1px", background: "#00000033" }} />
+        </div>
+        <LoadingButton
+          color={""}
+          type="button"
+          onClick={() => loginUser(false)}
+          isLoading={isLoading}
+          className="flex w-full justify-center"
+        >
+          <div className="flex w-full items-center justify-between rounded-lg border border-[#595959] py-4 pl-[18px] pr-[42px] transition-all duration-500 ease-in-out hover:bg-bleach-blue">
+            <Image src="/images/google-logo.png" alt="Google's logo" width={24} height={24} />
+            <p className="mx-auto text-[#595959]">Connect with Google</p>
+          </div>
+        </LoadingButton>
+
+        <div className="relative w-full">
+          {!showMoreOptions && (
+            <LoadingButton
+              color={""}
+              type="button"
+              onClick={() => setShowMoreOptions(true)}
+              isLoading={isLoading}
+              className="flex w-full items-center justify-center rounded-lg border border-[#595959] py-4 pl-[18px] text-[#595959] transition-all duration-500 ease-in-out hover:bg-bleach-blue"
+            >
+              More Options
+            </LoadingButton>
+          )}
+          {showMoreOptions && (
+            <div className="top-0 flex grid w-full grid-cols-2 gap-4 bg-white text-sm">
+              {socialMediaOptions.map(({ provider, icon, text }) => (
+                <LoadingButton
+                  key={provider}
+                  color={""}
+                  type="button"
+                  onClick={() => loginUser(false, provider)}
+                  isLoading={isLoading}
+                  className="flex w-full items-center justify-center rounded-lg border border-[#595959] py-2 pl-[18px] text-[#595959] transition-all duration-500 ease-in-out hover:bg-bleach-blue"
+                >
+                  {icon}
+                  <p className="mx-auto text-[#595959]">{text}</p>
+                </LoadingButton>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <p className="text-center text-sm text-[#87878D]">
+          By creating an account I agree with{" "}
+          <Link target="_blank" href="https://docs.sky.trade/terms.pdf" className="cursor-pointer text-[#0653EA]">
+            Terms and Conditions
+          </Link>{" "}
+          and{" "}
+          <Link target="_blank" href="https://docs.sky.trade/privacy.pdf" className="cursor-pointer text-[#0653EA]">
+            Privacy Policy
+          </Link>{" "}
+          agreement
+        </p>
+        <div style={{ width: "100%", height: "1px", background: "#00000033" }} />
+        <p onClick={handleSwitchingBetweenLoginAndRegister} className="mb-20 text-[#87878D]">
+          {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+          <span className="cursor-pointer font-bold text-[#0653EA]">{isLogin ? "Register" : "Login"}</span>
+        </p>
+      </form>
+    </div>
+  );
+};
+
+export default AuthForm;
